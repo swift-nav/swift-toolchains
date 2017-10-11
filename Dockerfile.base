@@ -3,14 +3,6 @@ FROM ubuntu:16.04
 RUN mkdir /work
 WORKDIR /work
 
-#                          g++-4.8-arm-linux-gnueabihf \
-#                          gcc-4.8-arm-linux-gnueabihf \
-#                          gcc-4.8-multilib-arm-linux-gnueabihf \
-#                          binutils-arm-linux-gnueabihf \
-#                          libgcc1-armhf-cross \
-#                          libsfgcc1-armhf-cross \
-#                          libstdc++6-armhf-cross \
-
 
 RUN   apt-get update \
     && apt-get install -y build-essential \
@@ -22,6 +14,13 @@ RUN   apt-get update \
                           llvm-4.0-dev \
                           clang-4.0 \
                           git \
+                          g++-4.8-arm-linux-gnueabihf \
+                          gcc-4.8-arm-linux-gnueabihf \
+                          gcc-4.8-multilib-arm-linux-gnueabihf \
+                          binutils-arm-linux-gnueabihf \
+                          libgcc1-armhf-cross \
+                          libsfgcc1-armhf-cross \
+                          libstdc++6-armhf-cross \
                           python
 
 RUN git clone --depth=1 --single-branch -b llvm-4.0 https://github.com/obfuscator-llvm/obfuscator.git obfuscator-llvm
