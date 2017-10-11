@@ -21,10 +21,18 @@ stage_sysroot() {
   done
 }
 
-docker run -i -t --rm \
-    -v $PWD/example:/work/example \
-    -v $PWD/build:/work/build \
-    -v $PWD/output/opt:/opt \
-    -v $PWD:/this_dir \
-    arm-llvm-obf:base \
-    /bin/bash -c ". /this_dir/stage_sysroot.bash; stage_sysroot"
+run() {
+
+  if [[ -n "$DOCKERCEPTION" ]]; then return; fi
+
+  docker run -i -t --rm \
+      -v $PWD/example:/work/example \
+      -v $PWD/build:/work/build \
+      -v $PWD/output/opt:/opt \
+      -v $PWD:/this_dir \
+      -e DOCKERCEPTION=1 \
+      arm-llvm-obf:base \
+      /bin/bash -c ". /this_dir/stage_sysroot.bash; stage_sysroot"
+}
+
+run
