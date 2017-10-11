@@ -16,6 +16,7 @@ before_install:
 
 script:
  - ./build.bash
+ - ./stage_sysroot.bash
  - ./build_example.bash
 
 after_success:

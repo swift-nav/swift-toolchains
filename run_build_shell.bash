@@ -9,5 +9,4 @@ docker run -i -t --rm \
     -v $PWD/output/opt:/opt \
     -v $PWD/bin:/wrapper-bin \
     arm-llvm-obf:base \
-    /bin/bash -c "export PATH=/opt/llvm-obfuscator/bin:/wrapper-bin:\$PATH; \
-                  make -C example"
+    /bin/bash -c "export PATH=/opt/llvm-obfuscator/bin:/wrapper-bin:\$PATH; exec /bin/bash"

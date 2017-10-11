@@ -1,0 +1,15 @@
+#!/bin/bash
+
+R=/opt/llvm-obfuscator/sysroot
+
+/opt/llvm-obfuscator/bin/clang++ \
+  -I ${R}/usr/arm-linux-gnueabihf/include \
+  -L ${R}/usr/arm-linux-gnueabi/libhf \
+  -I ${R}/usr/arm-linux-gnueabihf/include/c++/4.8.5/ \
+  -L ${R}/usr/lib/gcc-cross/arm-linux-gnueabihf/4.8/ \
+  -I ${R}/usr/arm-linux-gnueabihf/include/c++/4.8.5/arm-linux-gnueabihf \
+  -ccc-gcc-name arm-linux-gnueabihf-gcc \
+  --target=arm-linux-gnueabihf \
+  -mfloat-abi=hard \
+  -mcpu=cortex-a9 \
+  $@

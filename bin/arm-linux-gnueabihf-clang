@@ -1,0 +1,12 @@
+#!/bin/bash
+
+R=/opt/llvm-obfuscator/sysroot
+
+/opt/llvm-obfuscator/bin/clang \
+  -I ${R}/usr/arm-linux-gnueabihf/include \
+  -L ${R}/usr/arm-linux-gnueabi/libhf \
+  -ccc-gcc-name arm-linux-gnueabihf-gcc \
+  --target=arm-linux-gnueabihf \
+  -mfloat-abi=hard \
+  -mcpu=cortex-a9 \
+  $@
