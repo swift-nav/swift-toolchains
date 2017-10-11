@@ -1,19 +1,30 @@
 #!/bin/bash
 
-OUT=output/opt/llvm-obfuscator/sysroot
+stage_sysroot() {
 
-rm -rf "$OUT"
-mkdir -p "$OUT"
+  OUT=output/opt/llvm-obfuscator/sysroot
 
-SYSROOT_DIRS=(
-  "/usr/arm-linux-gnueabihf/include"
-  "/usr/arm-linux-gnueabi/libhf"
-  "/usr/arm-linux-gnueabihf/include/c++/4.8.5"
-  "/usr/lib/gcc-cross/arm-linux-gnueabihf/4.8"
-  "/usr/arm-linux-gnueabihf/include/c++/4.8.5/arm-linux-gnueabihf"
-)
+  rm -rf "$OUT"
+  mkdir -p "$OUT"
 
-for SYSROOT_DIR in ${SYSROOT_DIRS[@]}; do
-  mkdir -p "${OUT}/${SYSROOT_DIR}"
-  rsync -azv "${SYSROOT_DIR}/" "${OUT}/${SYSROOT_DIR}/"
-done
+  SYSROOT_DIRS=(
+    "/usr/arm-linux-gnueabihf/include"
+    "/usr/arm-linux-gnueabi/libhf"
+    "/usr/arm-linux-gnueabihf/include/c++/4.8.5"
+    "/usr/lib/gcc-cross/arm-linux-gnueabihf/4.8"
+    "/usr/arm-linux-gnueabihf/include/c++/4.8.5/arm-linux-gnueabihf"
+  )
+
+  for SYSROOT_DIR in ${SYSROOT_DIRS[@]}; do
+    mkdir -p "${OUT}/${SYSROOT_DIR}"
+    rsync -azv "${SYSROOT_DIR}/" "${OUT}/${SYSROOT_DIR}/"
+  done
+}
+
+docker run -i -t --rm \
+    -v $PWD/example:/work/example \
+    -v $PWD/build:/work/build \
+    -v $PWD/output/opt:/opt \
+    -v $PWD:/this_dir \
+    arm-llvm-obf:base \
+    /bin/bash -c ". /this_dir/stage_sysroot.bash; stage_sysroot"
