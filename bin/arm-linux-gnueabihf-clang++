@@ -1,8 +1,9 @@
 #!/bin/bash
 
-R=/opt/llvm-obfuscator/sysroot
+D=$( (cd `dirname $0`/../.. >/dev/null; pwd -P) )
+R=$D/sysroot
 
-/opt/llvm-obfuscator/bin/clang++ \
+${D}/bin/clang++ \
   -I ${R}/usr/arm-linux-gnueabihf/include \
   -L ${R}/usr/arm-linux-gnueabi/libhf \
   -I ${R}/usr/arm-linux-gnueabihf/include/c++/4.8.5/ \

@@ -20,8 +20,8 @@ script:
  - ./build_example.bash
 
 after_success:
- - tar -C output -czf llvm-obfuscator-arm.tgz .
- - PRODUCT_VERSION=v1 ./publish.sh llvm-obfuscator-arm.tgz
+ - tar -C output -cJf llvm-obfuscator-arm.txz .
+ - PRODUCT_VERSION=v1 ./publish.sh llvm-obfuscator-arm.txz
 
 env:
   global:
