@@ -23,4 +23,4 @@ docker run -i -t --rm \
     -v $PWD/build:/work/build \
     -v $PWD/output/opt:/opt \
     arm-llvm-obf:base \
-    /bin/bash -c "cd /work/build && $CMAKE_COMMAND && ninja -v"
+    /bin/bash -c "cd /work/build && $CMAKE_COMMAND && ninja -v && ninja -v install"
