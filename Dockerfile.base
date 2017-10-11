@@ -1,0 +1,28 @@
+FROM ubuntu:16.04
+
+RUN mkdir /work
+WORKDIR /work
+
+RUN   apt-get update \
+    && apt-get install -y build-essential \
+                          bison \
+                          flex \
+                          cmake \
+                          ninja-build \
+                          g++-4.8-arm-linux-gnueabihf \
+                          gcc-4.8-arm-linux-gnueabihf \
+                          gcc-4.8-multilib-arm-linux-gnueabihf \
+                          binutils-arm-linux-gnueabihf \
+                          libgcc1-armhf-cross \
+                          libsfgcc1-armhf-cross \
+                          libstdc++6-armhf-cross \
+                          llvm-4.0 \
+                          llvm-4.0-dev \
+                          clang-4.0 \
+                          git \
+                          python
+
+RUN git clone --depth=1 --single-branch -b llvm-4.0 https://github.com/obfuscator-llvm/obfuscator.git obfuscator-llvm
+
+COPY cpp_wrapper.py /bin
+RUN chmod +x /bin/cpp_wrapper.py
