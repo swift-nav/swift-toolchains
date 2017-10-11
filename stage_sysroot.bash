@@ -1,8 +1,10 @@
 #!/bin/bash
 
+set -x
+
 stage_sysroot() {
 
-  OUT=output/opt/llvm-obfuscator/sysroot
+  OUT=/opt/llvm-obfuscator/sysroot
 
   rm -rf "$OUT"
   mkdir -p "$OUT"
@@ -19,6 +21,11 @@ stage_sysroot() {
     mkdir -p "${OUT}/${SYSROOT_DIR}"
     rsync -azv "${SYSROOT_DIR}/" "${OUT}/${SYSROOT_DIR}/"
   done
+
+  WRAPPERS_BIN=/opt/llvm-obfuscator/wrappers/bin
+
+  mkdir -p $WRAPPERS_BIN
+  rsync -asv '--exclude=.*.sw?' /this_dir/bin/ $WRAPPERS_BIN/
 }
 
 run() {
