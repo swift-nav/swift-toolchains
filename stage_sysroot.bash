@@ -15,6 +15,7 @@ stage_sysroot() {
     "/usr/arm-linux-gnueabihf/include/c++/4.8.5"
     "/usr/lib/gcc-cross/arm-linux-gnueabihf/4.8"
     "/usr/arm-linux-gnueabihf/include/c++/4.8.5/arm-linux-gnueabihf"
+    "/usr/arm-linux-gnueabihf/bin"
   )
 
   for SYSROOT_DIR in ${SYSROOT_DIRS[@]}; do
@@ -26,6 +27,26 @@ stage_sysroot() {
 
   mkdir -p $WRAPPERS_BIN
   rsync -asv '--exclude=.*.sw?' /this_dir/bin/ $WRAPPERS_BIN/
+
+  BINTOOLS=(
+    /usr/bin/arm-linux-gnueabihf-ar
+    /usr/bin/arm-linux-gnueabihf-as
+    /usr/bin/arm-linux-gnueabihf-ld
+    /usr/bin/arm-linux-gnueabihf-ld.bfd
+    /usr/bin/arm-linux-gnueabihf-ld.gold
+    /usr/bin/arm-linux-gnueabihf-nm
+    /usr/bin/arm-linux-gnueabihf-objcopy
+    /usr/bin/arm-linux-gnueabihf-objdump
+    /usr/bin/arm-linux-gnueabihf-ranlib
+    /usr/bin/arm-linux-gnueabihf-readelf
+    /usr/bin/arm-linux-gnueabihf-strip
+  )
+
+  mkdir -p "${OUT}/usr/bin/"
+
+  for BINTOOL in ${BINTOOLS[@]}; do
+    cp -v ${BINTOOL} "${OUT}/usr/bin/"
+  done
 }
 
 run() {

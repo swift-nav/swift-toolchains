@@ -9,6 +9,7 @@ ${D}/bin/clang++ \
   -I ${R}/usr/arm-linux-gnueabihf/include/c++/4.8.5/ \
   -L ${R}/usr/lib/gcc-cross/arm-linux-gnueabihf/4.8/ \
   -I ${R}/usr/arm-linux-gnueabihf/include/c++/4.8.5/arm-linux-gnueabihf \
+  -fuse-ld=${R}/usr/arm-linux-gnueabihf/bin/ld \
   -ccc-gcc-name arm-linux-gnueabihf-gcc \
   --target=arm-linux-gnueabihf \
   -mfloat-abi=hard \

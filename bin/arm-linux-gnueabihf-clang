@@ -6,6 +6,7 @@ R=$D/sysroot
 ${D}/bin/clang \
   -I ${R}/usr/arm-linux-gnueabihf/include \
   -L ${R}/usr/arm-linux-gnueabi/libhf \
+  -fuse-ld=${R}/usr/arm-linux-gnueabihf/bin/ld \
   -ccc-gcc-name arm-linux-gnueabihf-gcc \
   --target=arm-linux-gnueabihf \
   -mfloat-abi=hard \
