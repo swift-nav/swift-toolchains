@@ -16,6 +16,7 @@ before_install:
 
 script:
  - ./build.bash
+ - PATH=/opt/llvm-obfuscator/bin:$PATH make -C example
 
 after_success:
  - tar -C output -czf llvm-obfuscated-arm.tgz .
