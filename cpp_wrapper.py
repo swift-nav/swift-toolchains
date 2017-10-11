@@ -3,7 +3,8 @@
 import os
 import sys
 
-cpp_path = "/usr/bin/arm-linux-gnueabihf-g++-4.8"
+#cpp_path = "/usr/bin/arm-linux-gnueabihf-g++-4.8"
+cpp_path = "/usr/bin/g++"
 
 new_argv = sys.argv[:]
 new_argv[0] = cpp_path
