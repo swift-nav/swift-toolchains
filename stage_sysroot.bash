@@ -10,12 +10,9 @@ stage_sysroot() {
   mkdir -p "$OUT"
 
   SYSROOT_DIRS=(
-    "/usr/arm-linux-gnueabihf/include"
-    "/usr/arm-linux-gnueabi/libhf"
-    "/usr/arm-linux-gnueabihf/include/c++/4.8.5"
+    "/usr/arm-linux-gnueabihf"
+    "/usr/arm-linux-gnueabi"
     "/usr/lib/gcc-cross/arm-linux-gnueabihf/4.8"
-    "/usr/arm-linux-gnueabihf/include/c++/4.8.5/arm-linux-gnueabihf"
-    "/usr/arm-linux-gnueabihf/bin"
   )
 
   for SYSROOT_DIR in ${SYSROOT_DIRS[@]}; do
@@ -46,6 +43,14 @@ stage_sysroot() {
 
   for BINTOOL in ${BINTOOLS[@]}; do
     cp -v ${BINTOOL} "${OUT}/usr/bin/"
+  done
+
+  D="${OUT}/usr/lib/x86_64-linux-gnu/"
+
+  mkdir -p "$D"
+
+  for ARMHF in /usr/lib/x86_64-linux-gnu/*armhf*; do
+    cp -v "${ARMHF}" "$D/"
   done
 }
 

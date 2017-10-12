@@ -1,12 +1,43 @@
 #!/bin/bash
 
-D=$( (cd `dirname $0`/../.. >/dev/null; pwd -P) )
-R=$D/sysroot
+if [[ "${LLVM_OBF_USE_BR_TOOLCHAIN}" ]]; then
+
+  T=${HOST_DIR}/opt/ext-toolchain
+  export LD_LIBRARY_PATH="${T}/lib/gcc/arm-linux-gnueabihf/6.2.1"
+
+  TOOLCHAIN_OPTS="\
+    --sysroot=${T}/arm-linux-gnueabihf/libc \
+    \
+    -fuse-ld=${T}/arm-linux-gnueabihf/bin/ld \
+    \
+    -B ${T}/lib/gcc/arm-linux-gnueabihf/6.2.1/ \
+    \
+    -L ${T}/lib/gcc/arm-linux-gnueabihf/6.2.1/ \
+    -L /piksi_buildroot/buildroot/host_output/host/opt/ext-toolchain/lib/gcc/i686-pc-linux-gnu/4.7.2"
+
+else
+
+  D=$( (cd `dirname $0`/../.. >/dev/null; pwd -P) )
+  R=$D/sysroot
+
+  export LD_LIBRARY_PATH="${R}/usr/lib/x86_64-linux-gnu"
+
+  TOOLCHAIN_OPTS="\
+    \
+    -fuse-ld=${R}/usr/arm-linux-gnueabihf/bin/ld \
+    --sysroot=${R} \
+    \
+    -B ${R}/usr/lib/gcc-cross/arm-linux-gnueabihf/4.8 \
+    \
+    -I ${R}/usr/arm-linux-gnueabihf/include \
+    \
+    -L ${R}/usr/arm-linux-gnueabi/libhf \
+    -L ${R}/usr/lib/gcc-cross/arm-linux-gnueabihf/4.8 \
+    -L ${R}/usr/lib/x86_64-linux-gnu"
+fi
 
 ${D}/bin/clang \
-  -I ${R}/usr/arm-linux-gnueabihf/include \
-  -L ${R}/usr/arm-linux-gnueabi/libhf \
-  -fuse-ld=${R}/usr/arm-linux-gnueabihf/bin/ld \
+  ${TOOLCHAIN_OPTS} \
   -ccc-gcc-name arm-linux-gnueabihf-gcc \
   --target=arm-linux-gnueabihf \
   -mfloat-abi=hard \
