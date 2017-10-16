@@ -1,0 +1,111 @@
+From 05c3ca6986ce1797b1d432f34abdf7790f258a9b Mon Sep 17 00:00:00 2001
+From: Jason Mobarak <jason@swiftnav.com>
+Date: Mon, 16 Oct 2017 14:55:35 -0700
+Subject: [PATCH 1/2] Port bcf bugfixes from
+ https://github.com/obfuscator-llvm/obfuscator/pull/76
+
+---
+ lib/Transforms/Obfuscation/BogusControlFlow.cpp | 14 +++++++++++---
+ lib/Transforms/Obfuscation/SplitBasicBlocks.cpp | 14 +++++++-------
+ 2 files changed, 18 insertions(+), 10 deletions(-)
+
+diff --git a/lib/Transforms/Obfuscation/BogusControlFlow.cpp b/lib/Transforms/Obfuscation/BogusControlFlow.cpp
+index 5060294..bcf7911 100644
+--- a/lib/Transforms/Obfuscation/BogusControlFlow.cpp
++++ b/lib/Transforms/Obfuscation/BogusControlFlow.cpp
+@@ -136,6 +136,14 @@ namespace {
+         errs()<<"BogusControlFlow application basic blocks percentage -bcf_prob=x must be 0 < x <= 100";
+ 		return false;
+       }
++      std::vector<BasicBlock *> orginalBBs;
++      // check for compatible
++      for (BasicBlock &bb : F.getBasicBlockList()) {
++          if (isa<InvokeInst>(bb.getTerminator())) {
++              return false;
++          }
++      }
++
+       // If fla annotations
+       if(toObfuscate(flag,&F,"bcf")) {
+         bogus(F);
+@@ -235,9 +243,9 @@ namespace {
+       // We do this way, so we don't have to adjust all the phi nodes, metadatas and so on
+       // for the first block. We have to let the phi nodes in the first part, because they
+       // actually are updated in the second part according to them.
+-      BasicBlock::iterator i1 = basicBlock->begin();
++      Instruction *i1 = &*basicBlock->begin();
+       if(basicBlock->getFirstNonPHIOrDbgOrLifetime())
+-        i1 = (BasicBlock::iterator)basicBlock->getFirstNonPHIOrDbgOrLifetime();
++        i1 = basicBlock->getFirstNonPHIOrDbgOrLifetime();
+       Twine *var;
+       var = new Twine("originalBB");
+       BasicBlock *originalBB = basicBlock->splitBasicBlock(i1, *var);
+@@ -326,7 +334,7 @@ namespace {
+         // Loop over the operands of the instruction
+         for(User::op_iterator opi = i->op_begin (), ope = i->op_end(); opi != ope; ++opi){
+           // get the value for the operand
+-          Value *v = MapValue(*opi, VMap,  RF_None, 0);
++          Value *v = MapValue(*opi, VMap,  RF_NoModuleLevelChanges, 0);
+           if (v != 0){
+             *opi = v;
+             DEBUG_WITH_TYPE("gen", errs() << "bcf: Value's operand has been setted\n");
+diff --git a/lib/Transforms/Obfuscation/SplitBasicBlocks.cpp b/lib/Transforms/Obfuscation/SplitBasicBlocks.cpp
+index 4f62596..7a462e1 100644
+--- a/lib/Transforms/Obfuscation/SplitBasicBlocks.cpp
++++ b/lib/Transforms/Obfuscation/SplitBasicBlocks.cpp
+@@ -54,9 +54,9 @@ Pass *llvm::createSplitBasicBlock(bool flag) {
+ 
+ bool SplitBasicBlock::runOnFunction(Function &F) {
+   // Check if the number of applications is correct
+-  if (!((SplitNum > 1) && (SplitNum <= 10))) {
+-    errs()<<"Split application basic block percentage\
+-            -split_num=x must be 1 < x <= 10";
++  if (!((SplitNum >= 1) && (SplitNum <= 10))) {
++    errs()<<"Split application basic block x times\
++            -split_num=x must be 1 <= x <= 10";
+     return false;
+   }
+ 
+@@ -73,7 +73,6 @@ bool SplitBasicBlock::runOnFunction(Function &F) {
+ 
+ void SplitBasicBlock::split(Function *f) {
+   std::vector<BasicBlock *> origBB;
+-  int splitN = SplitNum;
+ 
+   // Save all basic blocks
+   for (Function::iterator I = f->begin(), IE = f->end(); I != IE; ++I) {
+@@ -84,6 +83,7 @@ void SplitBasicBlock::split(Function *f) {
+                                            IE = origBB.end();
+        I != IE; ++I) {
+     BasicBlock *curr = *I;
++    int splitN = SplitNum;
+ 
+     // No need to split a 1 inst bb
+     // Or ones containing a PHI node
+@@ -92,7 +92,7 @@ void SplitBasicBlock::split(Function *f) {
+     }
+ 
+     // Check splitN and current BB size
+-    if ((size_t)splitN > curr->size()) {
++    if ((size_t)splitN >= curr->size()) {
+       splitN = curr->size() - 1;
+     }
+ 
+@@ -113,12 +113,12 @@ void SplitBasicBlock::split(Function *f) {
+     BasicBlock *toSplit = curr;
+     int last = 0;
+     for (int i = 0; i < splitN; ++i) {
++      if(toSplit->size() < 2)
++        continue;
+       for (int j = 0; j < test[i] - last; ++j) {
+         ++it;
+       }
+       last = test[i];
+-      if(toSplit->size() < 2)
+-        continue;
+       toSplit = toSplit->splitBasicBlock(it, toSplit->getName() + ".split");
+     }
+ 
+-- 
+2.7.4
+

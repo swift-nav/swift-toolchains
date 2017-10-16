@@ -22,8 +22,11 @@ CMAKE_COMMAND="\
         -DCMAKE_BUILD_TYPE=Release \
         -DLLVM_INCLUDE_TESTS=OFF"
 
+PATCH_COMMAND="git apply /patches/*.patch"
+
 docker run -i -t --rm \
     -v $PWD/build:/work/build \
     -v $PWD/output/opt:/opt \
+    -v $PWD/patches:/patches \
     arm-llvm-obf:base \
-    /bin/bash -c "cd /work/build && $CMAKE_COMMAND && ninja -v && ninja -v install"
+    /bin/bash -c "cd /work/obfuscator-llvm && $PATCH_COMMAND && cd /work/build && $CMAKE_COMMAND && ninja -v && ninja -v install"
