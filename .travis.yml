@@ -15,13 +15,11 @@ before_install:
  - ./base.bash
 
 script:
- - ./build.bash
- - ./stage_sysroot.bash
+ - ./build.bash --make-packages
  - ./build_example.bash
 
 after_success:
- - tar -C output -cJf llvm-obfuscator-arm.txz .
- - PRODUCT_VERSION=v1 ./publish.sh llvm-obfuscator-arm.txz
+ - ./publish.sh llvm-obfuscator-arm-x86.txz
 
 env:
   global:

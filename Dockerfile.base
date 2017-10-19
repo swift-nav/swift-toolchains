@@ -20,6 +20,8 @@ RUN   apt-get update \
                           libgcc1-armhf-cross \
                           libsfgcc1-armhf-cross \
                           libstdc++6-armhf-cross \
+                          binutils-dev \
+                          binutils-multiarch-dev \
                           python
 
 RUN git clone --depth=1 --single-branch -b llvm-4.0 https://github.com/obfuscator-llvm/obfuscator.git obfuscator-llvm
