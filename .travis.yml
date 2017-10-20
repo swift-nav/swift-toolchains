@@ -15,7 +15,7 @@ before_install:
  - ./base.bash
 
 script:
- - ./build.bash --make-packages
+ - ./build.bash
  - ./build_example.bash
 
 after_success:
