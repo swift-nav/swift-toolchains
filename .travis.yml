@@ -19,6 +19,7 @@ script:
  - ./build_example.bash
 
 after_success:
+ - tar -C output -cJf "llvm-obfuscator-arm-x86.txz" .
  - ./publish.sh llvm-obfuscator-arm-x86.txz
 
 env:

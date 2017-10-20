@@ -12,11 +12,6 @@ VERBOSE=
 
 while [[ $# -gt 0 ]]; do
   case $1 in
-    --make-packages)
-      echo "*** Making packages ***"
-      MAKE_PACKAGES=y
-      shift
-    ;;
     --verbose)
       VERBOSE="-v"
       shift
@@ -50,8 +45,4 @@ docker run -i -t --rm \
                   && ninja $VERBOSE \
                   && ninja $VERBOSE install"
 
-if [[ -n "$MAKE_PACKAGES" ]]; then
-
-  ./stage_sysroot.bash
-  tar -C output -cJf "llvm-obfuscator-arm-x86.txz" .
-fi
+./stage_sysroot.bash
