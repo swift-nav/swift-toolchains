@@ -13,7 +13,8 @@ if [[ "${LLVM_OBF_USE_BR_TOOLCHAIN}" ]]; then
     -B ${T}/lib/gcc/arm-linux-gnueabihf/6.2.1/ \
     \
     -L ${T}/lib/gcc/arm-linux-gnueabihf/6.2.1/ \
-    -L /piksi_buildroot/buildroot/host_output/host/opt/ext-toolchain/lib/gcc/i686-pc-linux-gnu/4.7.2"
+    -L /piksi_buildroot/buildroot/host_output/host/opt/ext-toolchain/lib/gcc/i686-pc-linux-gnu/4.7.2 \
+    -Wno-unused-command-line-argument"
 
 else
 
@@ -33,10 +34,11 @@ else
     \
     -L ${R}/usr/arm-linux-gnueabi/libhf \
     -L ${R}/usr/lib/gcc-cross/arm-linux-gnueabihf/4.8 \
-    -L ${R}/usr/lib/x86_64-linux-gnu"
+    -L ${R}/usr/lib/x86_64-linux-gnu \
+    -Wno-unused-command-line-argument"
 fi
 
-${D}/bin/clang \
+exec ${D}/bin/clang \
   ${TOOLCHAIN_OPTS} \
   -ccc-gcc-name arm-linux-gnueabihf-gcc \
   --target=arm-linux-gnueabihf \
