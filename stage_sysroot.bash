@@ -35,6 +35,9 @@ stage_sysroot() {
   mkdir -p $WRAPPERS_BIN
   rsync -asv '--exclude=.*.sw?' /this_dir/bin/ $WRAPPERS_BIN/
 
+  LICENSE=/opt/llvm-obfuscator/
+  cp -v /this_dir/LICENSE $LICENSE
+
   BINTOOLS=(
     /usr/bin/arm-linux-gnueabihf-ar
     /usr/bin/arm-linux-gnueabihf-as
