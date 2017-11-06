@@ -42,7 +42,7 @@ $(eval $(host-generic-package))
 ```
 
 To upgrade to a new release of the compiler, use the GitHub API to find the
-new artifact ID:
+new artifact ID (uses [jq](https://stedolan.github.io/jq/)):
 
 ```bash
 > export GITHUB_TOKEN=... # your GitHub auth token
@@ -56,7 +56,7 @@ new artifact ID:
 # Copyright Notice
 
 ```
-Copyright (C) 2016 Swift Navigation Inc.
+Copyright (C) 2017 Swift Navigation Inc.
 Contact: Swift Navigation <dev@swiftnav.com>
 
 This source is subject to the license found in the file 'LICENSE' which must
