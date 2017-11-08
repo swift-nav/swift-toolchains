@@ -12,6 +12,8 @@
 
 set -x
 
+DOCKER_NAMETAG=swiftnav/arm-llvm-obf:4.0
+
 stage_sysroot() {
 
   OUT=/opt/llvm-obfuscator/sysroot
@@ -77,7 +79,7 @@ run() {
       -v $PWD/output/opt:/opt \
       -v $PWD:/this_dir \
       -e DOCKERCEPTION=1 \
-      arm-llvm-obf:base \
+      $DOCKER_NAMETAG \
       /bin/bash -c ". /this_dir/stage_sysroot.bash; stage_sysroot"
 }
 

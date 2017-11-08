@@ -10,6 +10,8 @@
 # EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
 # WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
 
+DOCKER_NAMETAG=swiftnav/arm-llvm-obf:4.0
+
 mkdir -p build
 mkdir -p output/opt
 
@@ -19,5 +21,5 @@ docker run -i -t --rm \
     -v $PWD/output/opt:/opt \
     -v $PWD/bin:/wrapper-bin \
     -v $PWD/patches:/patches \
-    arm-llvm-obf:base \
+    $DOCKER_NAMETAG \
     /bin/bash -c "export PATH=/opt/llvm-obfuscator/bin:/wrapper-bin:\$PATH; exec /bin/bash"
