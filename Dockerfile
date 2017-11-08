@@ -38,3 +38,5 @@ RUN git clone --depth=1 --single-branch -b llvm-4.0 https://github.com/obfuscato
 
 COPY cpp_wrapper.py /bin
 RUN chmod +x /bin/cpp_wrapper.py
+
+# EOF
