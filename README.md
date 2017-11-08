@@ -1,4 +1,6 @@
-# Overview
+# Overview of llvm-obfuscator-arm
+
+[![Build Status](https://travis-ci.org/swift-nav/llvm-obfuscator-arm.svg?branch=master)](https://travis-ci.org/swift-nav/llvm-obfuscator-arm)
 
 Obfuscating compiler for ARM using https://github.com/obfuscator-llvm/obfuscator.
 
