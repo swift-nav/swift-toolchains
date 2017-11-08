@@ -13,7 +13,7 @@ FROM ubuntu:16.04
 RUN mkdir /work
 WORKDIR /work
 
-RUN   apt-get update \
+RUN    apt-get update \
     && apt-get install -y build-essential \
                           bison \
                           flex \

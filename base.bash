@@ -10,4 +10,9 @@
 # EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
 # WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
 
-docker build -f Dockerfile.base -t arm-llvm-obf:base .
+DOCKER_NAMETAG=swiftnav/arm-llvm-obf:4.0
+
+docker build -f Dockerfile -t $DOCKER_NAMETAG .
+
+docker login --username="$DOCKER_USER" --password="$DOCKER_PASS"
+docker push $DOCKER_NAMETAG

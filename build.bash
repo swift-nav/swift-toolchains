@@ -10,11 +10,12 @@
 # EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
 # WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
 
+DOCKER_NAMETAG=swiftnav/arm-llvm-obf:4.0
+
 set -x
 set -e
 
 mkdir -p build
-mkdir -p "build-x86"
 mkdir -p output/opt
 
 MAKE_PACKAGES=
@@ -26,6 +27,14 @@ while [[ $# -gt 0 ]]; do
       VERBOSE="-v"
       shift
     ;;
+    --arch=x86)
+      ARCH="X86"
+      shift
+    ;;
+    --arch=arm)
+      ARCH="ARM"
+      shift
+    ;;
   esac
 done
 
@@ -33,7 +42,7 @@ CMAKE_COMMAND="\
     cmake -G Ninja \
         /work/obfuscator-llvm \
         -DCMAKE_INSTALL_PREFIX=/opt/llvm-obfuscator \
-        -DLLVM_TARGETS_TO_BUILD=ARM\;X86 \
+        -DLLVM_TARGETS_TO_BUILD=$ARCH \
         -DCMAKE_CXX_FLAGS='-DENDIAN_LITTLE=1' \
         -DCMAKE_C_COMPILER=/usr/bin/gcc \
         -DCMAKE_CXX_COMPILER=/bin/cpp_wrapper.py \
@@ -47,7 +56,7 @@ docker run -i -t --rm \
     -v $PWD/build:/work/build \
     -v $PWD/output/opt:/opt \
     -v $PWD/patches:/patches \
-    arm-llvm-obf:base \
+    "$DOCKER_NAMETAG" \
     /bin/bash -c "cd /work/obfuscator-llvm \
                   && $PATCH_COMMAND \
                   && cd /work/build \

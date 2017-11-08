@@ -12,18 +12,18 @@ services:
 
 before_install:
  - pip install --user --upgrade awscli
- - ./base.bash
+ - apt-get install -y jq
 
 script:
- - ./build.bash
- - ./build_example.bash
+ - ./.travis.sh
 
 after_success:
- - tar -C output -cJf "llvm-obfuscator-arm-x86.txz" .
- - ./publish.sh llvm-obfuscator-arm-x86.txz
+ - travis_wait tar -C output -cJf "llvm-obfuscator-$ARCH.txz" .
+ - ./publish.sh llvm-obfuscator-$ARCH.txz
 
 env:
   global:
+    - DOCKER_USER=swiftnav
     # Secure keys below are encrypted with travis encrypt gem
     # Example encryption: travis encrypt AWS_SECRET_ACCESS_KEY=foo
     # See https://docs.travis-ci.com/user/encryption-keys/
@@ -33,3 +33,7 @@ env:
     - secure: "I025brJmSPMRp2oAvEYRB/xzqhVNYFJRoQnV8CjdV8uHYXOquHZGFyzLOCT1lRRGJ81geqa5uhWJ6e36sKd9kgk4IXW+DH5aPpOzv2B8p8dJKITIjUP7OpnIRghCsnb8JMFWqZUZ3YhmYShQY/eVByNneAyGLIYh6gsQyfqvoodf0t6ExlgNBLvJPWYfOz+dwpx+zE2HRim1+RRfdOYVMsvTmu5rrHTHn1fWqCbQCjarpvphNFTlgKU2mhxOhcSo4HR8xsYE6GbLc+ysufRLAqTOTMMPg9THiOdJqc1ZtXEvaw0StUeTEbIJlQSAV/lydRvQb1npJHFffoWy1ZdZEIjuX5ZkQkDvh/8TR6AJtGd4QUH3hEKsA5LhUrxgSZRCUMW5JyqWyiu7wC2Q9n2kpKUaDQKL6YfzKpzRa7txCf6YTIoUbzI9797UJUO6fgGgOQJzYhOUsFV23YyOsLete1bRuQkRKl3tmlv+KuoUlxxVtaO2kMWh33CHeE9z986pf1jsiMoHzk1D+tnGtL4lotFK2gQv7Ws9XlsBog0fNuh80kZ4P/hVQAM9TShesR+ebAPLckr334V8zjEdkiyz251fATYL5V7DY2iAZMA187ynz1HgZEopob0Gkz0kcrVI3JAvM8sxmXAEBDmoqysm3gAOQoFDgmjgdQtJW/1RrUE="
     # GITHUB_TOKEN
     - secure: "XnCmNEVc2qh1nvKNhEn4/yaeQNWGlAGH/7lSaKjK3LoJDeP4w1rCPs9jghpPes+9rUNEh4e3ekmKGUGIqJwRuzQPWM+zHza4WK4oXs43rd2hyfhRb2y+niLpTNc+RuiGtLobyc3IX3HaUeN6Bf9x9R49/3jxY/+lgYKhQ29Pw25CumQvQQjq6SYRyhndnrXeLQ4LWzSYEPpwYSQ5F7VEDs7FN3tX0IvfJlN+SiP+f8DHdMqoyPOBnDdEodt/erMcO7gm9inhZ6hWvGSJwi5nLd+SI2qlHFgRAFRugPe0kk2FBiBHpGYBPE7cJzKStJrQGQz7dVGgHwcgJrp5T9//HZtp2LH5iGNue+mdDeMtX5zShY+UhvXEX5/nnREHFz/9IFvz57MHqrEjjyxufOVHBnJM/5NVroKxgwUyxojSQZYxNKqzs046nVPHn5QWaseoeC1vxZ6XfxeMjv1Y/9L7OJfFgf4EFukhS/oPv/szrKBiKeBWTq36yQa2Fi+K/UNsE/IzD3RxftOSqz2Nev6fjl/t+keSFtJH/GWskmaKD+vuMkFSKeg8SXE+yZspkkFzAImCiQI5vWJhzzQK/qjoLonvrtwXObqXQU3JY7LfRZzNgNGXebWegw0DLFkAvoV8FxLCHhC+50eK5bob8UM0z7I02cibacim7iKmaP0G4W8="
+    - secure: "hhoYAlpElWzp9zzPmofdGYk5mNn/L0SdT+x7L040MFk+8VKKtRbJId4LlRSNfIA+zxgylL56/Jnth10aR7yq9fOhoN0oXvZeIAycz4TnXsPlCFmk8h3gBTYpYhcQ0Hy/tFe4XTOjjZuLIRZZQPuR93VEL/r3iHk6RYkj6f2jy6WpwKFAia7/3ng1zDR5Ixa9T7SwIKUu6l2PIqBml7irT2x0RJxoPhh6/8ol8XqLHdRohGLksAfC5GDBp3WqmvYaBp3TkBzDhfG4lIxghBcHK0a02EYiC0EdPkpaa9IBtn5KcjPgtPwdY6Gq/Yx77fmrufxUoY1IK+nfrIlyAptzSUWssJuKzdXSPUMAtPyN3jm2L0wMgLwpcHwhzCUelDlPdvUM6GM+Jt+MK6H4QE79uQTC7lO7wtpNqnWqkFmqlhN8+/K93sjXtgqEm/aIUGp4WXGbCK5pKcq4Fd0j6LK5ytHAxP3HqobfxfQafeyDlP8c9/heQw8DHRK1Vgm/LO7uCi1i/GIadCf2OCSnT517mTUjTeg+N8q7x5tvD+pWcaijOlYeHgypoa2KveBsOZnLqOpYMYAnbk7Zq8BBJAv1dds+XFZYYGsV8fsr/TXuv4pKg3vj4MXhxsTWpvoTA7JEu1fCSqIjNcluvumpGlHRXLU/SchB/WTXwCEiAadrqcs="
+  matrix:
+    - ARCH=x86
+    - ARCH=arm
