@@ -11,4 +11,7 @@ if echo $file_names | grep -q "Dockerfile"; then
 fi
 
 ./build.bash --arch=$ARCH
-[[ $ARCH = arm ]] && ./build_example.bash
+
+if [[ $ARCH = arm ]] then;
+  ./build_example.bash
+fi
