@@ -14,14 +14,11 @@ var below is important, you'll need to interact with the GitHub API to find it
 when upgrading to a new release):
 
 ```make
-HOST_LLVM_OBFUSCATOR_VERSION = v4
-HOST_LLVM_OBFUSCATOR_SOURCE = 5086675
+HOST_LLVM_OBFUSCATOR_VERSION = v7
+HOST_LLVM_OBFUSCATOR_SOURCE = $(HOST_LLVM_OBFUSCATOR_VERSION)/llvm-obfuscator-arm-x86.txz
+HOST_LLVM_OBFUSCATOR_SITE = https://github.com/swift-nav/llvm-obfuscator-arm/releases/download/
+HOST_LLVM_OBFUSCATOR_ACTUAL_SOURCE_TARBALL = llvm-obfuscator-$(HOST_LLVM_OBFUSCATOR_VERSION).tar.xz
 
-HOST_LLVM_OBFUSCATOR_SITE = https://$(GITHUB_TOKEN):@api.github.com/repos/swift-nav/llvm-obfuscator-arm/releases/assets
-HOST_LLVM_OBFUSCATOR_METHOD = wget
-HOST_LLVM_OBFUSCATOR_DL_OPTS = --auth-no-challenge --header='Accept:application/octet-stream'
-
-HOST_LLVM_OBFUSCATOR_ACTUAL_SOURCE_TARBALL = llvm-obfuscator-arm-$(HOST_LLVM_OBFUSCATOR_VERSION).tar.xz
 HOST_LLVM_OBFUSCATOR_DEPENDENCIES = host-xz
 
 define HOST_LLVM_OBFUSCATOR_PRE_EXTRACT_FIXUP
