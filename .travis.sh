@@ -12,6 +12,6 @@ fi
 
 ./build.bash --arch=$ARCH
 
-if [[ $ARCH = arm ]] then;
+if [[ $ARCH = arm ]]; then
   ./build_example.bash
 fi
