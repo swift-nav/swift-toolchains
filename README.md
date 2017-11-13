@@ -52,7 +52,7 @@ new artifact ID (uses [jq](https://stedolan.github.io/jq/)):
 "v4"
 ```
 
-# Copyright Notice
+# Copyright
 
 ```
 Copyright (C) 2017 Swift Navigation Inc.
