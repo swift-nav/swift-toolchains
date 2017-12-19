@@ -8,12 +8,17 @@
 # EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
 # WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
 
-FROM ubuntu:16.04
+FROM ubuntu:14.04
 
 RUN mkdir /work
 WORKDIR /work
 
 RUN    apt-get update \
+    && apt-get install -y wget \
+    && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - \
+    && echo "deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-4.0 main" \
+          >/etc/apt/sources.list.d/llvm40.list \
+    && apt-get update \
     && apt-get install -y build-essential \
                           bison \
                           flex \

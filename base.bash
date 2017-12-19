@@ -10,7 +10,24 @@
 # EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
 # WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
 
-DOCKER_NAMETAG=swiftnav/arm-llvm-obf:4.0
+set -euo pipefail
+IFS=$'\n\t'
+
+D=$( (cd "$(dirname "$0")" || exit 1 >/dev/null; pwd -P) )
+
+[[ -z "${DOCKER_USER:-}" ]] && {
+  echo "DOCKER_USER: must not be empty"
+  exit 1
+}
+
+[[ -z "${DOCKER_PASS:-}" ]] && {
+  echo "DOCKER_USER: must not be empty"
+  exit 1
+}
+
+set -x
+
+DOCKER_NAMETAG=$(cat docker_nametag)
 
 docker build -f Dockerfile -t $DOCKER_NAMETAG .
 

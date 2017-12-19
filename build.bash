@@ -10,10 +10,12 @@
 # EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
 # WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
 
-DOCKER_NAMETAG=swiftnav/arm-llvm-obf:4.0
+set -euo pipefail
+IFS=$'\n\t'
 
-set -x
-set -e
+D=$( (cd "$(dirname "$0")" || exit 1 >/dev/null; pwd -P) )
+
+DOCKER_NAMETAG=$(cat docker_nametag)
 
 mkdir -p build
 mkdir -p output/opt
@@ -23,20 +25,29 @@ VERBOSE=
 
 while [[ $# -gt 0 ]]; do
   case $1 in
-    --verbose)
-      VERBOSE="-v"
-      shift
-    ;;
-    --arch=x86)
-      ARCH="X86"
-      shift
-    ;;
-    --arch=arm)
-      ARCH="ARM"
-      shift
-    ;;
+  --verbose)
+  VERBOSE="-v"
+  shift
+  ;;
+
+  --arch=x86)
+  ARCH="X86"
+  shift
+  ;;
+
+  --arch=arm)
+  ARCH="ARM"
+  shift
+  ;;
   esac
 done
+
+if [[ -z "${ARCH:-}" ]]; then
+  echo "Error: must specify --arch=<arm|x86>"
+  exit 1
+fi
+
+set -x
 
 CMAKE_COMMAND="\
     cmake -G Ninja \
