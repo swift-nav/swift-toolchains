@@ -68,7 +68,10 @@ docker run -i -t --rm \
     -v $PWD/output/opt:/opt \
     -v $PWD/patches:/patches \
     "$DOCKER_NAMETAG" \
-    /bin/bash -c "cd /work/obfuscator-llvm \
+    /bin/bash -c "git clone --depth=1 --single-branch -b llvm-4.0 \
+                    https://github.com/obfuscator-llvm/obfuscator.git \
+                    obfuscator-llvm \
+                  && cd /work/obfuscator-llvm \
                   && $PATCH_COMMAND \
                   && cd /work/build \
                   && $CMAKE_COMMAND \

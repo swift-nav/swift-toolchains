@@ -25,11 +25,11 @@ D=$( (cd "$(dirname "$0")" || exit 1 >/dev/null; pwd -P) )
   exit 1
 }
 
-set -x
-
 DOCKER_NAMETAG=$(cat docker_nametag)
 
-docker build -f Dockerfile -t $DOCKER_NAMETAG .
+docker build \
+  --force-rm --no-cache \
+  -f Dockerfile -t $DOCKER_NAMETAG .
 
-docker login --username="$DOCKER_USER" --password="$DOCKER_PASS"
+echo "$DOCKER_PASS" | docker login --username="$DOCKER_USER" --password-stdin
 docker push $DOCKER_NAMETAG
