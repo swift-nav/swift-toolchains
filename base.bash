@@ -15,13 +15,13 @@ IFS=$'\n\t'
 
 D=$( (cd "$(dirname "$0")" || exit 1 >/dev/null; pwd -P) )
 
-[[ -z "${DOCKER_USER:-}" ]] && {
+[[ -n "${DOCKER_USER:-}" ]] || {
   echo "DOCKER_USER: must not be empty"
   exit 1
 }
 
-[[ -z "${DOCKER_PASS:-}" ]] && {
-  echo "DOCKER_USER: must not be empty"
+[[ -n "${DOCKER_PASS:-}" ]] || {
+  echo "DOCKER_PASS: must not be empty"
   exit 1
 }
 
