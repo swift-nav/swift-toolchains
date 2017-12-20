@@ -25,7 +25,7 @@ BUILD_PID=$!
 (
   while `true`; do
     echo '...'
-    sleep 1
+    sleep 10
   done
 )&
 TICKER_PID=$!
