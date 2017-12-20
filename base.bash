@@ -13,7 +13,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-[[ -z "$DEBUG" ]] || set -x
+[[ -z "${DEBUG:-}" ]] || set -x
 
 D=$( (cd "$(dirname "$0")" || exit 1 >/dev/null; pwd -P) )
 

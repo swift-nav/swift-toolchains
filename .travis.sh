@@ -10,8 +10,7 @@ else
 fi
 
 if echo $file_names | grep -q "Dockerfile"; then
-
-	./base.bash 2>&1 | tee /tmp/base.bash.log
+  ./base.bash 2>&1 | tee /tmp/base.bash.log
 fi
 
 ./build.bash --arch=$ARCH &>/tmp/build.bash.log &
