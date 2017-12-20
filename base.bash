@@ -13,6 +13,8 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+[[ -z "$DEBUG" ]] || set -x
+
 D=$( (cd "$(dirname "$0")" || exit 1 >/dev/null; pwd -P) )
 
 [[ -n "${DOCKER_USER:-}" ]] || {
@@ -26,6 +28,30 @@ D=$( (cd "$(dirname "$0")" || exit 1 >/dev/null; pwd -P) )
 }
 
 DOCKER_NAMETAG=$(cat docker_nametag)
+
+query_build_pushed() {
+
+  local repo_tag=$1; shift
+
+  repo_tag=${repo_tag##*:}
+
+  TOKEN=$(curl -s -H "Content-Type: application/json" \
+    -X POST -d '{"username": "'${DOCKER_USER}'", "password": "'${DOCKER_PASS}'"}' \
+    https://hub.docker.com/v2/users/login/ | jq -r .token)
+
+  ORG=swiftnav
+  REPO=arm-llvm-obf
+
+  curl -s -H "Authorization: JWT ${TOKEN}" \
+    https://hub.docker.com/v2/repositories/${ORG}/${REPO}/tags/?page_size=100 \
+    | jq '.results | .[] | .name' \
+    | grep $repo_tag
+}
+
+if [[ -n "$(query_build_pushed "$DOCKER_NAMETAG")" ]]; then
+  echo "Build already pushed, exiting..."
+  exit 0
+fi
 
 docker build \
   --force-rm --no-cache \

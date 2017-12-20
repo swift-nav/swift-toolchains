@@ -21,6 +21,14 @@ after_success:
  - travis_wait tar -C output -cJf "llvm-obfuscator-$ARCH.txz" .
  - ./publish.sh llvm-obfuscator-$ARCH.txz
 
+after_failure:
+ - if [[ -e /tmp/base.bash.log ]]; then echo "*** base.bash.log ***"; fi
+ - if [[ -e /tmp/base.bash.log ]]; then tail -n 500 /tmp/base.bash.log; fi
+ - if [[ -e /tmp/build.bash.log ]]; then echo "*** build.bash.log ***"; fi
+ - if [[ -e /tmp/build.bash.log ]]; then tail -n 500 /tmp/build.bash.log; fi
+ - if [[ -e /tmp/build_example.bash.log ]]; then echo "*** build_example.bash.log ***"; fi
+ - if [[ -e /tmp/build_example.bash.log ]]; then tail -n 500 /tmp/build_example.bash.log; fi
+
 env:
   global:
     - DOCKER_USER=swiftnav
