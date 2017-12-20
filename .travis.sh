@@ -10,10 +10,23 @@ else
 fi
 
 if echo $file_names | grep -q "Dockerfile"; then
-	./base.bash &>/tmp/base.bash.log
+
+	./base.bash 2>&1 | tee /tmp/base.bash.log
 fi
 
-./build.bash --arch=$ARCH &>/tmp/build.bash.log
+./build.bash --arch=$ARCH &>/tmp/build.bash.log &
+BUILD_PID=$!
+
+(
+  while `true`; do
+    echo '...'
+    sleep 1
+  done
+)&
+TICKER_PID=$!
+
+wait $BUILD_PID
+kill $TICKER_PID
 
 if [[ $ARCH = arm ]]; then
   ./build_example.bash &>/tmp/build_example.bash.log
