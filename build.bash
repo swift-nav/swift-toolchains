@@ -76,10 +76,15 @@ docker run $INTERACTIVE --rm \
     -v $PWD/build:/work/build \
     -v $PWD/output/opt:/opt \
     -v $PWD/patches:/patches \
+    -v obfuscator-llvm:/work/obfuscator-llvm \
     "$DOCKER_NAMETAG" \
-    /bin/bash -c "git clone --depth=1 --single-branch -b llvm-4.0 \
-                    https://github.com/obfuscator-llvm/obfuscator.git \
-                    obfuscator-llvm \
+    /bin/bash -c "if [ ! -d /work/obfuscator-llvm/.git ]; then \
+                      git clone --depth=1 --single-branch -b llvm-4.0 \
+                        https://github.com/obfuscator-llvm/obfuscator.git \
+                        obfuscator-llvm;
+                  else \
+                    (cd /work/obfuscator-llvm && git pull); \
+                  fi \
                   && cd /work/obfuscator-llvm \
                   && $PATCH_COMMAND \
                   && cd /work/build \
