@@ -22,6 +22,7 @@ mkdir -p output/opt
 
 MAKE_PACKAGES=
 VERBOSE=
+NO_TTY=
 
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -29,14 +30,16 @@ while [[ $# -gt 0 ]]; do
   VERBOSE="-v"
   shift
   ;;
-
   --arch=x86)
   ARCH="X86"
   shift
   ;;
-
   --arch=arm)
   ARCH="ARM"
+  shift
+  ;;
+  --no-tty)
+  NO_TTY=y
   shift
   ;;
   esac
@@ -63,7 +66,13 @@ CMAKE_COMMAND="\
 
 PATCH_COMMAND="git apply /patches/*.patch"
 
-docker run -i -t --rm \
+if [[ -z "$NO_TTY" ]]; then
+  INTERACTIVE="-i -t"
+else
+  INTERACTIVE=
+fi
+
+docker run $INTERACTIVE --rm \
     -v $PWD/build:/work/build \
     -v $PWD/output/opt:/opt \
     -v $PWD/patches:/patches \

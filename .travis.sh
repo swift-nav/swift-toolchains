@@ -19,7 +19,7 @@ echo 'DONE running ./base.bash'
 
 echo 'Running ./build.bash ...'
 
-./build.bash --arch=$ARCH &>/tmp/build.bash.log &
+./build.bash --arch=$ARCH --no-tty &>/tmp/build.bash.log &
 BUILD_PID=$!
 
 (
@@ -38,7 +38,7 @@ echo 'DONE running ./build.bash'
 if [[ $ARCH = arm ]]; then
 
   echo 'Running ./build_example.bash ...'
-  ./build_example.bash &>/tmp/build_example.bash.log
+  ./build_example.bash --no-tty &>/tmp/build_example.bash.log
 
 echo 'DONE running ./build_build.bash'
 fi

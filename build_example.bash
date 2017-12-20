@@ -15,7 +15,24 @@ DOCKER_NAMETAG=swiftnav/arm-llvm-obf:4.0
 mkdir -p build
 mkdir -p output/opt
 
-docker run -i -t --rm \
+NO_TTY=
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+  --no-tty)
+  NO_TTY=y
+  shift
+  ;;
+  esac
+done
+
+if [[ -z "$NO_TTY" ]]; then
+  INTERACTIVE="-i -t"
+else
+  INTERACTIVE=
+fi
+
+docker run $INTERACTIVE --rm \
     -v $PWD/example:/work/example \
     -v $PWD/build:/work/build \
     -v $PWD/output/opt:/opt \
