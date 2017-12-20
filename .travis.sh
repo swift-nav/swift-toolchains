@@ -40,5 +40,5 @@ if [[ $ARCH = arm ]]; then
   echo 'Running ./build_example.bash ...'
   ./build_example.bash --no-tty &>/tmp/build_example.bash.log
 
-echo 'DONE running ./build_build.bash'
+  echo 'DONE running ./build_build.bash'
 fi

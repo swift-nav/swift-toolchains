@@ -39,7 +39,7 @@ while [[ $# -gt 0 ]]; do
   shift
   ;;
   --no-tty)
-  NO_TTY=y
+  NO_TTY=--no-tty
   shift
   ;;
   esac
@@ -64,19 +64,19 @@ CMAKE_COMMAND="\
         -DLLVM_BINUTILS_INCDIR=/usr/include \
         -DLLVM_INCLUDE_TESTS=OFF"
 
-PATCH_COMMAND="git apply /patches/*.patch"
+PATCH_COMMAND="{ git apply /patches/*.patch || : ; }"
 
 if [[ -z "$NO_TTY" ]]; then
-  INTERACTIVE="-i -t"
+  INTERACTIVE=("-i" "-t")
 else
-  INTERACTIVE=
+  INTERACTIVE=()
 fi
 
 docker run $INTERACTIVE --rm \
-    -v $PWD/build:/work/build \
     -v $PWD/output/opt:/opt \
     -v $PWD/patches:/patches \
     -v obfuscator-llvm:/work/obfuscator-llvm \
+    -v obfuscator-llvm-build:/work/build \
     "$DOCKER_NAMETAG" \
     /bin/bash -c "if [ ! -d /work/obfuscator-llvm/.git ]; then \
                       git clone --depth=1 --single-branch -b llvm-4.0 \
@@ -92,4 +92,4 @@ docker run $INTERACTIVE --rm \
                   && ninja $VERBOSE \
                   && ninja $VERBOSE install"
 
-./stage_sysroot.bash
+./stage_sysroot.bash $NO_TTY
