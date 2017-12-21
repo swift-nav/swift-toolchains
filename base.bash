@@ -10,9 +10,50 @@
 # EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
 # WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
 
-DOCKER_NAMETAG=swiftnav/arm-llvm-obf:4.0
+set -euo pipefail
+IFS=$'\n\t'
 
-docker build -f Dockerfile -t $DOCKER_NAMETAG .
+[[ -z "${DEBUG:-}" ]] || set -x
 
-docker login --username="$DOCKER_USER" --password="$DOCKER_PASS"
-docker push $DOCKER_NAMETAG
+[[ -n "${DOCKER_USER:-}" ]] || {
+  echo "DOCKER_USER: must not be empty"
+  exit 1
+}
+
+[[ -n "${DOCKER_PASS:-}" ]] || {
+  echo "DOCKER_PASS: must not be empty"
+  exit 1
+}
+
+DOCKER_NAMETAG=$(cat docker_nametag)
+
+query_build_pushed() {
+
+  local repo_tag=$1; shift
+
+  repo_tag=${repo_tag##*:}
+
+  TOKEN=$(curl -s -H "Content-Type: application/json" \
+    -X POST -d '{"username": "'"${DOCKER_USER}"'", "password": "'"${DOCKER_PASS}"'"}' \
+    https://hub.docker.com/v2/users/login/ | jq -r .token)
+
+  ORG=swiftnav
+  REPO=arm-llvm-obf
+
+  curl -s -H "Authorization: JWT ${TOKEN}" \
+    https://hub.docker.com/v2/repositories/${ORG}/${REPO}/tags/?page_size=100 \
+    | jq '.results | .[] | .name' \
+    | grep "$repo_tag"
+}
+
+if [[ -n "$(query_build_pushed "$DOCKER_NAMETAG")" ]]; then
+  echo "Build already pushed, exiting..."
+  exit 0
+fi
+
+docker build \
+  --force-rm --no-cache \
+  -f Dockerfile -t "$DOCKER_NAMETAG" .
+
+echo "$DOCKER_PASS" | docker login --username="$DOCKER_USER" --password-stdin
+docker push "$DOCKER_NAMETAG"

@@ -10,33 +10,44 @@
 # EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
 # WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
 
-DOCKER_NAMETAG=swiftnav/arm-llvm-obf:4.0
+set -euo pipefail
+IFS=$'\n\t'
 
-set -x
-set -e
+DOCKER_NAMETAG=$(cat docker_nametag)
 
-mkdir -p build
 mkdir -p output/opt
 
-MAKE_PACKAGES=
 VERBOSE=
+NO_TTY=
 
 while [[ $# -gt 0 ]]; do
   case $1 in
-    --verbose)
-      VERBOSE="-v"
-      shift
-    ;;
-    --arch=x86)
-      ARCH="X86"
-      shift
-    ;;
-    --arch=arm)
-      ARCH="ARM"
-      shift
-    ;;
+  --verbose)
+  VERBOSE="-v"
+  shift
+  ;;
+  --arch=x86)
+  ARCH="X86"
+  shift
+  ;;
+  --arch=arm)
+  ARCH="ARM"
+  shift
+  ;;
+  --no-tty)
+  NO_TTY=--no-tty
+  shift
+  ;;
+  *) shift ;;
   esac
 done
+
+if [[ -z "${ARCH:-}" ]]; then
+  echo "Error: must specify --arch=<arm|x86>"
+  exit 1
+fi
+
+set -x
 
 CMAKE_COMMAND="\
     cmake -G Ninja \
@@ -50,18 +61,33 @@ CMAKE_COMMAND="\
         -DLLVM_BINUTILS_INCDIR=/usr/include \
         -DLLVM_INCLUDE_TESTS=OFF"
 
-PATCH_COMMAND="git apply /patches/*.patch"
+PATCH_COMMAND="{ git apply /patches/*.patch || : ; }"
 
-docker run -i -t --rm \
-    -v $PWD/build:/work/build \
-    -v $PWD/output/opt:/opt \
-    -v $PWD/patches:/patches \
+if [[ -z "$NO_TTY" ]]; then
+  INTERACTIVE=("-i" "-t")
+else
+  INTERACTIVE=()
+fi
+
+# shellcheck disable=SC2068
+docker run ${INTERACTIVE[@]:-} --rm \
+    -v "$PWD/output/opt:/opt" \
+    -v "$PWD/patches:/patches" \
+    -v obfuscator-llvm:/work/obfuscator-llvm \
+    -v obfuscator-llvm-build:/work/build \
     "$DOCKER_NAMETAG" \
-    /bin/bash -c "cd /work/obfuscator-llvm \
+    /bin/bash -c "if [ ! -d /work/obfuscator-llvm/.git ]; then \
+                      git clone --depth=1 --single-branch -b llvm-4.0 \
+                        https://github.com/obfuscator-llvm/obfuscator.git \
+                        obfuscator-llvm;
+                  else \
+                    (cd /work/obfuscator-llvm && git pull); \
+                  fi \
+                  && cd /work/obfuscator-llvm \
                   && $PATCH_COMMAND \
                   && cd /work/build \
                   && $CMAKE_COMMAND \
                   && ninja $VERBOSE \
                   && ninja $VERBOSE install"
 
-./stage_sysroot.bash
+./stage_sysroot.bash $NO_TTY

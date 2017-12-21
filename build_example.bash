@@ -10,15 +10,37 @@
 # EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
 # WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
 
-DOCKER_NAMETAG=swiftnav/arm-llvm-obf:4.0
+set -euo pipefail
+IFS=$'\n\t'
 
-mkdir -p build
+DOCKER_NAMETAG=$(cat docker_nametag)
+
 mkdir -p output/opt
 
-docker run -i -t --rm \
-    -v $PWD/example:/work/example \
-    -v $PWD/build:/work/build \
-    -v $PWD/output/opt:/opt \
-    $DOCKER_NAMETAG \
+NO_TTY=
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+  --no-tty)
+  NO_TTY=y
+  shift
+  ;;
+  *) shift ;;
+  esac
+done
+
+if [[ -z "$NO_TTY" ]]; then
+  INTERACTIVE=("-i" "-t")
+else
+  INTERACTIVE=()
+fi
+
+# shellcheck disable=SC2068
+docker run ${INTERACTIVE[@]:-} --rm \
+    -v "$PWD/example:/work/example" \
+    -v "$PWD/output/opt:/opt" \
+    -v obfuscator-llvm:/work/obfuscator-llvm \
+    -v obfuscator-llvm-build:/work/build \
+    "$DOCKER_NAMETAG" \
     /bin/bash -c "export PATH=/opt/llvm-obfuscator/bin:/opt/llvm-obfuscator/wrappers/bin:\$PATH; \
                   make -C example"

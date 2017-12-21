@@ -34,7 +34,7 @@ else
   D=$( (cd `dirname $0`/../.. >/dev/null; pwd -P) )
   R=$D/sysroot
 
-  export LD_LIBRARY_PATH="${R}/usr/lib/x86_64-linux-gnu"
+  export LD_LIBRARY_PATH="${R}/usr/lib/x86_64-linux-gnu:${R}/usr/x86_64-linux-gnu/arm-linux-gnueabihf"
 
   TOOLCHAIN_OPTS="\
     \
@@ -44,8 +44,8 @@ else
     -B ${R}/usr/lib/gcc-cross/arm-linux-gnueabihf/4.8 \
     \
     -I ${R}/usr/arm-linux-gnueabihf/include \
-    -I ${R}/usr/arm-linux-gnueabihf/include/c++/4.8.5 \
-    -I ${R}/usr/arm-linux-gnueabihf/include/c++/4.8.5/arm-linux-gnueabihf \
+    -I ${R}/usr/arm-linux-gnueabihf/include/c++/4.8.4 \
+    -I ${R}/usr/arm-linux-gnueabihf/include/c++/4.8.4/arm-linux-gnueabihf \
     \
     -L ${R}/usr/arm-linux-gnueabi/libhf \
     -L ${R}/usr/lib/gcc-cross/arm-linux-gnueabihf/4.8 \
