@@ -34,13 +34,13 @@ if [[ ! -z "$PRODUCT_TYPE" ]]; then
     BUILD_PATH="$BUILD_PATH/$PRODUCT_TYPE"
 fi
 
-echo "Uploading $@ to $BUILD_PATH"
+echo "Uploading $* to $BUILD_PATH"
 echo "Publish PULL_REQUEST ($TRAVIS_PULL_REQUEST)"
 echo "Publish BRANCH ($TRAVIS_BRANCH)"
 echo "Publish TAG ($TRAVIS_TAG)"
 
 for file in "$@"; do
-    KEY="$BUILD_PATH/$(basename $file)"
+    KEY="$BUILD_PATH/$(basename "$file")"
     if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
         if [[ "$TRAVIS_BRANCH" == master || "$TRAVIS_TAG" == v* || "$TRAVIS_BRANCH" == v*-release ]]; then
             OBJECT="s3://$BUCKET/$KEY"

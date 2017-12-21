@@ -20,8 +20,11 @@ set -x
 if [[ -z "${DOCKERCEPTION:-}" ]]; then
 
   ## Init vars
-  export DOCKER_NAMETAG=$(cat docker_nametag)
-  export INTERACTIVE=("-i" "-t")
+  export DOCKER_NAMETAG
+  DOCKER_NAMETAG=$(cat docker_nametag)
+
+  export INTERACTIVE
+  INTERACTIVE=("-i" "-t")
 
   while [[ $# -gt 0 ]]; do
     case $1 in
@@ -47,7 +50,7 @@ stage_sysroot() {
     "/usr/x86_64-linux-gnu/arm-linux-gnueabihf/"
   )
 
-  for SYSROOT_DIR in ${SYSROOT_DIRS[@]}; do
+  for SYSROOT_DIR in "${SYSROOT_DIRS[@]}"; do
     mkdir -p "${OUT}/${SYSROOT_DIR}"
     rsync -azv "${SYSROOT_DIR}/" "${OUT}/${SYSROOT_DIR}/"
   done
@@ -76,8 +79,8 @@ stage_sysroot() {
 
   mkdir -p "${OUT}/usr/bin/"
 
-  for BINTOOL in ${BINTOOLS[@]}; do
-    cp -v ${BINTOOL} "${OUT}/usr/bin/"
+  for BINTOOL in "${BINTOOLS[@]}"; do
+    cp -v "$BINTOOL" "${OUT}/usr/bin/"
   done
 
 ####
@@ -96,14 +99,15 @@ run() {
 
   if [[ -n "${DOCKERCEPTION:-}" ]]; then return; fi
 
-  docker run $INTERACTIVE --rm \
-      -v $PWD/example:/work/example \
-      -v $PWD/output/opt:/opt \
-      -v $PWD:/this_dir \
+  # shellcheck disable=SC2068
+  docker run ${INTERACTIVE[@]:-} --rm \
+      -v "$PWD/example:/work/example" \
+      -v "$PWD/output/opt:/opt" \
+      -v "$PWD:/this_dir" \
       -v obfuscator-llvm:/work/obfuscator-llvm \
       -v obfuscator-llvm-build:/work/build \
       -e DOCKERCEPTION=1 \
-      $DOCKER_NAMETAG \
+      "$DOCKER_NAMETAG" \
       /bin/bash -c ". /this_dir/stage_sysroot.bash; stage_sysroot"
 }
 

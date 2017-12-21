@@ -15,8 +15,6 @@ IFS=$'\n\t'
 
 [[ -z "${DEBUG:-}" ]] || set -x
 
-D=$( (cd "$(dirname "$0")" || exit 1 >/dev/null; pwd -P) )
-
 [[ -n "${DOCKER_USER:-}" ]] || {
   echo "DOCKER_USER: must not be empty"
   exit 1
@@ -36,7 +34,7 @@ query_build_pushed() {
   repo_tag=${repo_tag##*:}
 
   TOKEN=$(curl -s -H "Content-Type: application/json" \
-    -X POST -d '{"username": "'${DOCKER_USER}'", "password": "'${DOCKER_PASS}'"}' \
+    -X POST -d '{"username": "'"${DOCKER_USER}"'", "password": "'"${DOCKER_PASS}"'"}' \
     https://hub.docker.com/v2/users/login/ | jq -r .token)
 
   ORG=swiftnav
@@ -45,7 +43,7 @@ query_build_pushed() {
   curl -s -H "Authorization: JWT ${TOKEN}" \
     https://hub.docker.com/v2/repositories/${ORG}/${REPO}/tags/?page_size=100 \
     | jq '.results | .[] | .name' \
-    | grep $repo_tag
+    | grep "$repo_tag"
 }
 
 if [[ -n "$(query_build_pushed "$DOCKER_NAMETAG")" ]]; then
@@ -55,7 +53,7 @@ fi
 
 docker build \
   --force-rm --no-cache \
-  -f Dockerfile -t $DOCKER_NAMETAG .
+  -f Dockerfile -t "$DOCKER_NAMETAG" .
 
 echo "$DOCKER_PASS" | docker login --username="$DOCKER_USER" --password-stdin
-docker push $DOCKER_NAMETAG
+docker push "$DOCKER_NAMETAG"

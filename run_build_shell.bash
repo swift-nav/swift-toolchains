@@ -13,18 +13,16 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-D=$( (cd "$(dirname "$0")" || exit 1 >/dev/null; pwd -P) )
-
 DOCKER_NAMETAG=$(cat docker_nametag)
 
 mkdir -p output/opt
 
 docker run -i -t --rm \
-    -v $PWD/example:/work/example \
-    -v $PWD/output/opt:/opt \
-    -v $PWD/bin:/wrapper-bin \
-    -v $PWD/patches:/patches \
+    -v "$PWD/example:/work/example" \
+    -v "$PWD/output/opt:/opt" \
+    -v "$PWD/bin:/wrapper-bin" \
+    -v "$PWD/patches:/patches" \
     -v obfuscator-llvm:/work/obfuscator-llvm \
     -v obfuscator-llvm-build:/work/build \
-    $DOCKER_NAMETAG \
+    "$DOCKER_NAMETAG" \
     /bin/bash -c "export PATH=/opt/llvm-obfuscator/bin:/wrapper-bin:\$PATH; exec /bin/bash"

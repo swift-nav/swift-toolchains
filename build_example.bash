@@ -34,11 +34,12 @@ else
   INTERACTIVE=()
 fi
 
-docker run $INTERACTIVE --rm \
-    -v $PWD/example:/work/example \
-    -v $PWD/output/opt:/opt \
+# shellcheck disable=SC2068
+docker run ${INTERACTIVE[@]:-} --rm \
+    -v "$PWD/example:/work/example" \
+    -v "$PWD/output/opt:/opt" \
     -v obfuscator-llvm:/work/obfuscator-llvm \
     -v obfuscator-llvm-build:/work/build \
-    $DOCKER_NAMETAG \
+    "$DOCKER_NAMETAG" \
     /bin/bash -c "export PATH=/opt/llvm-obfuscator/bin:/opt/llvm-obfuscator/wrappers/bin:\$PATH; \
                   make -C example"

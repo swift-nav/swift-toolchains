@@ -13,14 +13,10 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-D=$( (cd "$(dirname "$0")" || exit 1 >/dev/null; pwd -P) )
-
 DOCKER_NAMETAG=$(cat docker_nametag)
 
-mkdir -p build
 mkdir -p output/opt
 
-MAKE_PACKAGES=
 VERBOSE=
 NO_TTY=
 
@@ -72,9 +68,10 @@ else
   INTERACTIVE=()
 fi
 
-docker run $INTERACTIVE --rm \
-    -v $PWD/output/opt:/opt \
-    -v $PWD/patches:/patches \
+# shellcheck disable=SC2068
+docker run ${INTERACTIVE[@]:-} --rm \
+    -v "$PWD/output/opt:/opt" \
+    -v "$PWD/patches:/patches" \
     -v obfuscator-llvm:/work/obfuscator-llvm \
     -v obfuscator-llvm-build:/work/build \
     "$DOCKER_NAMETAG" \
