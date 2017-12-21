@@ -20,7 +20,6 @@ fi
 
 REPO="${PWD##*/}"
 BUCKET="${BUCKET:-llvm-obfuscator-arm}"
-PRS_BUCKET="${PRS_BUCKET:-llvm-obfuscator-arm-pull-requests}"
 
 BUILD_VERSION="$(git describe --tags --dirty --always)"
 BUILD_PATH="$REPO/$BUILD_VERSION"
@@ -41,12 +40,13 @@ echo "Publish TAG ($TRAVIS_TAG)"
 
 for file in "$@"; do
     KEY="$BUILD_PATH/$(basename "$file")"
+    OBJECT="s3://$BUCKET/$KEY"
     if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
         if [[ "$TRAVIS_BRANCH" == master || "$TRAVIS_TAG" == v* || "$TRAVIS_BRANCH" == v*-release ]]; then
             OBJECT="s3://$BUCKET/$KEY"
             aws s3 cp "$file" "$OBJECT"
         fi
     else
-        aws s3api put-object --no-sign-request --bucket "$PRS_BUCKET" --key "$KEY" --body "$file" --acl public-read
+        aws s3 cp "$file" "$OBJECT"
     fi
 done
