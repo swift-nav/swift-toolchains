@@ -24,6 +24,9 @@ base: check-base
 build: check-build
 	$(CURDIR)/build.bash $(NO_TTY_ARG) --arch=$(ARCH)
 
+stage: check-stage_sysroot
+	$(CURDIR)/stage_sysroot.bash $(NO_TTY_ARG)
+
 build-example: check-build_example
 	$(CURDIR)/build_example.bash $(NO_TTY_ARG)
 

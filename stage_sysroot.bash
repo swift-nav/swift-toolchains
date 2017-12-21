@@ -32,6 +32,7 @@ if [[ -z "${DOCKERCEPTION:-}" ]]; then
       export INTERACTIVE=()
       shift
     ;;
+    *) shift ;;
     esac
   done
 fi

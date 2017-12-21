@@ -41,7 +41,7 @@ fi
 
 ### build.bash
 
-echo -n 'Running build of llvm-obfuscator... '
+echo 'Running build of llvm-obfuscator... '
 
 make "ARCH=$ARCH" NO_TTY=y build &>/tmp/build.bash.log &
 BUILD_PID=$!

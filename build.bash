@@ -38,6 +38,7 @@ while [[ $# -gt 0 ]]; do
   NO_TTY=--no-tty
   shift
   ;;
+  *) shift ;;
   esac
 done
 

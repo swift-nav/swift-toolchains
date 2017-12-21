@@ -25,6 +25,7 @@ while [[ $# -gt 0 ]]; do
   NO_TTY=y
   shift
   ;;
+  *) shift ;;
   esac
 done
 
