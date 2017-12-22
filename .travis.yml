@@ -46,3 +46,4 @@ env:
   matrix:
     - ARCH=x86
     - ARCH=arm
+    - ARCH=x86,arm
