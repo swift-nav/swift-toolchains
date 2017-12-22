@@ -49,7 +49,7 @@ CMAKE_COMMAND="\
         -DLLVM_TARGETS_TO_BUILD=$ARCH \
         -DCMAKE_CXX_FLAGS='-DENDIAN_LITTLE=1' \
         -DCMAKE_C_COMPILER=/usr/bin/gcc \
-        -DCMAKE_CXX_COMPILER=/bin/cpp_wrapper.py \
+        -DCMAKE_CXX_COMPILER=/bin/cpp_wrapper \
         -DCMAKE_BUILD_TYPE=Release \
         -DLLVM_BINUTILS_INCDIR=/usr/include \
         -DLLVM_INCLUDE_TESTS=OFF"
@@ -66,6 +66,7 @@ fi
 docker run ${INTERACTIVE[@]:-} --rm \
     -v "$PWD/output/opt:/opt" \
     -v "$PWD/patches:/patches" \
+    -v "$PWD:/this_dir" \
     -v obfuscator-llvm:/work/obfuscator-llvm \
     -v obfuscator-llvm-build:/work/build \
     "$DOCKER_NAMETAG" \
@@ -76,6 +77,8 @@ docker run ${INTERACTIVE[@]:-} --rm \
                   else \
                     (cd /work/obfuscator-llvm && git pull); \
                   fi \
+                  && cp -v /this_dir/cpp_wrapper.c /work/cpp_wrapper.c \
+                  && gcc -std=c99 -O3 -Wall /work/cpp_wrapper.c -o /bin/cpp_wrapper \
                   && cd /work/obfuscator-llvm \
                   && $PATCH_COMMAND \
                   && cd /work/build \

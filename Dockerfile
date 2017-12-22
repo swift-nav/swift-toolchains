@@ -41,7 +41,7 @@ RUN    apt-get update \
                           python \
     && mkdir -p cmake-build && cd cmake-build \
     && wget https://cmake.org/files/v3.10/cmake-3.10.1.tar.gz \
-    && tar -xvzf cmake-3.10.1.tar.gz \
+    && tar -xzf cmake-3.10.1.tar.gz \
     && cd cmake-3.10.1 \
     && ./configure \
     && make -j4 \
@@ -50,8 +50,5 @@ RUN    apt-get update \
     && apt-get -y --force-yes remove checkinstall \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-
-COPY cpp_wrapper.py /bin
-RUN chmod +x /bin/cpp_wrapper.py
 
 # EOF
