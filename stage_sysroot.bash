@@ -84,6 +84,9 @@ stage_sysroot() {
     cp -v "$BINTOOL" "${OUT}/usr/bin/"
   done
 
+  mkdir -p "${OUT}/buildroot"
+  cp -v /this_dir/toolchainfile.cmake "${OUT}/buildroot"
+
 ####
 ## Disable this for Ubuntu 14.04, it doesn't seem to be present
 ####
