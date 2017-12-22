@@ -22,23 +22,16 @@ NO_TTY=
 
 while [[ $# -gt 0 ]]; do
   case $1 in
-  --verbose)
-  VERBOSE="-v"
-  shift
-  ;;
-  --arch=x86)
-  ARCH="X86"
-  shift
-  ;;
-  --arch=arm)
-  ARCH="ARM"
-  shift
-  ;;
-  --no-tty)
-  NO_TTY=--no-tty
-  shift
-  ;;
-  *) shift ;;
+
+  --arch=x86)       ARCH="X86";       shift ;;
+  --arch=arm)       ARCH="ARM";       shift ;;
+  --arch=arm,x86)   ARCH="ARM\\;X86";   shift ;;
+  --arch=x86,arm)   ARCH="X86\\;ARM";   shift ;;
+
+  --verbose)        VERBOSE="-v";     shift ;;
+  --no-tty)         NO_TTY=--no-tty;  shift ;;
+
+  *)                                  shift ;;
   esac
 done
 
