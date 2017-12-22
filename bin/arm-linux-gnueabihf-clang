@@ -31,7 +31,7 @@ else
   D=$( (cd `dirname $0`/../.. >/dev/null; pwd -P) )
   R=$D/sysroot
 
-  export LD_LIBRARY_PATH="${R}/usr/lib/x86_64-linux-gnu:${R}/usr/x86_64-linux-gnu/arm-linux-gnueabihf"
+  export LD_LIBRARY_PATH="${R}/usr/lib/x86_64-linux-gnu:${R}/usr/x86_64-linux-gnu/arm-linux-gnueabihf/lib:${R}/usr/arm-linux-gnueabihf/lib"
 
   TOOLCHAIN_OPTS="\
     \
@@ -45,6 +45,11 @@ else
     -L ${R}/usr/arm-linux-gnueabi/libhf \
     -L ${R}/usr/lib/gcc-cross/arm-linux-gnueabihf/4.8 \
     -L ${R}/usr/lib/x86_64-linux-gnu \
+    -L ${R}/usr/x86_64-linux-gnu/arm-linux-gnueabihf/lib \
+    -L ${R}/usr/arm-linux-gnueabihf/lib \
+    \
+    -Wl,-rpath-link=${R}/usr/arm-linux-gnueabi/libhf \
+    \
     -Wno-unused-command-line-argument"
 fi
 
