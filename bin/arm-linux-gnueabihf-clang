@@ -49,6 +49,7 @@ else
     -L ${R}/usr/arm-linux-gnueabihf/lib \
     \
     -Wl,-rpath-link=${R}/usr/arm-linux-gnueabi/libhf \
+    -Wl,-rpath-link=${R}/usr/arm-linux-gnueabihf/lib \
     \
     -Wno-unused-command-line-argument"
 fi
