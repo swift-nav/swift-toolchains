@@ -6,6 +6,9 @@ SCRIPTS := .travis.sh \
 					 run_build_shell.bash \
 					 stage_sysroot.bash \
 
+cpp_wrapper: cpp_wrapper.c
+	gcc -O3 -std=c99 -Wall cpp_wrapper.c -o cpp_wrapper
+
 check:
 	docker run -v $(CURDIR):/mnt koalaman/shellcheck -x $(SCRIPTS)
 
