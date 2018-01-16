@@ -48,7 +48,6 @@ stage_sysroot() {
     "/usr/arm-linux-gnueabihf"
     "/usr/arm-linux-gnueabi"
     "/usr/lib/gcc-cross/arm-linux-gnueabihf/4.8"
-    "/usr/x86_64-linux-gnu/arm-linux-gnueabihf/"
   )
 
   for SYSROOT_DIR in "${SYSROOT_DIRS[@]}"; do
@@ -87,16 +86,13 @@ stage_sysroot() {
   mkdir -p "${OUT}/buildroot"
   cp -v /this_dir/toolchainfile.cmake "${OUT}/buildroot"
 
-####
-## Disable this for Ubuntu 14.04, it doesn't seem to be present
-####
-#  D="${OUT}/usr/lib/x86_64-linux-gnu/"
-#
-#  mkdir -p "$D"
-#
-#  for ARMHF in /usr/lib/x86_64-linux-gnu/*armhf*; do
-#    cp -v "${ARMHF}" "$D/"
-#  done
+  D="${OUT}/usr/lib/x86_64-linux-gnu/"
+
+  mkdir -p "$D"
+
+  for ARMHF in /usr/lib/x86_64-linux-gnu/*armhf*; do
+    cp -v "${ARMHF}" "$D/"
+  done
 }
 
 run() {
