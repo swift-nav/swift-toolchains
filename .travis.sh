@@ -52,7 +52,7 @@ echo 'DONE.'
 
 ### build_example.bash
 
-if [[ $ARCH = arm ]]; then
+if [[ $ARCH == *arm* ]]; then
 
   echo -n 'Building example project... '
   make NO_TTY=y build-example &>/tmp/build_example.bash.log
