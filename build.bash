@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Copyright (C) 2017 Swift Navigation Inc.
 # Contact: Swift Navigation <dev@swiftnav.com>
@@ -52,6 +52,8 @@ CMAKE_COMMAND="\
         -DCMAKE_CXX_COMPILER=/bin/cpp_wrapper \
         -DCMAKE_BUILD_TYPE=Release \
         -DLLVM_BINUTILS_INCDIR=/usr/include \
+        -DLLDB_DISABLE_CURSES:BOOL=TRUE \
+        -DLLVM_ENABLE_TERMINFO=0 \
         -DLLVM_INCLUDE_TESTS=OFF"
 
 PATCH_COMMAND="{ git apply /patches/*.patch || : ; }"

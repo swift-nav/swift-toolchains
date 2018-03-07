@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Copyright (C) 2017 Swift Navigation Inc.
 # Contact: Swift Navigation <dev@swiftnav.com>
