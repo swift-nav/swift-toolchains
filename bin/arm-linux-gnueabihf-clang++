@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (C) 2017 Swift Navigation Inc.
+# Copyright (C) 2017-2018 Swift Navigation Inc.
 # Contact: Swift Navigation <dev@swiftnav.com>
 #
 # This source is subject to the license found in the file 'LICENSE' which must
@@ -34,11 +34,11 @@ else
   D=$( (cd `dirname $0`/../.. >/dev/null; pwd -P) )
   R=$D/sysroot
 
-  export LD_LIBRARY_PATH="${R}/usr/lib/x86_64-linux-gnu:${R}/usr/x86_64-linux-gnu/arm-linux-gnueabihf/lib:${R}/usr/arm-linux-gnueabihf/lib"
+  export LD_LIBRARY_PATH="${R}/usr/lib/x86_64-linux-gnu:${R}/usr/x86_64-linux-gnu/arm-linux-gnueabihf/lib:${R}/usr/arm-linux-gnueabihf/lib:$LD_LIBRARY_PATH"
 
   TOOLCHAIN_OPTS="\
     \
-    -fuse-ld=${R}/usr/arm-linux-gnueabihf/bin/ld \
+    -fuse-ld=${D}/wrappers/bin/arm-linux-gnueabihf-ld \
     --sysroot=${R} \
     \
     -B ${R}/usr/lib/gcc-cross/arm-linux-gnueabihf/4.8 \
