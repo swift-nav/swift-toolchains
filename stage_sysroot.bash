@@ -47,6 +47,7 @@ stage_sysroot() {
   SYSROOT_DIRS=(
     "/usr/arm-linux-gnueabihf"
     "/usr/arm-linux-gnueabi"
+    "/usr/include"
     "/usr/lib/gcc-cross/arm-linux-gnueabihf/4.8"
   )
 
