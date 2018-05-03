@@ -47,13 +47,14 @@ CMAKE_COMMAND="\
         /work/obfuscator-llvm \
         -DCMAKE_INSTALL_PREFIX=/opt/llvm-obfuscator \
         -DLLVM_TARGETS_TO_BUILD=$ARCH \
-        -DCMAKE_CXX_FLAGS='-DENDIAN_LITTLE=1' \
-        -DCMAKE_C_COMPILER=/usr/bin/gcc \
+        -DCMAKE_CXX_FLAGS='-DENDIAN_LITTLE=1 -I/toolchain/x86/lib/gcc/x86_64-buildroot-linux-gnu/7.3.0/plugin/include' \
+        -DCMAKE_C_COMPILER=/toolchain/x86/bin/x86_64-linux-gcc \
         -DCMAKE_CXX_COMPILER=/bin/cpp_wrapper \
         -DCMAKE_BUILD_TYPE=Release \
         -DLLVM_BINUTILS_INCDIR=/usr/include \
         -DLLDB_DISABLE_CURSES:BOOL=TRUE \
         -DLLVM_ENABLE_TERMINFO=0 \
+        -DLLVM_BUILD_TOOLS:BOOL=FALSE \
         -DLLVM_INCLUDE_TESTS=OFF"
 
 PATCH_COMMAND="{ git apply /patches/*.patch || : ; }"

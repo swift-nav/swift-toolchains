@@ -37,3 +37,8 @@ build-example: check-build_example
 
 run: check-run_build_shell
 	$(CURDIR)/run_build_shell.bash $(NO_TTY_ARG)
+
+clean:
+	docker volume rm obfuscator-llvm-build || :
+	docker volume rm obfuscator-llvm || :
+	rm -rf output/*

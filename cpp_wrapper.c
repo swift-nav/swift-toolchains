@@ -15,9 +15,10 @@
 #include <stdbool.h>
 #include <unistd.h>
 
-//#define DEBUG
+#define DEBUG
 
-const char* real_cpp_path = "/usr/bin/g++";
+//const char* real_cpp_path = "/toolchain/x86/bin/x86_64-linux-g++";
+const char* real_cpp_path = "/toolchain/x86/bin/x86_64-buildroot-linux-gnu-c++.br_real";
 const char* new_argv_entry = "lib/libLLVMTransformUtils.a";
 
 int main(int argc, const char* argv[]) {
@@ -31,7 +32,7 @@ int main(int argc, const char* argv[]) {
   }
 
 #ifdef DEBUG
-  printf("%zu\n", args_str_size);
+  fprintf(stderr, "%zu\n", args_str_size);
 #endif
 
   // Make space for spaces in between argument values + null terminator
@@ -50,7 +51,7 @@ int main(int argc, const char* argv[]) {
   *p = '\0';
 
 #ifdef DEBUG
-  printf("All args: %s\n", all_args_buf);
+  fprintf(stderr, "All args: %s\n", all_args_buf);
 #endif
 
   bool append_new_arg = false;
@@ -69,6 +70,7 @@ int main(int argc, const char* argv[]) {
   }
 
   argv[0] = real_cpp_path;
+  int execv_ret;
 
   if (append_new_arg) {
 
@@ -77,7 +79,7 @@ int main(int argc, const char* argv[]) {
 
     for (int x = 0; x < argc; x++) {
 
-      size_t length = (lengths[x] + 1);
+      size_t length = x == 0 ? strlen(real_cpp_path) : (lengths[x] + 1);
 
       new_argv[x] = (char*) malloc(length * sizeof(char));
       memcpy((void*) new_argv[x], argv[x], length * sizeof(char));
@@ -92,14 +94,17 @@ int main(int argc, const char* argv[]) {
     
     argc = new_argc;
     argv = new_argv;
+
+    execv_ret = execv(real_cpp_path, (char*const*)new_argv);
+  }
+  else {
+    execv_ret = execv(real_cpp_path, (char*const*)argv);
   }
 
 #if 0 // This causes a heap corruption error trigger?
   free(lengths);
   free(all_args_buf);
 #endif
-
-  int execv_ret = execv(real_cpp_path, (char*const*)argv);
 
   fprintf(stderr, "execv() failure: %d\n", execv_ret);
   return -42;

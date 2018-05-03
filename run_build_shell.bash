@@ -22,7 +22,11 @@ docker run -i -t --rm \
     -v "$PWD/output/opt:/opt" \
     -v "$PWD/bin:/wrapper-bin" \
     -v "$PWD/patches:/patches" \
+    -v "$PWD:/this_dir" \
     -v obfuscator-llvm:/work/obfuscator-llvm \
     -v obfuscator-llvm-build:/work/build \
     "$DOCKER_NAMETAG" \
-    /bin/bash -c "export PATH=/opt/llvm-obfuscator/bin:/opt/llvm-obfuscator/wrappers/bin:\$PATH; exec /bin/bash"
+    /bin/bash -c "export PATH=/opt/llvm-obfuscator/bin:/opt/llvm-obfuscator/wrappers/bin:\$PATH; \
+                  cp -v /this_dir/cpp_wrapper.c /work/cpp_wrapper.c \
+                  && gcc -std=c99 -O3 -Wall /work/cpp_wrapper.c -o /bin/cpp_wrapper; \
+                  exec /bin/bash"
