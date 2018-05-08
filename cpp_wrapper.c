@@ -15,7 +15,7 @@
 #include <stdbool.h>
 #include <unistd.h>
 
-#define DEBUG
+//#define DEBUG
 
 //const char* real_cpp_path = "/toolchain/x86/bin/x86_64-linux-g++";
 const char* real_cpp_path = "/toolchain/x86/bin/x86_64-buildroot-linux-gnu-c++.br_real";

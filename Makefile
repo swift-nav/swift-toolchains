@@ -41,4 +41,4 @@ run: check-run_build_shell
 clean:
 	docker volume rm obfuscator-llvm-build || :
 	docker volume rm obfuscator-llvm || :
-	rm -rf output/*
+	sudo rm -rf output/*
