@@ -14,7 +14,13 @@ D=$( (cd `dirname $0`/../.. >/dev/null; pwd -P) )
 
 if [[ -z "${BR2_TOOLCHAIN_PATH:-}" ]]; then
   T=${HOST_DIR}/opt/ext-toolchain
+  if [[ -z "${LD_LIBRARY_PATH:-}" ]]; then
+    export LD_LIBRARY_PATH="${T}/lib"
+  else
+    export LD_LIBRARY_PATH="${T}/lib:$LD_LIBRARY_PATH"
+  fi
 else
+  export LD_LIBRARY_PATH=${BR2_TOOLCHAIN_LD_LIBRARY_PATH}
   T=${BR2_TOOLCHAIN_PATH}
 fi
 
