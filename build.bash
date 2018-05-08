@@ -41,6 +41,7 @@ if [[ -z "${ARCH:-}" ]]; then
 fi
 
 set -x
+#        -DLLVM_BUILD_TOOLS:BOOL=FALSE \
 
 CMAKE_COMMAND="\
     cmake -G Ninja \
@@ -54,7 +55,6 @@ CMAKE_COMMAND="\
         -DLLVM_BINUTILS_INCDIR=/usr/include \
         -DLLDB_DISABLE_CURSES:BOOL=TRUE \
         -DLLVM_ENABLE_TERMINFO=0 \
-        -DLLVM_BUILD_TOOLS:BOOL=FALSE \
         -DLLVM_INCLUDE_TESTS=OFF"
 
 PATCH_COMMAND="{ git apply /patches/*.patch || : ; }"

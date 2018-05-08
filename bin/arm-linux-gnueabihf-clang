@@ -10,10 +10,12 @@
 # EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
 # WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
 
-if [[ -z "${BR_TOOLCHAIN_PATH:-}" ]]; then
+D=$( (cd `dirname $0`/../.. >/dev/null; pwd -P) )
+
+if [[ -z "${BR2_TOOLCHAIN_PATH:-}" ]]; then
   T=${HOST_DIR}/opt/ext-toolchain
 else
-  T=${BR_TOOLCHAIN_PATH}
+  T=${BR2_TOOLCHAIN_PATH}
 fi
 
 export LD_LIBRARY_PATH="${T}/lib:$LD_LIBRARY_PATH"
@@ -22,6 +24,14 @@ toolchain_prefix="arm-buildroot-linux-gnueabihf"
 
 TOOLCHAIN_OPTS="\
   --sysroot=${T}/${toolchain_prefix}/sysroot \
+  -L ${T}/${toolchain_prefix}/lib \
+  -L ${HOST_DIR}/${toolchain_prefix}/sysroot/lib \
+  -L ${HOST_DIR}/${toolchain_prefix}/sysroot/usr/lib \
+  -B ${T}/lib/gcc/${toolchain_prefix}/${toolchain_version} \
+  -L ${T}/lib/gcc/${toolchain_prefix}/${toolchain_version} \
+  -Wl,-rpath-link=${T}/lib/gcc/${toolchain_prefix} \
+  -Wl,-rpath-link=${T}/${toolchain_prefix}/sysroot/lib \
+  -Wl,-rpath-link=${HOST_DIR}/${toolchain_prefix}/sysroot/lib \
   -fuse-ld=${T}/${toolchain_prefix}/bin/ld \
   -Wno-unused-command-line-argument"
 
