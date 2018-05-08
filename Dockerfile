@@ -1,4 +1,4 @@
-# Copyright (C) 2017 Swift Navigation Inc.
+# Copyright (C) 2017-2018 Swift Navigation Inc.
 # Contact: Swift Navigation <dev@swiftnav.com>
 #
 # This source is subject to the license found in the file 'LICENSE' which must
@@ -13,9 +13,10 @@ FROM ubuntu:16.04
 RUN mkdir /work
 WORKDIR /work
 
-ENV TOOLCHAIN_X86_URL https://toolchains.bootlin.com/downloads/releases/toolchains/x86-64-core-i7/tarballs/x86-64-core-i7--glibc--bleeding-edge-2018.02-1.tar.bz2
+ENV TOOLCHAIN_URL_BASE https://toolchains.bootlin.com/downloads/releases/toolchains
 
-ENV TOOLCHAIN_ARM_URL https://toolchains.bootlin.com/downloads/releases/toolchains/armv7-eabihf/tarballs/armv7-eabihf--glibc--bleeding-edge-2018.02-1.tar.bz2
+ENV TOOLCHAIN_X86_URL ${TOOLCHAIN_URL_BASE}/x86-64-core-i7/tarballs/x86-64-core-i7--glibc--stable-2018.02-2.tar.bz2
+ENV TOOLCHAIN_ARM_URL ${TOOLCHAIN_URL_BASE}/armv7-eabihf/tarballs/armv7-eabihf--glibc--stable-2018.02-2.tar.bz2
 
 RUN    apt-get update \
     && apt-get install -y wget \
