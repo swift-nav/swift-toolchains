@@ -11,8 +11,16 @@
 # WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
 
 D=$( (cd `dirname $0`/../.. >/dev/null; pwd -P) )
-R=$D/sysroot
 
-export LD_LIBRARY_PATH="${R}/usr/lib/x86_64-linux-gnu:${R}/usr/x86_64-linux-gnu/arm-linux-gnueabihf/lib:$LD_LIBRARY_PATH"
+toolchain_prefix="arm-buildroot-linux-gnueabihf"
+toolname="strip"
 
-exec ${R}/usr/bin/arm-linux-gnueabihf-strip $@
+if [[ -z "${BR2_TOOLCHAIN_PATH:-}" ]]; then
+  T=${HOST_DIR}/opt/ext-toolchain
+else
+  T=${BR2_TOOLCHAIN_PATH}
+fi
+
+export LD_LIBRARY_PATH="${T}/lib:$LD_LIBRARY_PATH"
+
+exec ${T}/bin/${toolchain_prefix}-${toolname} $@

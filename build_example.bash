@@ -14,6 +14,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 DOCKER_NAMETAG=$(cat docker_nametag)
+BR2_TOOLCHAIN_LD_LIBRARY_PATH=/toolchain/x86/x86_64-buildroot-linux-gnu/lib64
 
 mkdir -p output/opt
 
@@ -41,6 +42,9 @@ docker run ${INTERACTIVE[@]:-} --rm \
     -v "$PWD/output/opt:/opt" \
     -v obfuscator-llvm:/work/obfuscator-llvm \
     -v obfuscator-llvm-build:/work/build \
+    -e BR2_TOOLCHAIN_PATH=/toolchain/arm \
     "$DOCKER_NAMETAG" \
     /bin/bash -c "export PATH=/opt/llvm-obfuscator/bin:/opt/llvm-obfuscator/wrappers/bin:\$PATH; \
+                  export BR2_TOOLCHAIN_PATH=/toolchain/arm; \
+                  export BR2_TOOLCHAIN_LD_LIBRARY_PATH=$BR2_TOOLCHAIN_LD_LIBRARY_PATH; \
                   make -C example"

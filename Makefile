@@ -12,10 +12,10 @@ cpp_wrapper: cpp_wrapper.c
 	gcc -O3 -std=c99 -Wall cpp_wrapper.c -o cpp_wrapper
 
 check:
-	docker run -v $(CURDIR):/mnt koalaman/shellcheck -x $(SCRIPTS)
+	docker run --rm -v $(CURDIR):/mnt koalaman/shellcheck -x $(SCRIPTS)
 
 check-%:
-	docker run -v $(CURDIR):/mnt koalaman/shellcheck -x $*.bash
+	docker run --rm -v $(CURDIR):/mnt koalaman/shellcheck -x $*.bash
 
 ifeq ($(NO_TTY),y)
 NO_TTY_ARG := --no-tty
@@ -37,3 +37,8 @@ build-example: check-build_example
 
 run: check-run_build_shell
 	$(CURDIR)/run_build_shell.bash $(NO_TTY_ARG)
+
+clean:
+	docker volume rm obfuscator-llvm-build || :
+	docker volume rm obfuscator-llvm || :
+	sudo rm -rf output/*

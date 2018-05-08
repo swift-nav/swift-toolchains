@@ -44,17 +44,6 @@ stage_sysroot() {
   rm -rf "$OUT"
   mkdir -p "$OUT"
 
-  SYSROOT_DIRS=(
-    "/usr/arm-linux-gnueabihf"
-    "/usr/arm-linux-gnueabi"
-    "/usr/lib/gcc-cross/arm-linux-gnueabihf/4.8"
-  )
-
-  for SYSROOT_DIR in "${SYSROOT_DIRS[@]}"; do
-    mkdir -p "${OUT}/${SYSROOT_DIR}"
-    rsync -azv "${SYSROOT_DIR}/" "${OUT}/${SYSROOT_DIR}/"
-  done
-
   WRAPPERS_BIN=/opt/llvm-obfuscator/wrappers/bin
 
   mkdir -p $WRAPPERS_BIN
@@ -63,36 +52,8 @@ stage_sysroot() {
   LICENSE=/opt/llvm-obfuscator/
   cp -v /this_dir/LICENSE $LICENSE
 
-  BINTOOLS=(
-    /usr/bin/arm-linux-gnueabihf-ar
-    /usr/bin/arm-linux-gnueabihf-as
-    /usr/bin/arm-linux-gnueabihf-ld
-    /usr/bin/arm-linux-gnueabihf-ld.bfd
-    /usr/bin/arm-linux-gnueabihf-ld.gold
-    /usr/bin/arm-linux-gnueabihf-nm
-    /usr/bin/arm-linux-gnueabihf-objcopy
-    /usr/bin/arm-linux-gnueabihf-objdump
-    /usr/bin/arm-linux-gnueabihf-ranlib
-    /usr/bin/arm-linux-gnueabihf-readelf
-    /usr/bin/arm-linux-gnueabihf-strip
-  )
-
-  mkdir -p "${OUT}/usr/bin/"
-
-  for BINTOOL in "${BINTOOLS[@]}"; do
-    cp -v "$BINTOOL" "${OUT}/usr/bin/"
-  done
-
   mkdir -p "${OUT}/buildroot"
   cp -v /this_dir/toolchainfile.cmake "${OUT}/buildroot"
-
-  D="${OUT}/usr/lib/x86_64-linux-gnu/"
-
-  mkdir -p "$D"
-
-  for ARMHF in /usr/lib/x86_64-linux-gnu/*armhf*; do
-    cp -v "${ARMHF}" "$D/"
-  done
 }
 
 run() {

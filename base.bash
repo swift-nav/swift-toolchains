@@ -15,11 +15,13 @@ IFS=$'\n\t'
 
 [[ -z "${DEBUG:-}" ]] || set -x
 
+[[ -n "${LOCAL_BUILD:-}" ]] || \
 [[ -n "${DOCKER_USER:-}" ]] || {
   echo "DOCKER_USER: must not be empty"
   exit 1
 }
 
+[[ -n "${LOCAL_BUILD:-}" ]] || \
 [[ -n "${DOCKER_PASS:-}" ]] || {
   echo "DOCKER_PASS: must not be empty"
   exit 1
@@ -46,7 +48,8 @@ query_build_pushed() {
     | grep "$repo_tag"
 }
 
-if [[ -n "$(query_build_pushed "$DOCKER_NAMETAG")" ]]; then
+if [[ -z "${LOCAL_BUILD:-}" ]] && \
+   [[ -n "$(query_build_pushed "$DOCKER_NAMETAG")" ]]; then
   echo "Build already pushed, exiting..."
   exit 0
 fi
@@ -55,5 +58,9 @@ docker build \
   --force-rm --no-cache \
   -f Dockerfile -t "$DOCKER_NAMETAG" .
 
-echo "$DOCKER_PASS" | docker login --username="$DOCKER_USER" --password-stdin
-docker push "$DOCKER_NAMETAG"
+if [[ -n "${DOCKER_USER:-}" ]] && [[ -n "${DOCKER_PASS:-}" ]]; then
+  echo "$DOCKER_PASS" | docker login --username="$DOCKER_USER" --password-stdin
+  docker push "$DOCKER_NAMETAG"
+else
+  echo "WARNING: not pushing new image to Docker Hub..." >&2
+fi
