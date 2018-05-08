@@ -21,7 +21,7 @@ fi
 export LD_LIBRARY_PATH="${T}/lib:$LD_LIBRARY_PATH"
 
 toolchain_prefix="arm-buildroot-linux-gnueabihf"
-toolchain_version="7.3.0"
+toolchain_version="6.4.0"
 
 TOOLCHAIN_OPTS="\
   --sysroot=${T}/${toolchain_prefix}/sysroot \

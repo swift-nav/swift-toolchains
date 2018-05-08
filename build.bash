@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (C) 2017 Swift Navigation Inc.
+# Copyright (C) 2017-2018 Swift Navigation Inc.
 # Contact: Swift Navigation <dev@swiftnav.com>
 #
 # This source is subject to the license found in the file 'LICENSE' which must
@@ -48,7 +48,7 @@ CMAKE_COMMAND="\
         /work/obfuscator-llvm \
         -DCMAKE_INSTALL_PREFIX=/opt/llvm-obfuscator \
         -DLLVM_TARGETS_TO_BUILD=$ARCH \
-        -DCMAKE_CXX_FLAGS='-DENDIAN_LITTLE=1 -I/toolchain/x86/lib/gcc/x86_64-buildroot-linux-gnu/7.3.0/plugin/include' \
+        -DCMAKE_CXX_FLAGS='-DENDIAN_LITTLE=1 -I/toolchain/x86/lib/gcc/x86_64-buildroot-linux-gnu/6.4.0/plugin/include' \
         -DCMAKE_C_COMPILER=/toolchain/x86/bin/x86_64-linux-gcc \
         -DCMAKE_CXX_COMPILER=/bin/cpp_wrapper \
         -DCMAKE_BUILD_TYPE=Release \
