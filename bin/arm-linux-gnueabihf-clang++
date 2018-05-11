@@ -21,6 +21,7 @@ if [[ -z "${BR2_TOOLCHAIN_PATH:-}" ]]; then
   fi
 else
   export LD_LIBRARY_PATH=${BR2_TOOLCHAIN_LD_LIBRARY_PATH}
+  HOST_DIR=${BR2_TOOLCHAIN_PATH}
   T=${BR2_TOOLCHAIN_PATH}
 fi
 
