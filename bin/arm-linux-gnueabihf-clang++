@@ -24,13 +24,17 @@ else
   T=${BR2_TOOLCHAIN_PATH}
 fi
 
+if [[ -z "${BR2_SYSROOT_BASE:-}" ]]; then
+  BR2_SYSROOT_BASE=${T}
+fi
+
 export LD_LIBRARY_PATH="${T}/lib:$LD_LIBRARY_PATH"
 
 toolchain_prefix="arm-buildroot-linux-gnueabihf"
 toolchain_version="6.4.0"
 
 TOOLCHAIN_OPTS="\
-  --sysroot=${T}/${toolchain_prefix}/sysroot \
+  --sysroot=${BR2_SYSROOT_BASE}/${toolchain_prefix}/sysroot \
   -I ${T}/${toolchain_prefix}/include/c++/${toolchain_version}/ \
   -I ${T}/${toolchain_prefix}/include/c++/${toolchain_version}/${toolchain_prefix} \
   -L ${T}/${toolchain_prefix}/lib \
