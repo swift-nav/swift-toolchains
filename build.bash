@@ -108,4 +108,4 @@ docker run ${INTERACTIVE[@]:-} --rm \
     "$DOCKER_NAMETAG" \
     /bin/bash -c "/this_dir/do_clang_build.bash"
 
-./stage_sysroot.bash $NO_TTY
+./stage_sysroot.bash $NO_TTY "--variant=$VARIANT"

@@ -43,7 +43,7 @@ fi
 
 echo "Running build of llvm-$VARIANT... "
 
-make "ARCH=$ARCH" NO_TTY=y VARIANT=$VARIANT build &>/tmp/build.bash.log &
+make NO_TTY=y "ARCH=$ARCH" "VARIANT=$VARIANT" build &>/tmp/build.bash.log &
 BUILD_PID=$!
 
 wait $BUILD_PID

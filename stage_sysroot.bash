@@ -73,6 +73,7 @@ run() {
       -v $VARIANT-llvm:/work/$VARIANT-llvm \
       -v $VARIANT-llvm-build:/work/build \
       -e DOCKERCEPTION=1 \
+      -e "VARIANT=$VARIANT" \
       "$DOCKER_NAMETAG" \
       /bin/bash -c ". /this_dir/stage_sysroot.bash; stage_sysroot"
 }
