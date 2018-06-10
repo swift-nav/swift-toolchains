@@ -27,7 +27,7 @@ fi
   done
 )&
 TICKER_PID=$!
-trap 'kill ${TICKER_PID:-} ${BUILD_PID:-} &>/dev/null' EXIT
+trap 'kill ${TICKER_PID:-} ${BUILD_PID:-} &>/dev/null || :' EXIT
 
 ### base.bash
 

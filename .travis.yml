@@ -25,9 +25,8 @@ matrix:
         - travis_wait tar -C output -cJf "llvm-$VARIANT-$ARCH.txz" .
         - ./publish.sh llvm-$VARIANT-$ARCH.txz
       after_failure:
-        - if [[ -e /tmp/base.bash.log ]]; then tail -n 500 /tmp/base.bash.log; fi
-        - if [[ -e /tmp/build.bash.log ]]; then tail -n 500 /tmp/build.bash.log; fi
-        - if [[ -e /tmp/build_example.bash.log ]]; then tail -n 500 /tmp/build_example.bash.log; fi
+        - ./.after_failure.sh
+
     - env:
         - VARIANT=vanilla
         - ARCH=x86,arm
@@ -41,9 +40,7 @@ matrix:
         - travis_wait tar -C output -cJf "llvm-$VARIANT-$ARCH.txz" .
         - ./publish.sh llvm-$VARIANT-$ARCH.txz
       after_failure:
-        - if [[ -e /tmp/base.bash.log ]]; then tail -n 500 /tmp/base.bash.log; fi
-        - if [[ -e /tmp/build.bash.log ]]; then tail -n 500 /tmp/build.bash.log; fi
-        - if [[ -e /tmp/build_example.bash.log ]]; then tail -n 500 /tmp/build_example.bash.log; fi
+        - ./.after_failure.sh
 
 env:
   global:
