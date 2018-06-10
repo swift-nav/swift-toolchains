@@ -43,7 +43,7 @@ fi
 if [ -n "${CLANG_TOOLS_EXTRA_REPO:-}" ]; then \
   if [ ! -d "/work/$VARIANT-llvm/tools/clang-tools-extra/.git" ]; then
     git clone --depth=1 --single-branch -b "$LLVM_BRANCH" \
-      "$CLANG_REPO" "$VARIANT-llvm/tools/clang-tools-extra";
+      "$CLANG_TOOLS_EXTRA_REPO" "$VARIANT-llvm/tools/clang-tools-extra";
   else
     (cd "/work/$VARIANT-llvm/tools/clang-tools-extra" && git pull);
   fi
