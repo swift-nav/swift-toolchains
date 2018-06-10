@@ -57,7 +57,8 @@ stage_sysroot() {
   cp -v /this_dir/LICENSE $LICENSE
 
   mkdir -p "${OUT}/buildroot"
-  cp -v /this_dir/toolchainfile.cmake "${OUT}/buildroot"
+  m4 "-DM4_VARIANT=${VARIANT}" /this_dir/toolchainfile.cmake.m4 \
+    >"${OUT}/buildroot/toolchainfile.cmake"
 }
 
 run() {
