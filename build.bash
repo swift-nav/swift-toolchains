@@ -23,41 +23,64 @@ NO_TTY=
 while [[ $# -gt 0 ]]; do
   case $1 in
 
-  --arch=x86)       ARCH="X86";       shift ;;
-  --arch=arm)       ARCH="ARM";       shift ;;
-  --arch=arm,x86)   ARCH="ARM\\;X86";   shift ;;
-  --arch=x86,arm)   ARCH="X86\\;ARM";   shift ;;
+  --arch=x86)           ARCH="X86";           shift ;;
+  --arch=arm)           ARCH="ARM";           shift ;;
+  --arch=arm,x86)       ARCH="ARM\\;X86";     shift ;;
+  --arch=x86,arm)       ARCH="X86\\;ARM";     shift ;;
 
-  --verbose)        VERBOSE="-v";     shift ;;
-  --no-tty)         NO_TTY=--no-tty;  shift ;;
+  --variant=vanilla)    VARIANT="vanilla";    shift ;;
+  --variant=obfuscator) VARIANT="obfuscator"; shift ;;
 
-  *)                                  shift ;;
+  --verbose)            VERBOSE="-v";         shift ;;
+  --no-tty)             NO_TTY=--no-tty;      shift ;;
+
+  *)                                          shift ;;
   esac
 done
 
 if [[ -z "${ARCH:-}" ]]; then
-  echo "Error: must specify --arch=<arm|x86>"
+  echo "Error: must specify --arch=<arm|x86|arm,x86|x86,arm>"
+  exit 1
+fi
+
+if [[ -z "${VARIANT:-}" ]]; then
+  echo "Error: must a variant to build --variant=<vanilla|obfuscator>"
   exit 1
 fi
 
 set -x
-#        -DLLVM_BUILD_TOOLS:BOOL=FALSE \
+
+if [[ "$VARIANT" == "obfuscator" ]]; then
+  LLVM_REPO="https://github.com/obfuscator-llvm/obfuscator.git"
+  LLVM_BRANCH="llvm-4.0"
+  CLANG_REPO=""
+  CLANG_TOOLS_EXTRA_REPO=""
+  CPP_WRAPPER_DEFINE="-DCMAKE_CXX_COMPILER=/bin/cpp_wrapper"
+  PATCH_COMMAND="{ git apply /patches/*.patch || : ; }"
+  COMPILE_CPP_WRAPPER="cp -v /this_dir/cpp_wrapper.c /work/cpp_wrapper.c \
+                       && gcc -std=c99 -O3 -Wall /work/cpp_wrapper.c -o /bin/cpp_wrapper"
+else
+  LLVM_REPO="https://github.com/llvm-mirror/llvm.git"
+  CLANG_REPO="https://github.com/llvm-mirror/clang.git"
+  CLANG_TOOLS_EXTRA_REPO="https://github.com/llvm-mirror/clang-tools-extra.git"
+  LLVM_BRANCH="release_60"
+  CPP_WRAPPER_DEFINE="-DCMAKE_CXX_COMPILER=/toolchain/x86/bin/x86_64-linux-g++"
+  PATCH_COMMAND="true"
+  COMPILE_CPP_WRAPPER="true"
+fi
 
 CMAKE_COMMAND="\
     cmake -G Ninja \
-        /work/obfuscator-llvm \
-        -DCMAKE_INSTALL_PREFIX=/opt/llvm-obfuscator \
+        /work/$VARIANT-llvm \
+        -DCMAKE_INSTALL_PREFIX=/opt/llvm-$VARIANT \
         -DLLVM_TARGETS_TO_BUILD=$ARCH \
-        -DCMAKE_CXX_FLAGS='-DENDIAN_LITTLE=1 -I/toolchain/x86/lib/gcc/x86_64-buildroot-linux-gnu/6.4.0/plugin/include' \
+        -DCMAKE_CXX_FLAGS='-DENDIAN_LITTLE=1 -L/toolchain/x86/x86_64-buildroot-linux-gnu/sysroot/lib -L/toolchain/x86/x86_64-buildroot-linux-gnu/sysroot/usr/lib -I/toolchain/x86/lib/gcc/x86_64-buildroot-linux-gnu/6.4.0/plugin/include' \
+        $CPP_WRAPPER_DEFINE \
         -DCMAKE_C_COMPILER=/toolchain/x86/bin/x86_64-linux-gcc \
-        -DCMAKE_CXX_COMPILER=/bin/cpp_wrapper \
         -DCMAKE_BUILD_TYPE=Release \
         -DLLVM_BINUTILS_INCDIR=/usr/include \
-        -DLLDB_DISABLE_CURSES:BOOL=TRUE \
         -DLLVM_ENABLE_TERMINFO=0 \
         -DLLVM_INCLUDE_TESTS=OFF"
-
-PATCH_COMMAND="{ git apply /patches/*.patch || : ; }"
 
 if [[ -z "$NO_TTY" ]]; then
   INTERACTIVE=("-i" "-t")
@@ -70,23 +93,19 @@ docker run ${INTERACTIVE[@]:-} --rm \
     -v "$PWD/output/opt:/opt" \
     -v "$PWD/patches:/patches" \
     -v "$PWD:/this_dir" \
-    -v obfuscator-llvm:/work/obfuscator-llvm \
-    -v obfuscator-llvm-build:/work/build \
+    -v $VARIANT-llvm:/work/$VARIANT-llvm \
+    -v $VARIANT-llvm-build:/work/build \
+    -e VARIANT=$VARIANT -e ARCH=$ARCH \
+    -e VERBOSE=$VERBOSE -e NO_TTY=$NO_TTY \
+    -e CPP_WRAPPER_DEFINE=$CPP_WRAPPER_DEFINE \
+    -e CMAKE_COMMAND="$CMAKE_COMMAND" \
+    -e LLVM_REPO=$LLVM_REPO \
+    -e LLVM_BRANCH=$LLVM_BRANCH \
+    -e CLANG_REPO=$CLANG_REPO \
+    -e CLANG_TOOLS_EXTRA_REPO=$CLANG_TOOLS_EXTRA_REPO \
+    -e PATCH_COMMAND=$PATCH_COMMAND \
+    -e COMPILE_CPP_WRAPPER=$COMPILE_CPP_WRAPPER \
     "$DOCKER_NAMETAG" \
-    /bin/bash -c "if [ ! -d /work/obfuscator-llvm/.git ]; then \
-                      git clone --depth=1 --single-branch -b llvm-4.0 \
-                        https://github.com/obfuscator-llvm/obfuscator.git \
-                        obfuscator-llvm;
-                  else \
-                    (cd /work/obfuscator-llvm && git pull); \
-                  fi \
-                  && cp -v /this_dir/cpp_wrapper.c /work/cpp_wrapper.c \
-                  && gcc -std=c99 -O3 -Wall /work/cpp_wrapper.c -o /bin/cpp_wrapper \
-                  && cd /work/obfuscator-llvm \
-                  && $PATCH_COMMAND \
-                  && cd /work/build \
-                  && $CMAKE_COMMAND \
-                  && ninja $VERBOSE \
-                  && ninja $VERBOSE install"
+    /bin/bash -c "/this_dir/do_clang_build.bash"
 
 ./stage_sysroot.bash $NO_TTY

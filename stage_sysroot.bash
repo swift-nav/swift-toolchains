@@ -28,28 +28,32 @@ if [[ -z "${DOCKERCEPTION:-}" ]]; then
 
   while [[ $# -gt 0 ]]; do
     case $1 in
-    --no-tty)
-      export INTERACTIVE=()
-      shift
-    ;;
+    --no-tty) export INTERACTIVE=();           shift ;;
+    --variant=vanilla)   VARIANT="vanilla";    shift ;;
+    --variant=obfuscator)VARIANT="obfuscator"; shift ;;
     *) shift ;;
     esac
   done
 fi
 
+if [[ -z "${VARIANT:-}" ]]; then
+  echo "Error: must a variant --variant=<vanilla|obfuscator>"
+  exit 1
+fi
+
 stage_sysroot() {
 
-  OUT=/opt/llvm-obfuscator/sysroot
+  OUT=/opt/llvm-$VARIANT/sysroot
 
   rm -rf "$OUT"
   mkdir -p "$OUT"
 
-  WRAPPERS_BIN=/opt/llvm-obfuscator/wrappers/bin
+  WRAPPERS_BIN=/opt/llvm-$VARIANT/wrappers/bin
 
   mkdir -p $WRAPPERS_BIN
   rsync -asv '--exclude=.*.sw?' /this_dir/bin/ $WRAPPERS_BIN/
 
-  LICENSE=/opt/llvm-obfuscator/
+  LICENSE=/opt/llvm-$VARIANT/
   cp -v /this_dir/LICENSE $LICENSE
 
   mkdir -p "${OUT}/buildroot"
@@ -65,8 +69,8 @@ run() {
       -v "$PWD/example:/work/example" \
       -v "$PWD/output/opt:/opt" \
       -v "$PWD:/this_dir" \
-      -v obfuscator-llvm:/work/obfuscator-llvm \
-      -v obfuscator-llvm-build:/work/build \
+      -v $VARIANT-llvm:/work/$VARIANT-llvm \
+      -v $VARIANT-llvm-build:/work/build \
       -e DOCKERCEPTION=1 \
       "$DOCKER_NAMETAG" \
       /bin/bash -c ". /this_dir/stage_sysroot.bash; stage_sysroot"

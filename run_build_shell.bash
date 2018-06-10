@@ -13,6 +13,19 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+while [[ $# -gt 0 ]]; do
+  case $1 in
+  --variant=vanilla)   VARIANT="vanilla";    shift ;;
+  --variant=obfuscator)VARIANT="obfuscator"; shift ;;
+  *)                                         shift ;;
+  esac
+done
+
+if [[ -z "${VARIANT:-}" ]]; then
+  echo "Error: must a variant --variant=<vanilla|obfuscator>"
+  exit 1
+fi
+
 DOCKER_NAMETAG=$(cat docker_nametag)
 BR2_TOOLCHAIN_LD_LIBRARY_PATH=/toolchain/x86/x86_64-buildroot-linux-gnu/lib64
 
@@ -24,10 +37,10 @@ docker run -i -t --rm \
     -v "$PWD/bin:/wrapper-bin" \
     -v "$PWD/patches:/patches" \
     -v "$PWD:/this_dir" \
-    -v obfuscator-llvm:/work/obfuscator-llvm \
-    -v obfuscator-llvm-build:/work/build \
+    -v $VARIANT-llvm:/work/$VARIANT-llvm \
+    -v $VARIANT-llvm-build:/work/build \
     "$DOCKER_NAMETAG" \
-    /bin/bash -c "export PATH=/opt/llvm-obfuscator/bin:/opt/llvm-obfuscator/wrappers/bin:\$PATH; \
+    /bin/bash -c "export PATH=/opt/llvm-$VARIANT/bin:/opt/llvm-$VARIANT/wrappers/bin:\$PATH; \
                   cp -v /this_dir/cpp_wrapper.c /work/cpp_wrapper.c \
                   && gcc -std=c99 -O3 -Wall /work/cpp_wrapper.c -o /bin/cpp_wrapper; \
                   export BR2_TOOLCHAIN_PATH=/toolchain/arm; \

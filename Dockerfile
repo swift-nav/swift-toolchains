@@ -24,7 +24,7 @@ RUN    apt-get update \
     && echo "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-4.0 main" \
           >/etc/apt/sources.list.d/llvm40.list \
     && apt-get update \
-    && apt-get upgrade \
+    && apt-get upgrade -y \
     && apt-get install -y libcurl4-openssl-dev \
                           build-essential \
                           bison \
@@ -34,8 +34,17 @@ RUN    apt-get update \
                           llvm-4.0-dev \
                           clang-4.0 \
                           git \
+                          m4 \
+                          gperf \
+                          gawk \
+                          ncurses-dev \
+                          texinfo \
+                          help2man \
                           binutils-dev \
+                          libpthread-stubs0-dev \
+                          libtinfo-dev \
                           python \
+                          python-dev \
                           binutils-multiarch-dev \
                           g++-4.8-arm-linux-gnueabihf \
                           gcc-4.8-arm-linux-gnueabihf \

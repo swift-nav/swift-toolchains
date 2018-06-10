@@ -43,7 +43,7 @@ fi
 
 echo 'Running build of llvm-obfuscator... '
 
-make "ARCH=$ARCH" NO_TTY=y build &>/tmp/build.bash.log &
+make "ARCH=$ARCH" NO_TTY=y VARIANT=obfuscator build &>/tmp/build.obfuscator.log &
 BUILD_PID=$!
 
 wait $BUILD_PID
@@ -59,3 +59,14 @@ if [[ $ARCH == *arm* ]]; then
 
   echo 'DONE.'
 fi
+
+make clean-obfuscator
+
+echo 'Running build of llvm-vanilla... '
+
+make "ARCH=$ARCH" NO_TTY=y VARIANT=vanilla build &>/tmp/build.vanilla.log &
+BUILD_PID=$!
+
+wait $BUILD_PID
+
+echo 'DONE.'

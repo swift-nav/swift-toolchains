@@ -5,6 +5,7 @@ SCRIPTS := .travis.sh \
 					 publish.sh \
 					 run_build_shell.bash \
 					 stage_sysroot.bash \
+					 do_clang_build.bash \
 
 all: check base build
 
@@ -27,7 +28,7 @@ base: check-base
 	$(CURDIR)/base.bash $(NO_TTY_ARG)
 
 build: check-build
-	$(CURDIR)/build.bash $(NO_TTY_ARG) --arch=$(ARCH)
+	$(CURDIR)/build.bash $(NO_TTY_ARG) --arch=$(ARCH) --variant=$(VARIANT)
 
 stage: check-stage_sysroot
 	$(CURDIR)/stage_sysroot.bash $(NO_TTY_ARG)
@@ -38,7 +39,15 @@ build-example: check-build_example
 run: check-run_build_shell
 	$(CURDIR)/run_build_shell.bash $(NO_TTY_ARG)
 
-clean:
+clean-vanilla:
+	docker volume rm vanilla-llvm-build || :
+	docker volume rm vanilla-llvm || :
+
+clean-obfuscator:
 	docker volume rm obfuscator-llvm-build || :
 	docker volume rm obfuscator-llvm || :
+
+clean-build: clean-vanilla clean-obfuscator
+
+clean: clean-build
 	sudo rm -rf output/*
