@@ -41,9 +41,9 @@ fi
 
 ### build.bash
 
-echo 'Running build of llvm-obfuscator... '
+echo "Running build of llvm-$VARIANT... "
 
-make "ARCH=$ARCH" NO_TTY=y VARIANT=obfuscator build &>/tmp/build.obfuscator.log &
+make "ARCH=$ARCH" NO_TTY=y VARIANT=$VARIANT build &>/tmp/build.bash.log &
 BUILD_PID=$!
 
 wait $BUILD_PID
@@ -52,21 +52,10 @@ echo 'DONE.'
 
 ### build_example.bash
 
-if [[ $ARCH == *arm* ]]; then
+if [[ $ARCH == *arm* ]] && [[ $VARIANT == obfuscator ]]; then
 
   echo -n 'Building example project... '
   make NO_TTY=y build-example &>/tmp/build_example.bash.log
 
   echo 'DONE.'
 fi
-
-make clean-obfuscator
-
-echo 'Running build of llvm-vanilla... '
-
-make "ARCH=$ARCH" NO_TTY=y VARIANT=vanilla build &>/tmp/build.vanilla.log &
-BUILD_PID=$!
-
-wait $BUILD_PID
-
-echo 'DONE.'

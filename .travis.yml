@@ -10,23 +10,38 @@ branches:
 services:
  - docker
 
-before_install:
- - pip install --user --upgrade awscli
- - sudo apt-get update
- - sudo apt-get install -y jq
-
-script:
- - ./.travis.sh
-
-after_success:
- - travis_wait tar -C output -cJf "llvm-buildroot-$ARCH.txz" .
- - ./publish.sh llvm-buildroot-$ARCH.txz
-
-after_failure:
- - if [[ -e /tmp/base.bash.log ]]; then tail -n 500 /tmp/base.bash.log; fi
- - if [[ -e /tmp/build.obfuscator.log ]]; then tail -n 500 /tmp/build.obfuscator.log; fi
- - if [[ -e /tmp/build.vanilla.log ]]; then tail -n 500 /tmp/build.vanilla.log; fi
- - if [[ -e /tmp/build_example.bash.log ]]; then tail -n 500 /tmp/build_example.bash.log; fi
+matrix:
+  include:
+    - env:
+        - VARIANT=obfuscator
+      before_install:
+        - pip install --user --upgrade awscli
+        - sudo apt-get update
+        - sudo apt-get install -y jq
+      script:
+        - VARIANT=$VARIANT ./.travis.sh
+      after_success:
+        - travis_wait tar -C output -cJf "llvm-$VARIANT-$ARCH.txz" .
+        - ./publish.sh llvm-$VARIANT-$ARCH.txz
+      after_failure:
+        - if [[ -e /tmp/base.bash.log ]]; then tail -n 500 /tmp/base.bash.log; fi
+        - if [[ -e /tmp/build.bash.log ]]; then tail -n 500 /tmp/build.bash.log; fi
+        - if [[ -e /tmp/build_example.bash.log ]]; then tail -n 500 /tmp/build_example.bash.log; fi
+    - env:
+        - VARIANT=vanilla
+      before_install:
+        - pip install --user --upgrade awscli
+        - sudo apt-get update
+        - sudo apt-get install -y jq
+      script:
+        - VARIANT=$VARIANT ./.travis.sh
+      after_success:
+        - travis_wait tar -C output -cJf "llvm-$VARIANT-$ARCH.txz" .
+        - ./publish.sh llvm-$VARIANT-$ARCH.txz
+      after_failure:
+        - if [[ -e /tmp/base.bash.log ]]; then tail -n 500 /tmp/base.bash.log; fi
+        - if [[ -e /tmp/build.bash.log ]]; then tail -n 500 /tmp/build.bash.log; fi
+        - if [[ -e /tmp/build_example.bash.log ]]; then tail -n 500 /tmp/build_example.bash.log; fi
 
 env:
   global:
