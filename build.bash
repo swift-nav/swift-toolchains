@@ -16,6 +16,7 @@ IFS=$'\n\t'
 DOCKER_NAMETAG=$(cat docker_nametag)
 
 mkdir -p output/opt
+mkdir -p output/ccache
 
 VERBOSE=
 NO_TTY=
@@ -48,7 +49,9 @@ if [[ -z "${VARIANT:-}" ]]; then
   exit 1
 fi
 
-set -x
+CXX_FLAGS="-L/toolchain/x86/x86_64-buildroot-linux-gnu/sysroot/lib \
+  -L/toolchain/x86/x86_64-buildroot-linux-gnu/sysroot/usr/lib \
+  -I/toolchain/x86/lib/gcc/x86_64-buildroot-linux-gnu/6.4.0/plugin/include"
 
 if [[ "$VARIANT" == "obfuscator" ]]; then
   LLVM_REPO="https://github.com/obfuscator-llvm/obfuscator.git"
@@ -67,6 +70,8 @@ else
   CPP_WRAPPER_DEFINE="-DCMAKE_CXX_COMPILER=/toolchain/x86/bin/x86_64-linux-g++"
   PATCH_COMMAND="true"
   COMPILE_CPP_WRAPPER="true"
+  CXX_FLAGS+=" -I/work/$VARIANT-llvm/tools/clang/include"
+  CXX_FLAGS+=" -I/work/build/tools/clang/include"
 fi
 
 CMAKE_COMMAND="\
@@ -74,7 +79,8 @@ CMAKE_COMMAND="\
         /work/$VARIANT-llvm \
         -DCMAKE_INSTALL_PREFIX=/opt/llvm-$VARIANT \
         -DLLVM_TARGETS_TO_BUILD=$ARCH \
-        -DCMAKE_CXX_FLAGS='-DENDIAN_LITTLE=1 -L/toolchain/x86/x86_64-buildroot-linux-gnu/sysroot/lib -L/toolchain/x86/x86_64-buildroot-linux-gnu/sysroot/usr/lib -I/toolchain/x86/lib/gcc/x86_64-buildroot-linux-gnu/6.4.0/plugin/include' \
+        -DCMAKE_CXX_FLAGS='-DENDIAN_LITTLE=1 $CXX_FLAGS' \
+        -DLLVM_CCACHE_BUILD=ON \
         $CPP_WRAPPER_DEFINE \
         -DCMAKE_C_COMPILER=/toolchain/x86/bin/x86_64-linux-gcc \
         -DCMAKE_BUILD_TYPE=Release \
@@ -88,11 +94,14 @@ else
   INTERACTIVE=()
 fi
 
+#    -v $VARIANT-llvm-ccache:/work/ccache \
+
 # shellcheck disable=SC2068
 docker run ${INTERACTIVE[@]:-} --rm \
     -v "$PWD/output/opt:/opt" \
     -v "$PWD/patches:/patches" \
     -v "$PWD:/this_dir" \
+    -v "$PWD/output/ccache:/work/ccache" \
     -v $VARIANT-llvm:/work/$VARIANT-llvm \
     -v $VARIANT-llvm-build:/work/build \
     -e VARIANT=$VARIANT -e ARCH=$ARCH \
@@ -105,7 +114,8 @@ docker run ${INTERACTIVE[@]:-} --rm \
     -e CLANG_TOOLS_EXTRA_REPO=$CLANG_TOOLS_EXTRA_REPO \
     -e PATCH_COMMAND=$PATCH_COMMAND \
     -e COMPILE_CPP_WRAPPER=$COMPILE_CPP_WRAPPER \
-    "$DOCKER_NAMETAG" \
+    -e CCACHE_DIR=/work/ccache \
+    "$DOCKER_NAMETAG-$VARIANT" \
     /bin/bash -c "/this_dir/do_clang_build.bash"
 
 ./stage_sysroot.bash $NO_TTY "--variant=$VARIANT"

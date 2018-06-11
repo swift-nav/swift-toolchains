@@ -39,7 +39,7 @@ docker run -i -t --rm \
     -v "$PWD:/this_dir" \
     -v $VARIANT-llvm:/work/$VARIANT-llvm \
     -v $VARIANT-llvm-build:/work/build \
-    "$DOCKER_NAMETAG" \
+    "$DOCKER_NAMETAG-$VARIANT" \
     /bin/bash -c "export PATH=/opt/llvm-$VARIANT/bin:/opt/llvm-$VARIANT/wrappers/bin:\$PATH; \
                   cp -v /this_dir/cpp_wrapper.c /work/cpp_wrapper.c \
                   && gcc -std=c99 -O3 -Wall /work/cpp_wrapper.c -o /bin/cpp_wrapper; \

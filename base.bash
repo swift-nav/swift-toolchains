@@ -56,11 +56,16 @@ fi
 
 docker build \
   --force-rm --no-cache \
-  -f Dockerfile -t "$DOCKER_NAMETAG" .
+  -f Dockerfile.base -t "$DOCKER_NAMETAG" .
 
-if [[ -n "${DOCKER_USER:-}" ]] && [[ -n "${DOCKER_PASS:-}" ]]; then
-  echo "$DOCKER_PASS" | docker login --username="$DOCKER_USER" --password-stdin
-  docker push "$DOCKER_NAMETAG"
-else
-  echo "WARNING: not pushing new image to Docker Hub..." >&2
-fi
+docker build \
+  --force-rm --no-cache \
+  --build-arg "DOCKER_NAMETAG=$DOCKER_NAMETAG" \
+  -f Dockerfile.vanilla -t "$DOCKER_NAMETAG-vanilla" .
+
+docker build \
+  --force-rm --no-cache \
+  --build-arg "DOCKER_NAMETAG=$DOCKER_NAMETAG" \
+  -f Dockerfile.obfuscator -t "$DOCKER_NAMETAG-obfuscator" .
+
+./push.bash
