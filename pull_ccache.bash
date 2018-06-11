@@ -13,6 +13,8 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+DOCKER_NAMETAG=$(cat docker_nametag)
+
 while [[ $# -gt 0 ]]; do
   case $1 in
 
