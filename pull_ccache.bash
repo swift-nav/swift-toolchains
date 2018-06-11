@@ -52,4 +52,4 @@ docker run ${INTERACTIVE[@]:-} --rm \
     -v "$PWD:/this_dir" \
     -v $VARIANT-llvm-ccache:/work/ccache \
     "$DOCKER_NAMETAG-$VARIANT" \
-    /bin/bash -c "tar -xjf ${CCACHE_ARCHIVE} -C /work/ccache ."
+    /bin/bash -c "tar -xjf /this_dir/${CCACHE_ARCHIVE} -C /work/ccache ."
