@@ -12,11 +12,7 @@
 #
 # Script for publishing built binaries to S3.
 
-set -e
-
-if [ "$TRAVIS_OS_NAME" != "linux" ]; then
-    exit
-fi
+set -xe
 
 REPO="${PWD##*/}"
 BUCKET="${BUCKET:-llvm-obfuscator-arm}"
