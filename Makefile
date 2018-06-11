@@ -6,6 +6,8 @@ SCRIPTS := .travis.sh \
 					 run_build_shell.bash \
 					 stage_sysroot.bash \
 					 do_clang_build.bash \
+					 push_ccache.bash \
+					 pull_ccache.bash \
 
 all: check base build
 
@@ -39,13 +41,23 @@ build-example: check-build_example
 run: check-run_build_shell
 	$(CURDIR)/run_build_shell.bash $(NO_TTY_ARG)
 
-clean-vanilla:
+clean-vanilla-build:
 	docker volume rm vanilla-llvm-build || :
+	docker volume rm vanilla-llvm-ccache || :
+
+clean-vanilla-src:
 	docker volume rm vanilla-llvm || :
 
-clean-obfuscator:
+clean-vanilla: clean-vanilla-build clean-vanilla-src
+
+clean-obfuscator-build:
 	docker volume rm obfuscator-llvm-build || :
+	docker volume rm obfuscator-llvm-ccache || :
+
+clean-obfuscator-src:
 	docker volume rm obfuscator-llvm || :
+
+clean-obfuscator: clean-obfuscator-build clean-obfuscator-src
 
 clean-build: clean-vanilla clean-obfuscator
 

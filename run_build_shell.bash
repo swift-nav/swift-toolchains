@@ -37,8 +37,10 @@ docker run -i -t --rm \
     -v "$PWD/bin:/wrapper-bin" \
     -v "$PWD/patches:/patches" \
     -v "$PWD:/this_dir" \
+    -v $VARIANT-llvm-ccache:/work/ccache \
     -v $VARIANT-llvm:/work/$VARIANT-llvm \
     -v $VARIANT-llvm-build:/work/build \
+    -e CCACHE_DIR=/work/ccache \
     "$DOCKER_NAMETAG-$VARIANT" \
     /bin/bash -c "export PATH=/opt/llvm-$VARIANT/bin:/opt/llvm-$VARIANT/wrappers/bin:\$PATH; \
                   cp -v /this_dir/cpp_wrapper.c /work/cpp_wrapper.c \

@@ -16,7 +16,6 @@ IFS=$'\n\t'
 DOCKER_NAMETAG=$(cat docker_nametag)
 
 mkdir -p output/opt
-mkdir -p output/ccache
 
 VERBOSE=
 NO_TTY=
@@ -27,7 +26,7 @@ while [[ $# -gt 0 ]]; do
   --arch=x86)           ARCH="X86";           shift ;;
   --arch=arm)           ARCH="ARM";           shift ;;
   --arch=arm,x86)       ARCH="ARM\\;X86";     shift ;;
-  --arch=x86,arm)       ARCH="X86\\;ARM";     shift ;;
+  --arch=x86,arm)       ARCH="ARM\\;X86";     shift ;;
 
   --variant=vanilla)    VARIANT="vanilla";    shift ;;
   --variant=obfuscator) VARIANT="obfuscator"; shift ;;
@@ -94,14 +93,12 @@ else
   INTERACTIVE=()
 fi
 
-#    -v $VARIANT-llvm-ccache:/work/ccache \
-
 # shellcheck disable=SC2068
 docker run ${INTERACTIVE[@]:-} --rm \
     -v "$PWD/output/opt:/opt" \
     -v "$PWD/patches:/patches" \
     -v "$PWD:/this_dir" \
-    -v "$PWD/output/ccache:/work/ccache" \
+    -v $VARIANT-llvm-ccache:/work/ccache \
     -v $VARIANT-llvm:/work/$VARIANT-llvm \
     -v $VARIANT-llvm-build:/work/build \
     -e VARIANT=$VARIANT -e ARCH=$ARCH \

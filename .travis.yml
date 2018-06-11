@@ -18,7 +18,7 @@ matrix:
   include:
     - env:
         - VARIANT=obfuscator
-        - ARCH=x86,arm
+        - ARCH=arm,x86
       before_install:
         - pip install --user --upgrade awscli
         - sudo apt-get update
@@ -33,12 +33,13 @@ matrix:
 
     - env:
         - VARIANT=vanilla
-        - ARCH=x86,arm
+        - ARCH=arm,x86
       before_install:
         - pip install --user --upgrade awscli
         - sudo apt-get update
         - sudo apt-get install -y jq
       script:
+        - ./pull_ccache.bash --variant=$VARIANT --arch=$ARCH
         - VARIANT=$VARIANT ./.travis.sh
       after_success:
         - travis_wait tar -C output -cJf "llvm-$VARIANT-$ARCH.txz" .
