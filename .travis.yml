@@ -10,10 +10,6 @@ branches:
 services:
  - docker
 
-cache:
-  directories:
-    - output/ccache
-
 matrix:
   include:
     - env:
@@ -24,6 +20,7 @@ matrix:
         - sudo apt-get update
         - sudo apt-get install -y jq
       script:
+        - ./pull_ccache.bash --variant=$VARIANT --arch=$ARCH
         - VARIANT=$VARIANT ./.travis.sh
       after_success:
         - travis_wait tar -C output -cJf "llvm-$VARIANT-$ARCH.txz" .
