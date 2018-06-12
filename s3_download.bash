@@ -18,7 +18,7 @@ set -xe
 REPO="${PWD##*/}"
 BUCKET="${BUCKET:-llvm-obfuscator-arm}"
 
-BUILD_VERSION="$(./most_recent_tag.bash)"
+BUILD_VERSION="$(cat build_tag)"
 BUILD_PATH="$REPO/$BUILD_VERSION"
 if [[ ! -z "$PRODUCT_VERSION" ]]; then
     BUILD_PATH="$BUILD_PATH/$PRODUCT_VERSION"

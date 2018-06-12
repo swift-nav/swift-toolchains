@@ -40,7 +40,7 @@ if [[ -z "${VARIANT:-}" ]]; then
   exit 1
 fi
 
-BUILD_VERSION="$(./most_recent_tag.bash)"
+BUILD_VERSION="$(cat build_tag)"
 ARCH="${ARCH//\\;/-}"
 
 CCACHE_ARCHIVE="ccache-${VARIANT}-${ARCH}-${BUILD_VERSION}.tbz2"
