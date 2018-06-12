@@ -27,7 +27,7 @@ fi
   done
 )&
 TICKER_PID=$!
-trap 'kill ${TICKER_PID:-} ${BUILD_PID:-}' EXIT
+trap 'kill ${TICKER_PID:-} ${BUILD_PID:-} &>/dev/null || :' EXIT
 
 ### base.bash
 
@@ -41,9 +41,9 @@ fi
 
 ### build.bash
 
-echo 'Running build of llvm-obfuscator... '
+echo "Running build of llvm-$VARIANT... "
 
-make "ARCH=$ARCH" NO_TTY=y build &>/tmp/build.bash.log &
+make NO_TTY=y "ARCH=$ARCH" "VARIANT=$VARIANT" build &>/tmp/build.bash.log &
 BUILD_PID=$!
 
 wait $BUILD_PID
@@ -52,7 +52,7 @@ echo 'DONE.'
 
 ### build_example.bash
 
-if [[ $ARCH == *arm* ]]; then
+if [[ $ARCH == *arm* ]] && [[ $VARIANT == obfuscator ]]; then
 
   echo -n 'Building example project... '
   make NO_TTY=y build-example &>/tmp/build_example.bash.log

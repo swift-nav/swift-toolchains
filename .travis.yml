@@ -10,25 +10,39 @@ branches:
 services:
  - docker
 
-before_install:
- - pip install --user --upgrade awscli
- - sudo apt-get update
- - sudo apt-get install -y jq
+matrix:
+  include:
+    - env:
+        - VARIANT=obfuscator
+        - ARCH=arm,x86
+      before_install:
+        - pip install --user --upgrade awscli
+        - sudo apt-get update
+        - sudo apt-get install -y jq
+      script:
+        - ./pull_ccache.bash --variant=$VARIANT --arch=$ARCH
+        - VARIANT=$VARIANT ./.travis.sh
+      after_success:
+        - travis_wait tar -C output -cJf "llvm-$VARIANT-$ARCH.txz" .
+        - ./publish.sh llvm-$VARIANT-$ARCH.txz
+      after_failure:
+        - ./.after_failure.sh
 
-script:
- - ./.travis.sh
-
-after_success:
- - travis_wait tar -C output -cJf "llvm-obfuscator-$ARCH.txz" .
- - ./publish.sh llvm-obfuscator-$ARCH.txz
-
-after_failure:
- - if [[ -e /tmp/base.bash.log ]]; then echo "*** base.bash.log ***"; fi
- - if [[ -e /tmp/base.bash.log ]]; then tail -n 500 /tmp/base.bash.log; fi
- - if [[ -e /tmp/build.bash.log ]]; then echo "*** build.bash.log ***"; fi
- - if [[ -e /tmp/build.bash.log ]]; then tail -n 500 /tmp/build.bash.log; fi
- - if [[ -e /tmp/build_example.bash.log ]]; then echo "*** build_example.bash.log ***"; fi
- - if [[ -e /tmp/build_example.bash.log ]]; then tail -n 500 /tmp/build_example.bash.log; fi
+    - env:
+        - VARIANT=vanilla
+        - ARCH=arm,x86
+      before_install:
+        - pip install --user --upgrade awscli
+        - sudo apt-get update
+        - sudo apt-get install -y jq
+      script:
+        - ./pull_ccache.bash --variant=$VARIANT --arch=$ARCH
+        - VARIANT=$VARIANT ./.travis.sh
+      after_success:
+        - travis_wait tar -C output -cJf "llvm-$VARIANT-$ARCH.txz" .
+        - ./publish.sh llvm-$VARIANT-$ARCH.txz
+      after_failure:
+        - ./.after_failure.sh
 
 env:
   global:
@@ -44,5 +58,3 @@ env:
     - secure: "T1wlLXyhfGnMNMPtHv2FspxsWG09hVZgaucSJ6IxN+PZBbgjLb/TMSlqqLXfIzx6s0SuQIzX1xZE8lb/uOzfLtjmxBdc4dGYLW+qR4AwkghQl2DGMK+hzGAi9ZbeCGKWtX7cN4WxLN1tpcTyQBCC8LcnP0xVxd+7Znytdezmlr86ce2d8dmUo+kyLdN+vhEUnch9zhMpuZI+TxV2HQqCS/6e31myP+3Xzw3B6o6uF8dYZ0QlWlNU4KjUNNAD7cLqkxNd38E7wFrQJdyrk03/hZanatl2mcL7Te5Uxo5sWN5WteTNwq8dCKXiEXpkEqP1++4wWTQDeQWoPjHlhHzO4MxGAdEUnlFWafsV78OJvr/gwV0UxDFmfadPwGG/xPPJMyNJjXwDyeztswknbVaNZdbRXp3m7Iri+bWCvOZE9N7rGde/5q0JOz9rwJXRDMPnp7+lyupHQQIdswNpkFraHz3eZ/h4n+Dkr3RtkW0M6ZpPR+/r18uD7jwm/Ye73E9wzq1b6sL0knX/OEwBv3FVvaBaA4SWzb1glDlru8BKnZfVIZ/UxYas6FqGN6H9ROyCHtva86ffv7HvvnB/gUqcOfY5si7WvtPVApIc9kfILcSWEchRWTHQIeUOdEUBfoq8/Km0BL6gguOO9Ge9zzOrdo0NThh8x7NoE0DhHdQctJY="
     # DOCKER_PASS
     - secure: "qEmUT+mBsHjLkrBYMZWiLl8+ZXq9UAv+DyMDww+N74hPtGiZxMqLuVIFq94qR/WhiI9zd7k+tjhy6TcgD8rpKoQnQSGXcotFGq6typ3UWEV0ekt40IMV5nBqopqGGIBVIHNfXjq0OTeYTF2eGncpNnznJHAQi8Dvj7vD99y5GA5RoZGSdsiqTyxBGMvZ0cE0QApkb1MH3lBVRzBuh6dotpa1RBlGR+i2xbcH3nAqy5RB38wZgMedAPnlUfg+uB+IQiF8+hbuSmHzADiabNLBkkB/UCOz59k/JkaeN+2gnyP6/so+SpOe1BKfpxKBcN74O4n056ZLDBRjTod2YSc49dKqxhZhQijwNJfFi3Tt5iNrFYdU3KPeqqfNLoQKmbBTKjGXbxHHXm3lnUuCTZH0Yd9QGKSAwn5kxDRy6DuyNMUGwFtu8YxzirwTJiQR6ayodMCMWjZCXuxUc0I5I2Y64CsofRWkuMbznjE4wJwptVPzTwIxkZnMt+aWVoQTXBtZVpiHf4CTJb65dyLDXeMOwhYnKzwLUrvvHHpOm7GygvAbbeDAzHumTDvt7s5nl2VwHNLmTK3TizvvpQCucIjG8M8dEd7iu4VRZh/rxGxV9MJ2qUNETa6hnfX+Z2xaLTcgYAG5z7p60sThPfFfYLopdJL1dO5eA/EncPzuQuh087w="
-  matrix:
-    - ARCH=x86,arm
