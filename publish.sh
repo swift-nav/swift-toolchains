@@ -17,22 +17,29 @@ set -xe
 REPO="${PWD##*/}"
 BUCKET="${BUCKET:-llvm-obfuscator-arm}"
 
-BUILD_VERSION="$(./describe_repo.bash)"
+if [[ -z "$BUILD_VERSION" ]]; then
+  BUILD_VERSION="$(git describe --tags --always --dirty)"
+fi
+
 BUILD_PATH="$REPO/$BUILD_VERSION"
+
 if [[ ! -z "$PRODUCT_VERSION" ]]; then
     BUILD_PATH="$BUILD_PATH/$PRODUCT_VERSION"
 fi
+
 if [[ ! -z "$PRODUCT_REV" ]]; then
     BUILD_PATH="$BUILD_PATH/$PRODUCT_REV"
 fi
+
 if [[ ! -z "$PRODUCT_TYPE" ]]; then
     BUILD_PATH="$BUILD_PATH/$PRODUCT_TYPE"
 fi
 
 echo "Uploading $* to $BUILD_PATH"
-echo "Publish PULL_REQUEST ($TRAVIS_PULL_REQUEST)"
-echo "Publish BRANCH ($TRAVIS_BRANCH)"
-echo "Publish TAG ($TRAVIS_TAG)"
+
+[[ -n "$TRAVIS_PULL_REQUEST" ]] || echo "Publish PULL_REQUEST ($TRAVIS_PULL_REQUEST)"
+[[ -n "$TRAVIS_BRANCH" ]]       || echo "Publish BRANCH ($TRAVIS_BRANCH)"
+[[ -n "$TRAVIS_TAG" ]]          || echo "Publish TAG ($TRAVIS_TAG)"
 
 for file in "$@"; do
     KEY="$BUILD_PATH/$(basename "$file")"

@@ -28,9 +28,6 @@ while [[ $# -gt 0 ]]; do
   --variant=vanilla)    VARIANT="vanilla";    shift ;;
   --variant=obfuscator) VARIANT="obfuscator"; shift ;;
 
-  --verbose)            VERBOSE="-v";         shift ;;
-  --no-tty)             NO_TTY=--no-tty;      shift ;;
-
   *)                                          shift ;;
   esac
 done
@@ -45,8 +42,8 @@ if [[ -z "${VARIANT:-}" ]]; then
   exit 1
 fi
 
-BUILD_VERSION="$(./describe_repo.bash)"
-ARCH="$(echo ${ARCH} | sed 's@\\;@-@g')"
+BUILD_VERSION="$(./most_recent_tag.bash)"
+ARCH="${ARCH//\\;/-}"
 
 CCACHE_ARCHIVE="ccache-${VARIANT}-${ARCH}-${BUILD_VERSION}.tbz2"
 
@@ -56,4 +53,4 @@ docker run -it --rm \
     "$DOCKER_NAMETAG-$VARIANT" \
     /bin/bash -c "tar -cjf /this_dir/${CCACHE_ARCHIVE} -C /work/ccache ."
 
-./publish.sh "${CCACHE_ARCHIVE}"
+BUILD_VERSION="${BUILD_VERSION}" ./publish.sh "${CCACHE_ARCHIVE}"

@@ -26,9 +26,6 @@ while [[ $# -gt 0 ]]; do
   --variant=vanilla)    VARIANT="vanilla";    shift ;;
   --variant=obfuscator) VARIANT="obfuscator"; shift ;;
 
-  --verbose)            VERBOSE="-v";         shift ;;
-  --no-tty)             NO_TTY=--no-tty;      shift ;;
-
   *)                                          shift ;;
   esac
 done
@@ -43,14 +40,14 @@ if [[ -z "${VARIANT:-}" ]]; then
   exit 1
 fi
 
-BUILD_VERSION="$(./describe_repo.bash)"
-ARCH="$(echo ${ARCH} | sed 's@\\;@-@g')"
+BUILD_VERSION="$(./most_recent_tag.bash)"
+ARCH="${ARCH//\\;/-}"
 
 CCACHE_ARCHIVE="ccache-${VARIANT}-${ARCH}-${BUILD_VERSION}.tbz2"
 
-./s3_download.bash ${CCACHE_ARCHIVE}
+./s3_download.bash "${CCACHE_ARCHIVE}"
 
-docker run ${INTERACTIVE[@]:-} --rm \
+docker run --rm \
     -v "$PWD:/this_dir" \
     -v $VARIANT-llvm-ccache:/work/ccache \
     "$DOCKER_NAMETAG-$VARIANT" \

@@ -8,6 +8,8 @@ SCRIPTS := .travis.sh \
 					 do_clang_build.bash \
 					 push_ccache.bash \
 					 pull_ccache.bash \
+					 most_recent_tag.bash \
+					 s3_download.bash \
 
 all: check base build
 
