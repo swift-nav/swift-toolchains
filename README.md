@@ -14,6 +14,9 @@ To integrate with with Buildroot, see the examples in [piksi_buildroot](https://
 - [llvm_obfuscator.mk](https://github.com/swift-nav/piksi_buildroot/blob/v2.2.0-release/package/llvm_obfuscator/llvm_obfuscator.mk)
 - [llvm_vanilla.mk](https://github.com/swift-nav/piksi_buildroot/blob/v2.2.0-release/package/llvm_vanilla/llvm_vanilla.mk)
 
+# Piksi Firmware Toolchain
+The Piksi Firmware toolchains are mirrored in the releases for this repo. When these are updated the instructions in the Piksi Firmware repository should be updated, along with any installation tools (i.e. Mac Homebrew formulas).
+
 # Copyright
 
 ```
