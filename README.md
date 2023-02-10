@@ -17,6 +17,9 @@ To integrate with with Buildroot, see the examples in [piksi_buildroot](https://
 # Piksi Firmware Toolchain
 The Piksi Firmware toolchains are mirrored in the releases for this repo. When these are updated the instructions in the Piksi Firmware repository should be updated, along with any installation tools (i.e. Mac Homebrew formulas).
 
+# Adding a new toolchain
+For adding new toolchains to repo, create a Release and manually upload the toolchain as an asset. We're using GitHub releases mostly for "free" file hosting.
+
 # Copyright
 
 ```
