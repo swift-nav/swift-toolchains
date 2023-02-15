@@ -55,7 +55,7 @@ pipeline {
                         //     make -C build -j "$NPROC" install-distribution
                         // ''')
                         sh('''
-                            ls -l clang-14.0.6/arm64/bin/
+                            ls -l $HOME/clang-14.0.6/arm64/bin/
                         ''')
                     }
                     // post {
