@@ -36,7 +36,9 @@ pipeline {
                         node('macos-arm64')
                     }
                     steps {
-                        sh('''
+                        sh(''' 
+                            ls -l
+
                             git clone https://github.com/llvm/llvm-project
                             cd llvm-project
                             git checkout llvmorg-14.0.6
@@ -72,7 +74,7 @@ pipeline {
                                 -DLLVM_DISTRIBUTION_COMPONENTS='clang'
 
                             make -C build-stage2 -j "$NPROC" install-distribution
-                            ls -l $PWD/stage1/clang-14.0.6/arm64/bin
+                            ls -l $PWD/stage2/clang-14.0.6/arm64/bin
                         ''')
                         // sh('''
                         //     ls -l $HOME/clang-14.0.6/arm64/bin/
