@@ -40,20 +40,36 @@ pipeline {
                             git clone https://github.com/llvm/llvm-project
                             cd llvm-project
                             git checkout llvmorg-14.0.6
-                            cmake -S llvm -B build -G "Unix Makefiles" \
+
+                            NPROC=$(nproc --all)
+                            echo $NPROC
+
+                            cmake -S llvm -B build-stage1 -G "Unix Makefiles" \
                                 -DCMAKE_OSX_ARCHITECTURES='arm64' \
                                 -DCMAKE_C_COMPILER=`which clang` \
                                 -DCMAKE_CXX_COMPILER=`which clang++` \
                                 -DCMAKE_BUILD_TYPE=Release \
-                                -DCMAKE_INSTALL_PREFIX=$HOME/software/clang-14.0.6/arm64 \
+                                -DCMAKE_INSTALL_PREFIX=$PWD/stage1/clang-14.0.6/arm64 \
                                 -DLLVM_TARGETS_TO_BUILD="AArch64" \
                                 -DLLVM_HOST_TRIPLE='aarch64-apple-darwin' \
                                 -DLLVM_DEFAULT_TARGET_TRIPLE='aarch64-apple-darwin' \
                                 -DLLVM_ENABLE_PROJECTS='clang'
-                            NPROC=$(nproc --all)
-                            echo $NPROC
+
                             make -C build -j "$NPROC" install-distribution
-                            ls -l $HOME/clang-14.0.6/arm64/bin/
+                            ls -l $PWD/stage1/clang-14.0.6/arm64
+
+                            cmake -S llvm -B build-stage2 -G "Unix Makefiles" \
+                                -DCMAKE_OSX_ARCHITECTURES='arm64' \
+                                -DCMAKE_C_COMPILER=$PWD/stage1/clang-14.0.6/arm64/bin/clang \
+                                -DCMAKE_CXX_COMPILER=$PWD/stage1/clang-14.0.6/arm64/bin/clang++ \
+                                -DCMAKE_BUILD_TYPE=Release \
+                                -DCMAKE_INSTALL_PREFIX=$PWD/stage2/clang-14.0.6/arm64 \
+                                -DLLVM_TARGETS_TO_BUILD="AArch64" \
+                                -DLLVM_HOST_TRIPLE='aarch64-apple-darwin' \
+                                -DLLVM_DEFAULT_TARGET_TRIPLE='aarch64-apple-darwin' \
+                                -DLLVM_ENABLE_PROJECTS='clang'
+
+                            ls -l $PWD/stage2/clang-14.0.6/arm64
                         ''')
                         // sh('''
                         //     ls -l $HOME/clang-14.0.6/arm64/bin/
