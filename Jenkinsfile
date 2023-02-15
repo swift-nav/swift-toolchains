@@ -50,8 +50,9 @@ pipeline {
                                 -DLLVM_HOST_TRIPLE='aarch64-apple-darwin' \
                                 -DLLVM_DEFAULT_TARGET_TRIPLE='aarch64-apple-darwin' \
                                 -DLLVM_ENABLE_PROJECTS='clang'
-
-                            make -C build install
+                            NPROC=$(nproc --all)
+                            echo $NPROC
+                            make -C build -j "$NPROC" install
                         ''')
                     }
                     // post {
