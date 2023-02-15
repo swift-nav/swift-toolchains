@@ -55,8 +55,8 @@ pipeline {
                                 -DLLVM_TARGETS_TO_BUILD="AArch64" \
                                 -DLLVM_HOST_TRIPLE='aarch64-apple-darwin' \
                                 -DLLVM_DEFAULT_TARGET_TRIPLE='aarch64-apple-darwin' \
-                                -DLLVM_ENABLE_PROJECTS='clang' \
-                                -DLLVM_DISTRIBUTION_COMPONENTS='clang'
+                                -DLLVM_ENABLE_PROJECTS='clang;libcxx;libcxxabi' \
+                                -DLLVM_DISTRIBUTION_COMPONENTS='clang;cxx;cxxabi;cxx-headers'
 
                             make -C build-stage1 -j "$NPROC" install-distribution
                             ls -l $PWD/stage1/clang-14.0.6/arm64/bin
