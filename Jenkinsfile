@@ -55,7 +55,7 @@ pipeline {
                                 -DLLVM_DEFAULT_TARGET_TRIPLE='aarch64-apple-darwin' \
                                 -DLLVM_ENABLE_PROJECTS='clang'
 
-                            make -C build -j "$NPROC" install-distribution
+                            make -C build-stage1 -j "$NPROC" install-distribution
                             ls -l $PWD/stage1/clang-14.0.6/arm64
 
                             cmake -S llvm -B build-stage2 -G "Unix Makefiles" \
@@ -69,6 +69,7 @@ pipeline {
                                 -DLLVM_DEFAULT_TARGET_TRIPLE='aarch64-apple-darwin' \
                                 -DLLVM_ENABLE_PROJECTS='clang'
 
+                            make -C build-stage2 -j "$NPROC" install-distribution
                             ls -l $PWD/stage2/clang-14.0.6/arm64
                         ''')
                         // sh('''
