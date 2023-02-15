@@ -59,7 +59,7 @@ pipeline {
                                 -DLLVM_DISTRIBUTION_COMPONENTS='clang;cxx;cxxabi;cxx-headers'
 
                             make -C build-stage1 -j "$NPROC" install-distribution
-                            ls -l $PWD/stage1/clang-14.0.6/arm64/bin
+                            find $PWD/stage1/clang-14.0.6/arm64/
 
                             cmake -S llvm -B build-stage2 -G "Unix Makefiles" \
                                 -DCMAKE_OSX_ARCHITECTURES='arm64' \
@@ -71,10 +71,11 @@ pipeline {
                                 -DLLVM_HOST_TRIPLE='aarch64-apple-darwin' \
                                 -DLLVM_DEFAULT_TARGET_TRIPLE='aarch64-apple-darwin' \
                                 -DLLVM_ENABLE_PROJECTS='clang' \
-                                -DLLVM_DISTRIBUTION_COMPONENTS='clang'
+                                -DLLVM_DISTRIBUTION_COMPONENTS='clang' \
+                                -DLLVM_ENABLE_LIBCXX=ON
 
                             make -C build-stage2 -j "$NPROC" install-distribution
-                            ls -l $PWD/stage2/clang-14.0.6/arm64/bin
+                            find $PWD/stage2/clang-14.0.6/arm64/
                         ''')
                         // sh('''
                         //     ls -l $HOME/clang-14.0.6/arm64/bin/
