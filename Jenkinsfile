@@ -39,7 +39,19 @@ pipeline {
                         sh('''
                             git clone https://github.com/llvm/llvm-project
                             cd llvm-project
-                            cmake -S llvm -B build -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
+                            git checkout llvmorg-14.0.6
+                            cmake -S llvm -B build -G "Unix Makefiles" \
+                                -DCMAKE_OSX_ARCHITECTURES='arm64' \
+                                -DCMAKE_C_COMPILER=`which clang` \
+                                -DCMAKE_CXX_COMPILER=`which clang++` \
+                                -DCMAKE_BUILD_TYPE=Release \
+                                -DCMAKE_INSTALL_PREFIX=$HOME/software/clang-14.0.6/arm64 \
+                                -DLLVM_TARGETS_TO_BUILD="AArch64" \
+                                -DLLVM_HOST_TRIPLE='aarch64-apple-darwin' \
+                                -DLLVM_DEFAULT_TARGET_TRIPLE='aarch64-apple-darwin' \
+                                -DLLVM_ENABLE_PROJECTS='clang'
+
+                            make -C build install
                         ''')
                     }
                     // post {
