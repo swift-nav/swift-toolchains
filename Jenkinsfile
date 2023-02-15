@@ -52,7 +52,7 @@ pipeline {
                                 -DLLVM_ENABLE_PROJECTS='clang'
                             NPROC=$(nproc --all)
                             echo $NPROC
-                            make -C build -j "$NPROC" install
+                            make -C build -j "$NPROC" install-distribution
                         ''')
                     }
                     // post {
