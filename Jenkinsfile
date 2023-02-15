@@ -36,13 +36,17 @@ pipeline {
                         node('macos-arm64')
                     }
                     steps {
-                        gitPrep()
+                        sh('''
+                            git clone https://github.com/llvm/llvm-project
+                            cd llvm-project
+                            cmake -S llvm -B build -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
+                        ''')
                     }
-                    post {
-                        always {
-                            archiveArtifacts(artifacts: '', allowEmptyArchive: true)
-                        }
-                    }
+                    // post {
+                    //     always {
+                    //         archiveArtifacts(artifacts: '', allowEmptyArchive: true)
+                    //     }
+                    // }
                 }
                 // stage('llvm x86_64 darwin') {
                 //     agent {
