@@ -121,11 +121,6 @@ pipeline {
                 //     steps {
                 //         gitPrep()
                 //     }
-                //     post {
-                //         always {
-                //             archiveArtifacts(artifacts: '', allowEmptyArchive: true)
-                //         }
-                //     }
                 // }
                 stage('llvm x86_64 linux') {
                     agent {
@@ -134,28 +129,32 @@ pipeline {
                         }
                     }
                     steps {
-                        sh(''' 
-                            git clone https://github.com/llvm/llvm-project
-                            cd llvm-project
-                            git checkout llvmorg-14.0.6
+                        // sh('''
+                        //     gitPrep()
 
-                            mkdir build
-                            cd build
+                        //     git clone https://github.com/llvm/llvm-project
+                        //     cd llvm-project
+                        //     git checkout llvmorg-14.0.6
 
-                            cmake -GNinja ../llvm \
-                                -DLLVM_ENABLE_PROJECTS="clang;lld" \
-                                -DLLVM_TARGETS_TO_BUILD="X86" \
-                                -DCMAKE_INSTALL_PREFIX=$PWD/out/clang-14.0.6/x86 \
-                                -C ../clang/cmake/caches/DistributionExample.cmake
-                            ninja stage2-install-distribution
+                        //     mkdir build
+                        //     cd build
 
-                            find $PWD/out/clang-14.0.6/x86
+                        //     cmake -GNinja ../llvm \
+                        //         -DCMAKE_INSTALL_PREFIX=../out/ \
+                        //         -C ../../llvm/Distribution-x86.cmake
+                        //     ninja stage2-install-distribution
+                        // ''')
+                        sh('''
+                            mkdir -p llvm-project/out/bin
+                            echo "abc" > llvm-project/out/bin/llvm-bin
                         ''')
-                    }
-                    post {
-                        always {
-                            archiveArtifacts(artifacts: '', allowEmptyArchive: true)
-                        }
+                        sh('find llvm-project/out/bin')
+                        zip(zipFile: 'clang+llvm-14.0.6-x86_64-linux.zip', dir: 'llvm-project/out/bin', archive: false)
+                        jenkins.context.archivePatterns(
+                            patterns: ['clang+llvm-14.0.6-x86_64-linux.zip'],
+                            path: "swift-toolchains/${jenkins.context.gitDescribe()}/clang+llvm-14.0.6-x86_64-linux.zip",
+                            jenkins: true
+                        )
                     }
                 }
             }
