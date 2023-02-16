@@ -150,11 +150,11 @@ pipeline {
                         ''')
                         sh('find llvm-project/out/bin')
                         zip(zipFile: 'clang+llvm-14.0.6-x86_64-linux.zip', dir: 'llvm-project/out/bin', archive: false)
-                        jenkins.context.archivePatterns(
-                            patterns: ['clang+llvm-14.0.6-x86_64-linux.zip'],
-                            path: "swift-toolchains/${jenkins.context.gitDescribe()}/clang+llvm-14.0.6-x86_64-linux.zip",
-                            jenkins: true
-                        )
+                        // jenkins.context.archivePatterns(
+                        //     patterns: ['clang+llvm-14.0.6-x86_64-linux.zip'],
+                        //     path: "swift-toolchains/${jenkins.context.gitDescribe()}/clang+llvm-14.0.6-x86_64-linux.zip",
+                        //     jenkins: true
+                        // )
                     }
                 }
             }
