@@ -129,24 +129,20 @@ pipeline {
                         }
                     }
                     steps {
-                        // sh('''
-                        //     gitPrep()
-
-                        //     git clone https://github.com/llvm/llvm-project
-                        //     cd llvm-project
-                        //     git checkout llvmorg-14.0.6
-
-                        //     mkdir build
-                        //     cd build
-
-                        //     cmake -GNinja ../llvm \
-                        //         -DCMAKE_INSTALL_PREFIX=../out/ \
-                        //         -C ../../llvm/Distribution-x86.cmake
-                        //     ninja stage2-install-distribution
-                        // ''')
                         sh('''
-                            mkdir -p llvm-project/out/bin
-                            echo "abc" > llvm-project/out/bin/llvm-bin
+                            gitPrep()
+
+                            git clone https://github.com/llvm/llvm-project
+                            cd llvm-project
+                            git checkout llvmorg-14.0.6
+
+                            mkdir build
+                            cd build
+
+                            cmake -GNinja ../llvm \
+                                -DCMAKE_INSTALL_PREFIX=../out/ \
+                                -C ../../llvm/Distribution-x86.cmake
+                            ninja stage2-install-distribution
                         ''')
                         sh('find llvm-project/out/bin')
                         tar(file: 'clang+llvm-14.0.6-x86_64-linux.tar.gz', dir: 'llvm-project/out/bin', archive: false)
