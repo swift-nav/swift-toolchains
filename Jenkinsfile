@@ -37,6 +37,8 @@ pipeline {
                     }
                     steps {
                         sh('''
+                            brew install ninja
+
                             git clone https://github.com/llvm/llvm-project
                             cd llvm-project
                             git checkout llvmorg-14.0.6
