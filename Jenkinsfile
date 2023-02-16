@@ -149,11 +149,11 @@ pipeline {
                             echo "abc" > llvm-project/out/bin/llvm-bin
                         ''')
                         sh('find llvm-project/out/bin')
-                        zip(zipFile: 'clang+llvm-14.0.6-x86_64-linux.zip', dir: 'llvm-project/out/bin', archive: false)
+                        tar(file: 'clang+llvm-14.0.6-x86_64-linux.tar.gz', dir: 'llvm-project/out/bin', archive: false)
                         script{
                             context.archivePatterns(
-                                patterns: ['clang+llvm-14.0.6-x86_64-linux.zip'],
-                                path: "swift-toolchains/${context.gitDescribe()}/clang+llvm-14.0.6-x86_64-linux.zip",
+                                patterns: ['clang+llvm-14.0.6-x86_64-linux.tar.gz'],
+                                path: "swift-toolchains/${context.gitDescribe()}/clang+llvm-14.0.6-x86_64-linux.tar.gz",
                                 jenkins: true
                             )
                         }
