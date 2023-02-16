@@ -129,29 +129,30 @@ pipeline {
                         }
                     }
                     steps {
-                        gitPrep()
-                        sh('''
-                            git clone https://github.com/llvm/llvm-project
-                            cd llvm-project
-                            git checkout llvmorg-14.0.6
+                        // gitPrep()
+                        sh('ls -l')
+                        // sh('''
+                        //     git clone https://github.com/llvm/llvm-project
+                        //     cd llvm-project
+                        //     git checkout llvmorg-14.0.6
 
-                            mkdir build
-                            cd build
+                        //     mkdir build
+                        //     cd build
 
-                            cmake -GNinja ../llvm \
-                                -DCMAKE_INSTALL_PREFIX=../out/ \
-                                -C ../../llvm/Distribution-x86.cmake
-                            ninja stage2-install-distribution
-                        ''')
-                        sh('find llvm-project/out/bin')
-                        tar(file: 'clang+llvm-14.0.6-x86_64-linux.tar.gz', dir: 'llvm-project/out/bin', archive: false)
-                        script{
-                            context.archivePatterns(
-                                patterns: ['clang+llvm-14.0.6-x86_64-linux.tar.gz'],
-                                path: "swift-toolchains/${context.gitDescribe()}/clang+llvm-14.0.6-x86_64-linux.tar.gz",
-                                jenkins: true
-                            )
-                        }
+                        //     cmake -GNinja ../llvm \
+                        //         -DCMAKE_INSTALL_PREFIX=../out/ \
+                        //         -C ../../llvm/Distribution-x86.cmake
+                        //     ninja stage2-install-distribution
+                        // ''')
+                        // sh('find llvm-project/out/bin')
+                        // tar(file: 'clang+llvm-14.0.6-x86_64-linux.tar.gz', dir: 'llvm-project/out/bin', archive: false)
+                        // script{
+                        //     context.archivePatterns(
+                        //         patterns: ['clang+llvm-14.0.6-x86_64-linux.tar.gz'],
+                        //         path: "swift-toolchains/${context.gitDescribe()}/clang+llvm-14.0.6-x86_64-linux.tar.gz",
+                        //         jenkins: true
+                        //     )
+                        // }
                     }
                 }
             }
