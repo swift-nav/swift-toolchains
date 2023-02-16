@@ -10,4 +10,5 @@ RUN apt-get install -y \
     python3-pip \
     python3-distutils \
     vim \
-    ninja-build
+    ninja-build \
+    git
