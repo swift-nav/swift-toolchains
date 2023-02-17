@@ -57,6 +57,7 @@ pipeline {
                                 -C ../../llvm/Apple-stage1.cmake
                             ninja help
                             ninja stage2-install-distribution || true
+                            find .
                         ''')
                         sh('find llvm-project/out/')
                     }
