@@ -52,6 +52,7 @@ pipeline {
                                 -DCMAKE_INSTALL_PREFIX=../out \
                                 -DLLVM_ENABLE_PROJECTS='clang' \
                                 -DLLVM_DISTRIBUTION_COMPONENTS='clang' \
+                                -DLLVM_ENABLE_LIBCXX=ON \
                                 -C ../../llvm/Apple-stage1.cmake
                             ninja help
                             ninja stage2-install-distribution || true
