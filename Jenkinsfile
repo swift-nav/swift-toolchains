@@ -58,7 +58,7 @@ pipeline {
                                 -DLLVM_DEFAULT_TARGET_TRIPLE='aarch64-apple-darwin' \
                                 -DLLVM_ENABLE_PROJECTS='clang' \
                                 -DLLVM_DISTRIBUTION_COMPONENTS='clang' \
-                                -C ../../Apple-stage1.cmake
+                                -C ../clang/cmake/caches/Apple-stage1.cmake
                             ninja help
                             ninja stage2-install-distribution
                         ''')
