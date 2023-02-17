@@ -37,7 +37,7 @@ pipeline {
                     }
                     steps {
                         sh('''
-                            git clone https://github.com/llvm/llvm-project --branch=llvmorg-15.0.0-rc1 --single-branch
+                            git clone https://github.com/llvm/llvm-project --branch=llvmorg-14.0.6 --single-branch
                             cd llvm-project
 
                             mkdir build
@@ -57,6 +57,27 @@ pipeline {
                             ninja stage2-install-distribution || true
                         ''')
                         sh('find llvm-project/out/')
+                        sh('''
+                            mkdir -p tar/clang+llvm-14.0.6-x86_64-apple/bin
+                            cp llvm-project/out/bin/llvm-ar \
+                               llvm-project/out/bin/llvm-cov \
+                               llvm-project/out/bin/llvm-dwp \
+                               llvm-project/out/bin/llvm-nm \
+                               llvm-project/out/bin/llvm-objcopy \
+                               llvm-project/out/bin/llvm-objdump \
+                               llvm-project/out/bin/llvm-profdata \
+                               llvm-project/out/bin/llvm-strip \
+                               llvm-project/out/bin/clang-cpp \
+                               llvm-project/out/bin/ld.lld \
+                               tar/clang+llvm-14.0.6-x86_64-apple/bin
+                        ''')
+                        tar(file: 'clang+llvm-14.0.6-x86_64-apple.tar.gz', dir: 'tar', archive: false)
+                        script{
+                            context.archivePatterns(
+                                patterns: ['clang+llvm-14.0.6-x86_64-apple.tar.gz'],
+                                path: "swift-toolchains/${context.gitDescribe()}/clang+llvm-14.0.6-x86_64-apple.tar.gz",
+                                jenkins: true
+                            )
                     }
                 }
             }
