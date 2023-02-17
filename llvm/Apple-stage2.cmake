@@ -63,7 +63,7 @@ set(CMAKE_BUILD_TYPE Release CACHE STRING "")
 #   CACHE STRING "")
 
 set(LLVM_DISTRIBUTION_COMPONENTS
-  # clang
+  clang
   lld
   # ${LLVM_TOOLCHAIN_TOOLS}
   CACHE STRING "")
