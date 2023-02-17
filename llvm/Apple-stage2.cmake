@@ -1,7 +1,7 @@
 # This file sets up a CMakeCache for Apple-style stage2 bootstrap. It is
 # specified by the stage1 build.
 
-set(LLVM_TARGETS_TO_BUILD X86 ARM AArch64 CACHE STRING "") 
+set(LLVM_TARGETS_TO_BUILD AArch64 CACHE STRING "") 
 set(PACKAGE_VENDOR Apple CACHE STRING "")
 set(CLANG_VENDOR_UTI com.apple.clang CACHE STRING "")
 set(LLVM_INCLUDE_EXAMPLES OFF CACHE BOOL "")
@@ -71,13 +71,13 @@ set(LLVM_TOOLCHAIN_UTILITIES
 
 set(LLVM_DISTRIBUTION_COMPONENTS
   clang
-  LTO
-  clang-format
-  clang-resource-headers
-  cxx-headers
-  Remarks
-  ${LLVM_TOOLCHAIN_TOOLS}
-  ${LLVM_TOOLCHAIN_UTILITIES}
+  # LTO
+  # clang-format
+  # clang-resource-headers
+  # cxx-headers
+  # Remarks
+  # ${LLVM_TOOLCHAIN_TOOLS}
+  # ${LLVM_TOOLCHAIN_UTILITIES}
   CACHE STRING "")
 
 # test args
