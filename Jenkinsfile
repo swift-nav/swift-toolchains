@@ -48,10 +48,16 @@ pipeline {
 
                             cmake -GNinja ../llvm \
                                 -DCMAKE_INSTALL_PREFIX=../out/ \
-                                -DCMAKE_OSX_ARCHITECTURES=arm64 \
-                                -DLLVM_HOST_TRIPLE=aarch64-apple-darwin \
-                                -DLLVM_DEFAULT_TARGET_TRIPLE=aarch64-apple-darwin \
-                                -DLLVM_DISTRIBUTION_COMPONENTS=clang \
+                                -DCMAKE_OSX_ARCHITECTURES='arm64' \
+                                -DCMAKE_C_COMPILER=`which clang` \
+                                -DCMAKE_CXX_COMPILER=`which clang++` \
+                                -DCMAKE_BUILD_TYPE=Release \
+                                -DCMAKE_INSTALL_PREFIX=../out \
+                                -DLLVM_TARGETS_TO_BUILD="AArch64" \
+                                -DLLVM_HOST_TRIPLE='aarch64-apple-darwin' \
+                                -DLLVM_DEFAULT_TARGET_TRIPLE='aarch64-apple-darwin' \
+                                -DLLVM_ENABLE_PROJECTS='clang' \
+                                -DLLVM_DISTRIBUTION_COMPONENTS='clang' \
                                 -C ../../Apple-stage1.cmake
                             ninja help
                             ninja stage2-install-distribution
