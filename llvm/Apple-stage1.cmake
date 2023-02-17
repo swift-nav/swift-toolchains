@@ -7,6 +7,9 @@ else()
   set(CMAKE_INSTALL_PREFIX /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.toolchain/usr/)
 endif()
 
+set(LLVM_ENABLE_PROJECTS "clang;clang-tools-extra;lld" CACHE STRING "")
+set(LLVM_ENABLE_RUNTIMES "compiler-rt;libcxx;libcxxabi" CACHE STRING "")
+
 set(LLVM_TARGETS_TO_BUILD X86 CACHE STRING "")
 set(CLANG_VENDOR Apple CACHE STRING "")
 set(LLVM_INCLUDE_TESTS OFF CACHE BOOL "")
