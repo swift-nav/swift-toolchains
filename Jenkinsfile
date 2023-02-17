@@ -31,97 +31,6 @@ pipeline {
     stages {
         stage('Build') {
             parallel {
-                // stage('llvm aarch64 darwin') {
-                //     agent {
-                //         node('macos-arm64')
-                //     }
-                //     steps {
-                //         sh(''' 
-                //             ls -l
-
-                //             git clone https://github.com/llvm/llvm-project
-                //             cd llvm-project
-                //             git checkout llvmorg-14.0.6
-
-                //             NPROC=$(nproc --all)
-                //             echo $NPROC
-
-                //             cmake -S llvm -B build-stage1 \
-                //                 -G "Unix Makefiles" \
-                //                 -C clang/cmake/caches/Apple-stage1.cmake \
-                //                 -DCMAKE_OSX_ARCHITECTURES='arm64' \
-                //                 -DCMAKE_C_COMPILER=`which clang` \
-                //                 -DCMAKE_CXX_COMPILER=`which clang++` \
-                //                 -DCMAKE_BUILD_TYPE=Release \
-                //                 -DCMAKE_INSTALL_PREFIX=$PWD/stage1/clang-14.0.6/arm64 \
-                //                 -DLLVM_TARGETS_TO_BUILD="AArch64" \
-                //                 -DLLVM_HOST_TRIPLE='aarch64-apple-darwin' \
-                //                 -DLLVM_DEFAULT_TARGET_TRIPLE='aarch64-apple-darwin' \
-                //                 -DLLVM_ENABLE_PROJECTS='clang' \
-                //                 -DLLVM_DISTRIBUTION_COMPONENTS='clang'
-
-                //             make -C build-stage1 -j "$NPROC" stage2-install-distribution
-                //             find $PWD/stage1/clang-14.0.6/arm64/
-                //         ''')
-                //         // sh(''' 
-                //         //     ls -l
-
-                //         //     git clone https://github.com/llvm/llvm-project
-                //         //     cd llvm-project
-                //         //     git checkout llvmorg-14.0.6
-
-                //         //     NPROC=$(nproc --all)
-                //         //     echo $NPROC
-
-                //         //     cmake -S llvm -B build-stage1 -G "Unix Makefiles" \
-                //         //         -DCMAKE_OSX_ARCHITECTURES='arm64' \
-                //         //         -DCMAKE_C_COMPILER=`which clang` \
-                //         //         -DCMAKE_CXX_COMPILER=`which clang++` \
-                //         //         -DCMAKE_BUILD_TYPE=Release \
-                //         //         -DCMAKE_INSTALL_PREFIX=$PWD/stage1/clang-14.0.6/arm64 \
-                //         //         -DLLVM_TARGETS_TO_BUILD="AArch64" \
-                //         //         -DLLVM_HOST_TRIPLE='aarch64-apple-darwin' \
-                //         //         -DLLVM_DEFAULT_TARGET_TRIPLE='aarch64-apple-darwin' \
-                //         //         -DLLVM_ENABLE_PROJECTS='clang;libcxx;libcxxabi' \
-                //         //         -DLLVM_DISTRIBUTION_COMPONENTS='clang;cxx;cxxabi;cxx-headers'
-
-                //         //     make -C build-stage1 -j "$NPROC" install-distribution
-                //         //     find $PWD/stage1/clang-14.0.6/arm64/
-
-                //         //     cmake -S llvm -B build-stage2 -G "Unix Makefiles" \
-                //         //         -DCMAKE_OSX_ARCHITECTURES='arm64' \
-                //         //         -DCMAKE_C_COMPILER=$PWD/stage1/clang-14.0.6/arm64/bin/clang \
-                //         //         -DCMAKE_CXX_COMPILER=$PWD/stage1/clang-14.0.6/arm64/bin/clang++ \
-                //         //         -DCMAKE_BUILD_TYPE=Release \
-                //         //         -DCMAKE_INSTALL_PREFIX=$PWD/stage2/clang-14.0.6/arm64 \
-                //         //         -DLLVM_TARGETS_TO_BUILD="AArch64" \
-                //         //         -DLLVM_HOST_TRIPLE='aarch64-apple-darwin' \
-                //         //         -DLLVM_DEFAULT_TARGET_TRIPLE='aarch64-apple-darwin' \
-                //         //         -DLLVM_ENABLE_PROJECTS='clang' \
-                //         //         -DLLVM_DISTRIBUTION_COMPONENTS='clang' \
-                //         //         -DLLVM_ENABLE_LIBCXX=ON
-
-                //         //     make -C build-stage2 -j "$NPROC" install-distribution
-                //         //     find $PWD/stage2/clang-14.0.6/arm64/
-                //         // ''')
-                //         // sh('''
-                //         //     ls -l $HOME/clang-14.0.6/arm64/bin/
-                //         // ''')
-                //     }
-                //     // post {
-                //     //     always {
-                //     //         archiveArtifacts(artifacts: '', allowEmptyArchive: true)
-                //     //     }
-                //     // }
-                // }
-                // stage('llvm x86_64 darwin') {
-                //     agent {
-                //         node('macos')
-                //     }
-                //     steps {
-                //         gitPrep()
-                //     }
-                // }
                 stage('llvm x86_64 linux') {
                     agent {
                         dockerfile {
@@ -138,6 +47,8 @@ pipeline {
                             cd build
 
                             cmake -GNinja ../llvm \
+                                -DLLVM_ENABLE_PROJECTS="clang;lld" \
+                                -DLLVM_TARGETS_TO_BUILD="X86" \
                                 -DCMAKE_INSTALL_PREFIX=../out/ \
                                 -C ../../llvm/Distribution-x86.cmake
                             ninja stage2-install-distribution
