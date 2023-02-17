@@ -38,34 +38,21 @@ pipeline {
                         }
                     }
                     steps {
-                        // sh('''
-                        //     git clone https://github.com/llvm/llvm-project --branch=llvmorg-14.0.6 --single-branch
-                        //     cd llvm-project
-                        //     git checkout llvmorg-14.0.6
-
-                        //     mkdir build
-                        //     cd build
-
-                        //     cmake -GNinja ../llvm \
-                        //         -DLLVM_ENABLE_PROJECTS="clang;lld" \
-                        //         -DCMAKE_INSTALL_PREFIX=../out/ \
-                        //         -C ../../llvm/Distribution-x86.cmake
-                        //     ninja stage2-install-distribution
-                        // ''')
-                        // sh('find llvm-project/out/bin')
                         sh('''
-                            mkdir -p llvm-project/out/bin
-                            echo "ABC" > llvm-project/out/bin/llvm-ar 
-                            echo "ABC" > llvm-project/out/bin/llvm-cov 
-                            echo "ABC" > llvm-project/out/bin/llvm-dwp 
-                            echo "ABC" > llvm-project/out/bin/llvm-nm 
-                            echo "ABC" > llvm-project/out/bin/llvm-objcopy 
-                            echo "ABC" > llvm-project/out/bin/llvm-objdump 
-                            echo "ABC" > llvm-project/out/bin/llvm-profdata 
-                            echo "ABC" > llvm-project/out/bin/llvm-strip 
-                            echo "ABC" > llvm-project/out/bin/clang-cpp 
-                            echo "ABC" > llvm-project/out/bin/ld.lld 
+                            git clone https://github.com/llvm/llvm-project --branch=llvmorg-14.0.6 --single-branch
+                            cd llvm-project
+                            git checkout llvmorg-14.0.6
+
+                            mkdir build
+                            cd build
+
+                            cmake -GNinja ../llvm \
+                                -DLLVM_ENABLE_PROJECTS="clang;lld" \
+                                -DCMAKE_INSTALL_PREFIX=../out/ \
+                                -C ../../llvm/Distribution-x86.cmake
+                            ninja stage2-install-distribution
                         ''')
+                        sh('find llvm-project/out/bin')
                         sh('''
                             mkdir -p tar/clang+llvm-14.0.6-x86_64-linux/bin
                             cp llvm-project/out/bin/llvm-ar \
