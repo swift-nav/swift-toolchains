@@ -41,7 +41,6 @@ pipeline {
 
                             git clone https://github.com/llvm/llvm-project --branch=llvmorg-14.0.6 --single-branch
                             cd llvm-project
-                            git checkout llvmorg-14.0.6
 
                             mkdir build
                             cd build
@@ -58,7 +57,7 @@ pipeline {
                                 -DLLVM_DEFAULT_TARGET_TRIPLE='aarch64-apple-darwin' \
                                 -DLLVM_ENABLE_PROJECTS='clang' \
                                 -DLLVM_DISTRIBUTION_COMPONENTS='clang' \
-                                -C ../clang/cmake/caches/Apple-stage1.cmake
+                                -C ../../llvm/Apple-stage1.cmake
                             ninja help
                             ninja stage2-install-distribution
                         ''')
