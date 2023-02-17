@@ -37,7 +37,7 @@ pipeline {
                     }
                     steps {
                         sh('''
-                            git clone https://github.com/llvm/llvm-project --branch=llvmorg-14.0.6 --single-branch
+                            git clone https://github.com/llvm/llvm-project --branch=llvmorg-15.0.0-rc1 --single-branch
                             cd llvm-project
 
                             mkdir build

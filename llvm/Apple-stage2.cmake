@@ -41,8 +41,6 @@ set(LIBCXX_INSTALL_HEADERS ON CACHE BOOL "")
 set(LIBCXX_INCLUDE_TESTS OFF CACHE BOOL "")
 set(LIBCXX_USE_COMPILER_RT ON CACHE BOOL "")
 
-set(LLVM_ENABLE_LIBCXX ON CACHE BOOL "")
-
 set(LLVM_LTO_VERSION_OFFSET 3000 CACHE STRING "")
 
 # Generating Xcode toolchains is useful for developers wanting to build and use
