@@ -45,6 +45,6 @@ if(STAGE2_CACHE_FILE)
     CACHE STRING "")
 else()
   set(CLANG_BOOTSTRAP_CMAKE_ARGS
-    -C ${CMAKE_CURRENT_LIST_DIR}/DistributionExample-x86-stage2.cmake
+    -C ${CMAKE_CURRENT_LIST_DIR}/Distribution-x86-stage2.cmake
     CACHE STRING "")
 endif()
