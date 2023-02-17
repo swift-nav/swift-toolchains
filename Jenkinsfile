@@ -78,6 +78,7 @@ pipeline {
                                 path: "swift-toolchains/${context.gitDescribe()}/clang+llvm-14.0.6-x86_64-apple.tar.gz",
                                 jenkins: true
                             )
+                        }
                     }
                 }
             }
