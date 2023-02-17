@@ -39,7 +39,7 @@ pipeline {
                         sh('''
                             export ARCHFLAGS="-arch arm64"
 
-                            git clone https://github.com/llvm/llvm-project
+                            git clone https://github.com/llvm/llvm-project --branch=llvmorg-14.0.6 --single-branch
                             cd llvm-project
                             git checkout llvmorg-14.0.6
 
