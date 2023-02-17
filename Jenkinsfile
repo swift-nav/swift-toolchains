@@ -48,7 +48,6 @@ pipeline {
 
                             cmake -GNinja ../llvm \
                                 -DLLVM_ENABLE_PROJECTS="clang;lld" \
-                                -DLLVM_TARGETS_TO_BUILD="X86" \
                                 -DCMAKE_INSTALL_PREFIX=../out/ \
                                 -C ../../llvm/Distribution-x86.cmake
                             ninja stage2-install-distribution
