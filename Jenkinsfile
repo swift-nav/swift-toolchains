@@ -36,29 +36,6 @@ pipeline {
                         node('macos-arm64')
                     }
                     steps {
-                        // sh('''
-                        //     export ARCHFLAGS="-arch arm64"
-
-                        //     git clone https://github.com/llvm/llvm-project --branch=llvmorg-15.0.0-rc1 --single-branch
-                        //     cd llvm-project
-
-                        //     mkdir build
-                        //     cd build
-
-                        //     cmake -GNinja ../llvm \
-                        //         -DCMAKE_INSTALL_PREFIX=../out/ \
-                        //         -DCMAKE_OSX_ARCHITECTURES='arm64' \
-                        //         -DCMAKE_C_COMPILER=`which clang` \
-                        //         -DCMAKE_CXX_COMPILER=`which clang++` \
-                        //         -DCMAKE_BUILD_TYPE=Release \
-                        //         -DCMAKE_INSTALL_PREFIX=../out \
-                        //         -DLLVM_ENABLE_PROJECTS='clang' \
-                        //         -DLLVM_DISTRIBUTION_COMPONENTS='clang' \
-                        //         -C ../../llvm/Apple-stage1.cmake
-                        //     ninja help
-                        //     ninja stage2-install-distribution || true
-                        //     find .
-                        // ''')
                         sh('''
                             export ARCHFLAGS="-arch arm64"
 
@@ -68,18 +45,37 @@ pipeline {
                             mkdir build
                             cd build
 
-                            cmake -G Ninja ../llvm \
-                                -DLLVM_ENABLE_PROJECTS="lld" \
-                                -DLLVM_DISTRIBUTION_COMPONENTS="lld" \
-                                -DLLVM_TARGETS_TO_BUILD="AArch64" \
-                                -DCMAKE_OSX_ARCHITECTURES='arm64' \
+                            cmake -GNinja ../llvm \
+                                -DCMAKE_INSTALL_PREFIX=../out/ \
+                                -DCMAKE_C_COMPILER=`which clang` \
+                                -DCMAKE_CXX_COMPILER=`which clang++` \
                                 -DCMAKE_BUILD_TYPE=Release \
-                                -DCMAKE_INSTALL_PREFIX=../out
-
+                                -C ../../llvm/Apple-stage1.cmake
                             ninja help
-                            ninja lld
+                            ninja stage2-distribution || true
                             find .
                         ''')
+                        // sh('''
+                        //     export ARCHFLAGS="-arch arm64"
+
+                        //     git clone https://github.com/llvm/llvm-project --branch=llvmorg-15.0.0-rc1 --single-branch
+                        //     cd llvm-project
+
+                        //     mkdir build
+                        //     cd build
+
+                        //     cmake -G Ninja ../llvm \
+                        //         -DLLVM_ENABLE_PROJECTS="lld" \
+                        //         -DLLVM_DISTRIBUTION_COMPONENTS="lld" \
+                        //         -DLLVM_TARGETS_TO_BUILD="AArch64" \
+                        //         -DCMAKE_OSX_ARCHITECTURES='arm64' \
+                        //         -DCMAKE_BUILD_TYPE=Release \
+                        //         -DCMAKE_INSTALL_PREFIX=../out
+
+                        //     ninja help
+                        //     ninja lld
+                        //     find .
+                        // ''')
                         sh('find llvm-project/out/')
                     }
                 }
