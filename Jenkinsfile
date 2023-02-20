@@ -49,8 +49,8 @@ pipeline {
                                 -DCMAKE_C_COMPILER=`which clang` \
                                 -DCMAKE_CXX_COMPILER=`which clang++` \
                                 -DCMAKE_BUILD_TYPE=Release \
-                                -DCMAKE_INSTALL_PREFIX=../out \
                                 -C ../../llvm/Apple-stage1.cmake
+
                             ninja help
                             ninja stage2-install-distribution || true
                         ''')
