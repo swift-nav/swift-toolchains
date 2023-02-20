@@ -48,10 +48,13 @@ pipeline {
 
                             cmake -GNinja ../llvm \
                                 -DCMAKE_INSTALL_PREFIX=../out/ \
+                                -DCMAKE_OSX_ARCHITECTURES='arm64' \
                                 -DCMAKE_C_COMPILER=`which clang` \
                                 -DCMAKE_CXX_COMPILER=`which clang++` \
                                 -DCMAKE_BUILD_TYPE=Release \
-                                -DCMAKE_OSX_ARCHITECTURES='arm64' \
+                                -DCMAKE_INSTALL_PREFIX=../out \
+                                -DLLVM_ENABLE_PROJECTS='clang' \
+                                -DLLVM_DISTRIBUTION_COMPONENTS='clang' \
                                 -C ../../llvm/Apple-stage1.cmake
                             ninja help
                             ninja stage2-distribution || true
