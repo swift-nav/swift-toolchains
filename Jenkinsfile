@@ -41,7 +41,7 @@ pipeline {
 
                             git clone https://github.com/llvm/llvm-project --branch=llvmorg-15.0.0-rc1 --single-branch
                             cd llvm-project
-                            git checkout b82a3a8ef3843a8b98807219db87bc12f38ed704
+                            git checkout 245e25f9c3b4273ee77f5d066ef8b8526f881b69
 
                             mkdir build
                             cd build
