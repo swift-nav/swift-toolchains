@@ -41,6 +41,7 @@ pipeline {
 
                             git clone https://github.com/llvm/llvm-project --branch=llvmorg-15.0.0-rc1 --single-branch
                             cd llvm-project
+                            git checkout 61ace8f78b1c52fd63fc8c2d800f08d7ddd87b0d
 
                             mkdir build
                             cd build
@@ -50,6 +51,7 @@ pipeline {
                                 -DCMAKE_C_COMPILER=`which clang` \
                                 -DCMAKE_CXX_COMPILER=`which clang++` \
                                 -DCMAKE_BUILD_TYPE=Release \
+                                -DCMAKE_OSX_ARCHITECTURES='arm64' \
                                 -C ../../llvm/Apple-stage1.cmake
                             ninja help
                             ninja stage2-distribution || true
