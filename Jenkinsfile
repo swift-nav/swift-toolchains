@@ -41,7 +41,7 @@ pipeline {
 
                             git clone https://github.com/llvm/llvm-project --branch=llvmorg-14.0.6 --single-branch
                             cd llvm-project
-                            git am < ../../patches/0003-Add-missing-include-diagnosed-by-the-modules-build.patch
+                            git am < ../patches/0003-Add-missing-include-diagnosed-by-the-modules-build.patch
 
                             mkdir build
                             cd build
