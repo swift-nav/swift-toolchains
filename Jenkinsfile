@@ -39,9 +39,9 @@ pipeline {
                         sh('''
                             export ARCHFLAGS="-arch arm64"
 
-                            git clone https://github.com/llvm/llvm-project --branch=llvmorg-15.0.0-rc1 --single-branch
+                            git clone https://github.com/llvm/llvm-project --branch=llvmorg-14.0.6 --single-branch
                             cd llvm-project
-                            git checkout 4904e853130825d1c6fa93faf289e1ccf2f01c68
+                            git am < ../../patches/0003-Add-missing-include-diagnosed-by-the-modules-build.patch
 
                             mkdir build
                             cd build
