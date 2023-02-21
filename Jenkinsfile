@@ -77,7 +77,7 @@ pipeline {
                                llvm-project/out/bin/ld.lld \
                                tar/clang+llvm-14.0.6-x86_64-linux/bin
                         ''')
-                        uploadDistribution("clang+llvm-14.0.6-x86_64-linux")
+                        uploadDistribution("clang+llvm-14.0.6-x86_64-linux", context)
                     }
                 }
                 // stage('llvm aarch64 darwin') {
@@ -103,7 +103,7 @@ pipeline {
                 //                 -C ../../llvm/Distribution.cmake
                 //             ninja stage2-install-distribution
                 //         ''')
-                //         uploadDistribution("clang+llvm-14.0.6-x86_64-apple-darwin")
+                //         uploadDistribution("clang+llvm-14.0.6-x86_64-apple-darwin", context)
                 //     }
                 // }
             }
@@ -111,7 +111,7 @@ pipeline {
     }
 }
 
-def uploadDistribution(name) {
+def uploadDistribution(name, context) {
     sh('''
         mkdir -p tar/${name}/bin
         cp llvm-project/out/bin/llvm-ar \
