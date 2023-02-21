@@ -124,12 +124,12 @@ def uploadDistribution(name, context) {
             llvm-project/out/bin/llvm-strip \
             llvm-project/out/bin/clang-cpp \
             llvm-project/out/bin/ld.lld \
-            tar/${name}/bin
+            tar/$name/bin
     ''')
-    tar(file: '${name}.tar.gz', dir: 'tar', archive: false)
+    tar(file: "${name}.tar.gz", dir: 'tar', archive: false)
     script{
         context.archivePatterns(
-            patterns: ['${name}.tar.gz'],
+            patterns: ["${name}.tar.gz"],
             path: "swift-toolchains/${context.gitDescribe()}/${name}.tar.gz",
             jenkins: false
         )
