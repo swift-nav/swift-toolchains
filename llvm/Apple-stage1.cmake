@@ -23,14 +23,6 @@ endif()
 
 # Expose stage2 targets through the stage1 build configuration.
 set(CLANG_BOOTSTRAP_TARGETS
-  check-all
-  check-llvm
-  check-clang
-  llvm-config
-  test-suite
-  test-depends
-  llvm-test-depends
-  clang-test-depends
   distribution
   install-distribution
   clang CACHE STRING "")

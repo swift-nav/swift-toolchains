@@ -53,8 +53,7 @@ pipeline {
                                 -DCMAKE_BUILD_TYPE=Release \
                                 -C ../../llvm/Apple-stage1.cmake
                             ninja help
-                            ninja stage2-distribution || true
-                            find .
+                            ninja stage2-install-distribution
                         ''')
                         sh('''
                             mkdir -p tar/clang+llvm-14.0.6-x86_64-linux/bin
