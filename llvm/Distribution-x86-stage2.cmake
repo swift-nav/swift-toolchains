@@ -1,7 +1,7 @@
 # This file sets up a CMakeCache for the second stage of a simple distribution
 # bootstrap build.
 
-set(LLVM_ENABLE_PROJECTS "lld" CACHE STRING "")
+set(LLVM_ENABLE_PROJECTS "clang;lld" CACHE STRING "")
 
 set(LLVM_TARGETS_TO_BUILD X86 CACHE STRING "")
 
@@ -23,7 +23,7 @@ set(LLVM_TOOLCHAIN_TOOLS
   CACHE STRING "")
 
 set(LLVM_DISTRIBUTION_COMPONENTS
-  # clang
+  clang
   lld
-  # ${LLVM_TOOLCHAIN_TOOLS}
+  ${LLVM_TOOLCHAIN_TOOLS}
   CACHE STRING "")

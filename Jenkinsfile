@@ -52,29 +52,29 @@ pipeline {
                                 -C ../../llvm/Distribution-x86.cmake
                             ninja stage2-install-distribution
                         ''')
-                        // sh('find llvm-project/out/bin')
-                        // sh('''
-                        //     mkdir -p tar/clang+llvm-14.0.6-x86_64-linux/bin
-                        //     cp llvm-project/out/bin/llvm-ar \
-                        //        llvm-project/out/bin/llvm-cov \
-                        //        llvm-project/out/bin/llvm-dwp \
-                        //        llvm-project/out/bin/llvm-nm \
-                        //        llvm-project/out/bin/llvm-objcopy \
-                        //        llvm-project/out/bin/llvm-objdump \
-                        //        llvm-project/out/bin/llvm-profdata \
-                        //        llvm-project/out/bin/llvm-strip \
-                        //        llvm-project/out/bin/clang-cpp \
-                        //        llvm-project/out/bin/ld.lld \
-                        //        tar/clang+llvm-14.0.6-x86_64-linux/bin
-                        // ''')
-                        // tar(file: 'clang+llvm-14.0.6-x86_64-linux.tar.gz', dir: 'tar', archive: false)
-                        // script{
-                        //     context.archivePatterns(
-                        //         patterns: ['clang+llvm-14.0.6-x86_64-linux.tar.gz'],
-                        //         path: "swift-toolchains/${context.gitDescribe()}/clang+llvm-14.0.6-x86_64-linux.tar.gz",
-                        //         jenkins: true
-                        //     )
-                        // }
+                        sh('find llvm-project/out/bin')
+                        sh('''
+                            mkdir -p tar/clang+llvm-14.0.6-x86_64-linux/bin
+                            cp llvm-project/out/bin/llvm-ar \
+                               llvm-project/out/bin/llvm-cov \
+                               llvm-project/out/bin/llvm-dwp \
+                               llvm-project/out/bin/llvm-nm \
+                               llvm-project/out/bin/llvm-objcopy \
+                               llvm-project/out/bin/llvm-objdump \
+                               llvm-project/out/bin/llvm-profdata \
+                               llvm-project/out/bin/llvm-strip \
+                               llvm-project/out/bin/clang-cpp \
+                               llvm-project/out/bin/ld.lld \
+                               tar/clang+llvm-14.0.6-x86_64-linux/bin
+                        ''')
+                        tar(file: 'clang+llvm-14.0.6-x86_64-linux.tar.gz', dir: 'tar', archive: false)
+                        script{
+                            context.archivePatterns(
+                                patterns: ['clang+llvm-14.0.6-x86_64-linux.tar.gz'],
+                                path: "swift-toolchains/${context.gitDescribe()}/clang+llvm-14.0.6-x86_64-linux.tar.gz",
+                                jenkins: true
+                            )
+                        }
                     }
                 }
             }
