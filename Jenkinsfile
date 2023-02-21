@@ -36,7 +36,6 @@ pipeline {
                         node('macos-arm64')
                     }
                     steps {
-                        String releaseName = "clang+llvm-14.0.6-arm64-apple-darwin.tar.gz"
                         // sh('''
                         //     export ARCHFLAGS="-arch arm64"
 
