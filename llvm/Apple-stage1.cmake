@@ -1,46 +1,28 @@
-# This file sets up a CMakeCache for Apple-style bootstrap builds. It can be
-# used on any Darwin system to approximate Apple Clang builds.
+# This file sets up a CMakeCache for a simple distribution bootstrap build.
 
-if($ENV{DT_TOOLCHAIN_DIR})
-  set(CMAKE_INSTALL_PREFIX $ENV{DT_TOOLCHAIN_DIR}/usr/)
-else()
-  set(CMAKE_INSTALL_PREFIX /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.toolchain/usr/)
-endif()
-
+#Enable LLVM projects and runtimes
 set(LLVM_ENABLE_PROJECTS "clang;lld" CACHE STRING "")
 
-set(LLVM_TARGETS_TO_BUILD AArch64 CACHE STRING "")
-set(CLANG_VENDOR Apple CACHE STRING "")
-set(LLVM_INCLUDE_TESTS OFF CACHE BOOL "")
-set(LLVM_INCLUDE_EXAMPLES OFF CACHE BOOL "")
-set(LLVM_INCLUDE_UTILS OFF CACHE BOOL "")
-set(LLVM_INCLUDE_DOCS OFF CACHE BOOL "")
-set(CLANG_INCLUDE_TESTS OFF CACHE BOOL "")
-set(COMPILER_RT_INCLUDE_TESTS OFF CACHE BOOL "")
-set(COMPILER_RT_BUILD_SANITIZERS OFF CACHE BOOL "")
-set(CMAKE_MACOSX_RPATH ON CACHE BOOL "")
-set(LLVM_ENABLE_ZLIB OFF CACHE BOOL "")
-set(LLVM_ENABLE_BACKTRACES OFF CACHE BOOL "")
-set(CLANG_PLUGIN_SUPPORT OFF CACHE BOOL "")
-set(CLANG_SPAWN_CC1 ON CACHE BOOL "")
-set(CLANG_BOOTSTRAP_PASSTHROUGH
-  CMAKE_OSX_ARCHITECTURES
-  CACHE STRING "")
+# Only build the native target in stage1 since it is a throwaway build.
+set(LLVM_TARGETS_TO_BUILD Native CACHE STRING "")
 
-# Disabling embedded darwin compiler-rt on stage1 builds is required because we
-# don't build stage1 to support arm code generation.
-set(COMPILER_RT_ENABLE_IOS OFF CACHE BOOL "")
-set(COMPILER_RT_ENABLE_WATCHOS OFF CACHE BOOL "")
-set(COMPILER_RT_ENABLE_TVOS OFF CACHE BOOL "")
+# Optimize the stage1 compiler, but don't LTO it because that wastes time.
+set(CMAKE_BUILD_TYPE Release CACHE STRING "")
 
+# Setup vendor-specific settings.
+set(PACKAGE_VENDOR LLVM.org CACHE STRING "")
+
+# Setting up the stage2 LTO option needs to be done on the stage1 build so that
+# the proper LTO library dependencies can be connected.
 set(BOOTSTRAP_LLVM_ENABLE_LTO ON CACHE BOOL "")
-set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "")
 
-set(LIBCXX_ENABLE_NEW_DELETE_DEFINITIONS OFF CACHE BOOL "")
-set(LIBCXXABI_ENABLE_NEW_DELETE_DEFINITIONS ON CACHE BOOL "")
+if (NOT APPLE)
+  # Since LLVM_ENABLE_LTO is ON we need a LTO capable linker
+  set(BOOTSTRAP_LLVM_ENABLE_LLD ON CACHE BOOL "")
+endif()
 
+# Expose stage2 targets through the stage1 build configuration.
 set(CLANG_BOOTSTRAP_TARGETS
-  generate-order-file
   check-all
   check-llvm
   check-clang
@@ -51,12 +33,17 @@ set(CLANG_BOOTSTRAP_TARGETS
   clang-test-depends
   distribution
   install-distribution
-  install-xcode-toolchain
-  install-distribution-toolchain
   clang CACHE STRING "")
 
-#bootstrap
+# Setup the bootstrap build.
 set(CLANG_ENABLE_BOOTSTRAP ON CACHE BOOL "")
-set(CLANG_BOOTSTRAP_CMAKE_ARGS
-  -C ${CMAKE_CURRENT_LIST_DIR}/Apple-stage2.cmake
-  CACHE STRING "")
+
+if(STAGE2_CACHE_FILE)
+  set(CLANG_BOOTSTRAP_CMAKE_ARGS
+    -C ${STAGE2_CACHE_FILE}
+    CACHE STRING "")
+else()
+  set(CLANG_BOOTSTRAP_CMAKE_ARGS
+    -C ${CMAKE_CURRENT_LIST_DIR}/Apple-stage2.cmake
+    CACHE STRING "")
+endif()
