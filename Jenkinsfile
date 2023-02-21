@@ -41,15 +41,13 @@ pipeline {
                         sh('''
                             git clone https://github.com/llvm/llvm-project --branch=llvmorg-14.0.6 --single-branch
                             cd llvm-project
-                            git checkout llvmorg-14.0.6
 
                             mkdir build
                             cd build
 
                             cmake -GNinja ../llvm \
-                                -DLLVM_ENABLE_PROJECTS="clang;lld" \
                                 -DCMAKE_INSTALL_PREFIX=../out/ \
-                                -C ../../llvm/Distribution-x86.cmake
+                                -C ../../llvm/Distribution.cmake
                             ninja stage2-install-distribution
                         ''')
                         sh('find llvm-project/out/bin')
@@ -72,7 +70,54 @@ pipeline {
                             context.archivePatterns(
                                 patterns: ['clang+llvm-14.0.6-x86_64-linux.tar.gz'],
                                 path: "swift-toolchains/${context.gitDescribe()}/clang+llvm-14.0.6-x86_64-linux.tar.gz",
-                                jenkins: true
+                                jenkins: false
+                            )
+                        }
+                    }
+                }
+                stage('llvm aarch64 darwin') {
+                    agent {
+                        node('macos-arm64')
+                    }
+                    steps {
+                        sh('''
+                            export ARCHFLAGS="-arch arm64"
+
+                            git clone https://github.com/llvm/llvm-project --branch=llvmorg-14.0.6 --single-branch
+                            cd llvm-project
+
+                            mkdir build
+                            cd build
+
+                            cmake -GNinja ../llvm \
+                                -DCMAKE_INSTALL_PREFIX=../out/ \
+                                -DCMAKE_OSX_ARCHITECTURES='arm64' \
+                                -DCMAKE_C_COMPILER=`which clang` \
+                                -DCMAKE_CXX_COMPILER=`which clang++` \
+                                -DCMAKE_BUILD_TYPE=Release \
+                                -C ../../llvm/Distribution.cmake
+                            ninja stage2-install-distribution
+                        ''')
+                        sh('''
+                            mkdir -p tar/clang+llvm-14.0.6-x86_64-linux/bin
+                            cp llvm-project/out/bin/llvm-ar \
+                            llvm-project/out/bin/llvm-cov \
+                            llvm-project/out/bin/llvm-dwp \
+                            llvm-project/out/bin/llvm-nm \
+                            llvm-project/out/bin/llvm-objcopy \
+                            llvm-project/out/bin/llvm-objdump \
+                            llvm-project/out/bin/llvm-profdata \
+                            llvm-project/out/bin/llvm-strip \
+                            llvm-project/out/bin/clang-cpp \
+                            llvm-project/out/bin/ld.lld \
+                            tar/clang+llvm-14.0.6-x86_64-linux/bin
+                        ''')
+                        tar(file: 'clang+llvm-14.0.6-arm64-apple-darwin.tar.gz', dir: 'tar', archive: false)
+                        script{
+                            context.archivePatterns(
+                                patterns: ['clang+llvm-14.0.6-arm64-apple-darwin.tar.gz'],
+                                path: "swift-toolchains/${context.gitDescribe()}/clang+llvm-14.0.6-arm64-apple-darwin.tar.gz",
+                                jenkins: false
                             )
                         }
                     }

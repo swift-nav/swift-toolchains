@@ -23,14 +23,6 @@ endif()
 
 # Expose stage2 targets through the stage1 build configuration.
 set(CLANG_BOOTSTRAP_TARGETS
-  check-all
-  check-llvm
-  check-clang
-  llvm-config
-  test-suite
-  test-depends
-  llvm-test-depends
-  clang-test-depends
   distribution
   install-distribution
   clang CACHE STRING "")
@@ -38,12 +30,7 @@ set(CLANG_BOOTSTRAP_TARGETS
 # Setup the bootstrap build.
 set(CLANG_ENABLE_BOOTSTRAP ON CACHE BOOL "")
 
-if(STAGE2_CACHE_FILE)
-  set(CLANG_BOOTSTRAP_CMAKE_ARGS
-    -C ${STAGE2_CACHE_FILE}
-    CACHE STRING "")
-else()
-  set(CLANG_BOOTSTRAP_CMAKE_ARGS
-    -C ${CMAKE_CURRENT_LIST_DIR}/Distribution-x86-stage2.cmake
-    CACHE STRING "")
-endif()
+set(CLANG_BOOTSTRAP_CMAKE_ARGS
+  -C ${CMAKE_CURRENT_LIST_DIR}/Distribution-stage2.cmake
+  CACHE STRING "")
+
