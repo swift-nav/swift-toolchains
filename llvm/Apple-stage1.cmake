@@ -2,6 +2,7 @@
 
 #Enable LLVM projects and runtimes
 set(LLVM_ENABLE_PROJECTS "clang;lld" CACHE STRING "")
+set(LLVM_ENABLE_RUNTIMES "compiler-rt;libcxx;libcxxabi" CACHE STRING "")
 
 # Only build the native target in stage1 since it is a throwaway build.
 set(LLVM_TARGETS_TO_BUILD Native CACHE STRING "")
@@ -23,14 +24,6 @@ endif()
 
 # Expose stage2 targets through the stage1 build configuration.
 set(CLANG_BOOTSTRAP_TARGETS
-  check-all
-  check-llvm
-  check-clang
-  llvm-config
-  test-suite
-  test-depends
-  llvm-test-depends
-  clang-test-depends
   distribution
   install-distribution
   clang CACHE STRING "")
