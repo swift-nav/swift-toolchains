@@ -45,7 +45,6 @@ pipeline {
 
                             cmake -GNinja ../llvm \
                                 -DCMAKE_INSTALL_PREFIX=../out/ \
-                                -DCMAKE_OSX_ARCHITECTURES='x86_64' \
                                 -DCMAKE_C_COMPILER=`which clang` \
                                 -DCMAKE_CXX_COMPILER=`which clang++` \
                                 -DCMAKE_BUILD_TYPE=Release \
