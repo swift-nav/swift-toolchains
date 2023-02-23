@@ -120,7 +120,7 @@ def uploadDistribution(name, context) {
             llvm-project/out/bin/ld.lld \
             tar/${name}/bin
     """)
-    tar(file: "${name}.tar.gz", dir: 'tar', archive: false)
+    tar(file: "${name}.tar.gz", dir: 'tar', archive: true)
     script{
         context.archivePatterns(
             patterns: ["${name}.tar.gz"],
