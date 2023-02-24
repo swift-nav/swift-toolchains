@@ -45,10 +45,9 @@ pipeline {
                             mkdir build
                             cd build
 
-                            cmake -GNinja \
+                            cmake -GNinja ../llvm \
                                 -DCMAKE_INSTALL_PREFIX=../out/ \
-                                -C ../../llvm/Distribution.cmake \
-                                ../llvm
+                                -C ../../llvm/Distribution.cmake
                             ninja install-distribution
 
                             find ../out/
