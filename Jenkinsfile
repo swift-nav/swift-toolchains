@@ -53,28 +53,11 @@ pipeline {
                             ninja help
                             ninja stage2-install-distribution
                         ''')
-                        sh('''
-                            mkdir -p tar/clang+llvm-14.0.6-x86_64-apple/bin
-                            cp llvm-project/out/bin/llvm-ar \
-                               llvm-project/out/bin/llvm-cov \
-                               llvm-project/out/bin/llvm-dwp \
-                               llvm-project/out/bin/llvm-nm \
-                               llvm-project/out/bin/llvm-objcopy \
-                               llvm-project/out/bin/llvm-objdump \
-                               llvm-project/out/bin/llvm-profdata \
-                               llvm-project/out/bin/llvm-strip \
-                               llvm-project/out/bin/clang-cpp \
-                               llvm-project/out/bin/ld.lld \
-                               tar/clang+llvm-14.0.6-x86_64-apple/bin
-                        ''')
-                        tar(file: 'clang+llvm-14.0.6-x86_64-apple.tar.gz', dir: 'tar', archive: false)
-                        script{
-                            context.archivePatterns(
-                                patterns: ['clang+llvm-14.0.6-x86_64-apple.tar.gz'],
-                                path: "swift-toolchains/${context.gitDescribe()}/clang+llvm-14.0.6-x86_64-apple.tar.gz",
-                                jenkins: true
-                            )
-                        }
+                        sh("""
+                            mkdir -p tar/clang+llvm-14.0.6-x86_64-apple/
+                            cp -rH llvm-project/out/* tar/clang+llvm-14.0.6-x86_64-apple/
+                        """)
+                        tar(file: "clang+llvm-14.0.6-x86_64-apple.tar.gz", dir: 'tar', archive: true)
                     }
                 }
             }
