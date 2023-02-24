@@ -3,8 +3,8 @@ FROM ubuntu:18.04
 RUN apt-get update
 RUN apt-get install -y \
     build-essential \
-    clang-11 \
-    clang++-11 \
+    clang-8 \
+    clang++-8 \
     cmake \
     libc6-dev-i386 \
     python3-pip \
