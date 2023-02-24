@@ -107,18 +107,8 @@ pipeline {
 
 def uploadDistribution(name, context) {
     sh("""
-        mkdir -p tar/${name}/bin
-        cp llvm-project/out/bin/llvm-ar \
-            llvm-project/out/bin/llvm-cov \
-            llvm-project/out/bin/llvm-dwp \
-            llvm-project/out/bin/llvm-nm \
-            llvm-project/out/bin/llvm-objcopy \
-            llvm-project/out/bin/llvm-objdump \
-            llvm-project/out/bin/llvm-profdata \
-            llvm-project/out/bin/llvm-strip \
-            llvm-project/out/bin/clang-cpp \
-            llvm-project/out/bin/ld.lld \
-            tar/${name}/bin
+        mkdir -p tar/${name}/
+        cp -rH llvm-project/out/* tar/${name}/
     """)
     tar(file: "${name}.tar.gz", dir: 'tar', archive: true)
     script{
