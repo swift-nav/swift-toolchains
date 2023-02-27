@@ -6,6 +6,8 @@ set(LLVM_ENABLE_RUNTIMES "compiler-rt;libcxx;libcxxabi;libunwind" CACHE STRING "
 
 set(COMPILER_RT_BUILD_BUILTINS              ON CACHE BOOL "")
 
+set(LLDB_ENABLE_CURSES 0 CACHE STRING "")
+
 set(LLVM_TOOLCHAIN_TOOLS
   llvm-ar
   llvm-cov
