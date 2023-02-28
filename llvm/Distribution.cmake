@@ -1,17 +1,17 @@
 # This file sets up a CMakeCache for a simple distribution bootstrap build.
 
 #Enable LLVM projects and runtimes
-set(LLVM_ENABLE_PROJECTS "clang;clang-tools-extra;lld" CACHE STRING "")
-set(LLVM_ENABLE_RUNTIMES "compiler-rt;libcxx;libcxxabi;libunwind" CACHE STRING "")
+set(LLVM_ENABLE_PROJECTS "clang" CACHE STRING "")
+# set(LLVM_ENABLE_RUNTIMES "compiler-rt;libcxx;libcxxabi;libunwind" CACHE STRING "")
 
-set(COMPILER_RT_BUILD_BUILTINS              ON CACHE BOOL "")
+# set(COMPILER_RT_BUILD_BUILTINS              ON CACHE BOOL "")
 
-set(LLDB_ENABLE_CURSES 0 CACHE STRING "")
-set(CLANG_DEFAULT_RTLIB "compiler-rt" CACHE STRING "")
-set(LLVM_BUILD_COMPILER_RT "ON" CACHE STRING "")
+# set(LLDB_ENABLE_CURSES 0 CACHE STRING "")
+# set(CLANG_DEFAULT_RTLIB "compiler-rt" CACHE STRING "")
+# set(LLVM_BUILD_COMPILER_RT "ON" CACHE STRING "")
 # set(LIBUNWIND_USE_COMPILER_RT ON CACHE STRING "")
-set(LIBCXXABI_USE_COMPILER_RT "ON" CACHE STRING "")
-set(LIBCXX_USE_COMPILER_RT "ON" CACHE STRING "")
+# set(LIBCXXABI_USE_COMPILER_RT "ON" CACHE STRING "")
+# set(LIBCXX_USE_COMPILER_RT "ON" CACHE STRING "")
 
 set(LLVM_TOOLCHAIN_TOOLS
   llvm-ar
