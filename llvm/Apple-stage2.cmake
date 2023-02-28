@@ -1,6 +1,9 @@
 # This file sets up a CMakeCache for Apple-style stage2 bootstrap. It is
 # specified by the stage1 build.
 
+set(LLVM_ENABLE_PROJECTS "clang;clang-tools-extra;lld" CACHE STRING "")
+set(LLVM_ENABLE_RUNTIMES "compiler-rt;libcxx;libcxxabi;libunwind" CACHE STRING "")
+
 set(LLVM_TARGETS_TO_BUILD X86 CACHE STRING "") 
 set(PACKAGE_VENDOR Apple CACHE STRING "")
 set(CLANG_VENDOR_UTI com.apple.clang CACHE STRING "")
@@ -49,35 +52,25 @@ set(LLVM_CREATE_XCODE_TOOLCHAIN ON CACHE BOOL "")
 # setup toolchain
 set(LLVM_INSTALL_TOOLCHAIN_ONLY ON CACHE BOOL "")
 set(LLVM_TOOLCHAIN_TOOLS
-  dsymutil
+  llvm-ar
   llvm-cov
-  llvm-dwarfdump
-  llvm-profdata
-  llvm-objdump
+  llvm-dwp
   llvm-nm
-  llvm-size
-  llvm-cxxfilt
-  llvm-config
-  CACHE STRING "")
-
-set(LLVM_BUILD_UTILS ON CACHE BOOL "")
-set(LLVM_INSTALL_UTILS ON CACHE BOOL "")
-set(LLVM_TOOLCHAIN_UTILITIES
-  FileCheck
-  yaml2obj
-  not
-  count
+  llvm-objcopy
+  llvm-objdump
+  llvm-profdata
+  llvm-strip
+  llvm-symbolizer
   CACHE STRING "")
 
 set(LLVM_DISTRIBUTION_COMPONENTS
   clang
-  LTO
-  clang-format
+  # lld
+  builtins
+  runtimes
   clang-resource-headers
-  cxx-headers
-  Remarks
+  clang-tidy
   ${LLVM_TOOLCHAIN_TOOLS}
-  ${LLVM_TOOLCHAIN_UTILITIES}
   CACHE STRING "")
 
 # test args
