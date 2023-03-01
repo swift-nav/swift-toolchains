@@ -1,3 +1,21 @@
 FROM ubuntu:18.04
 
-RUN apt-get update && apt-get install -y git wget
+RUN apt-get update
+RUN apt-get install -y \
+    build-essential \
+    clang-8 \
+    clang++-8 \
+    wget \
+    libc6-dev-i386 \
+    python3-pip \
+    python3-distutils \
+    vim \
+    ninja-build \
+    git
+
+RUN \
+  mkdir /opt/cmake && \
+  wget -qO- https://cmake.org/files/v3.13/cmake-3.13.5-Linux-x86_64.tar.gz | \
+    tar -xzf - --strip-components 1 -C /opt/cmake
+
+ENV PATH=/opt/cmake/bin:${PATH}
