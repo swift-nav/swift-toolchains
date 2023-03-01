@@ -39,9 +39,7 @@ pipeline {
                     }
                     steps {
                         sh('''
-                            wget https://github.com/llvm/llvm-project/releases/download/llvmorg-14.0.0/clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
-                            tar -xf clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
-                            rm clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+                            wget -qO- https://github.com/llvm/llvm-project/releases/download/llvmorg-14.0.0/clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz | tar xfJ -
 
                             find clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04/bin/* \
                                 ! -name 'clang' ! -name 'clang++' ! -name 'clang-14' ! -name 'clang-cl' ! -name 'clang-cpp' \
