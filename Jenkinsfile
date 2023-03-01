@@ -110,7 +110,7 @@ pipeline {
 }
 
 def uploadDistribution(name, context) {
-    tar(file: "${name}.tar.gz", dir: 'tar', archive: false)
+    tar(file: "${name}.tar.gz", dir: 'tar', compress: true, archive: false)
     sh("sha256sum '${name}.tar.gz' > ${name}.tar.gz.sha256")
     archiveArtifacts artifacts: '*.tar.gz*'
 
