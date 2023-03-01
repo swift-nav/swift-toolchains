@@ -40,7 +40,7 @@ pipeline {
                     steps {
                         sh('''
                             wget https://github.com/llvm/llvm-project/releases/download/llvmorg-14.0.0/clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz -P tar
-                            tar -xf tar/clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+                            tar -xf tar/clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz -C tar/
                             rm tar/clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
 
                             find tar/clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04/bin/* \
