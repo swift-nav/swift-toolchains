@@ -33,8 +33,8 @@ pipeline {
             parallel {
                 stage('llvm x86_64 linux') {
                     agent {
-                        dockerfile {
-                            filename "Dockerfile.llvm"
+                        docker{
+                            image 'ubuntu:18.04'
                         }
                     }
                     steps {
@@ -57,60 +57,13 @@ pipeline {
                         uploadDistribution("clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04", context)
                     }
                 }
-                // stage('llvm aarch64 darwin') {
-                //     agent {
-                //         node('macos-arm64')
-                //     }
-                //     steps {
-                //         sh('''
-                //             git clone https://github.com/llvm/llvm-project --branch=llvmorg-14.0.6 --single-branch
-                //             cd llvm-project
-
-                //             mkdir build
-                //             cd build
-
-                //             cmake -GNinja ../llvm \
-                //                 -DCMAKE_INSTALL_PREFIX=../out/ \
-                //                 -DCMAKE_OSX_ARCHITECTURES='arm64' \
-                //                 -DCMAKE_C_COMPILER=`which clang` \
-                //                 -DCMAKE_CXX_COMPILER=`which clang++` \
-                //                 -DCMAKE_BUILD_TYPE=Release \
-                //                 -C ../../llvm/Distribution.cmake
-                //             ninja stage2-install-distribution
-                //         ''')
-                //         uploadDistribution("clang+llvm-14.0.6-arm64-apple-darwin", context)
-                //     }
-                // }
-                // stage('llvm x86_64 darwin') {
-                //     agent {
-                //         node('macos')
-                //     }
-                //     steps {
-                //         sh('''
-                //             git clone https://github.com/llvm/llvm-project --branch=llvmorg-14.0.6 --single-branch
-                //             cd llvm-project
-                //             mkdir build
-                //             cd build
-                //             cmake -GNinja ../llvm \
-                //                 -DCMAKE_INSTALL_PREFIX=../out/ \
-                //                 -DCMAKE_OSX_ARCHITECTURES='x86_64' \
-                //                 -DLLVM_ENABLE_RUNTIMES='compiler-rt;libcxx;libcxxabi' \
-                //                 -DCMAKE_C_COMPILER=`which clang` \
-                //                 -DCMAKE_CXX_COMPILER=`which clang++` \
-                //                 -DCMAKE_BUILD_TYPE=Release \
-                //                 -C ../../llvm/Distribution.cmake
-                //             ninja stage2-install-distribution
-                //         ''')
-                //         uploadDistribution("clang+llvm-14.0.6-x86_64-apple-darwin", context)
-                //     }
-                // }
             }
         }
     }
 }
 
 def uploadDistribution(name, context) {
-    sh("tar -czf clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.gz clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04/")
+    sh("tar -czf ${name}.tar.gz ${name}/")
     sh("sha256sum '${name}.tar.gz' > ${name}.tar.gz.sha256")
     archiveArtifacts artifacts: '*.tar.gz*'
 
