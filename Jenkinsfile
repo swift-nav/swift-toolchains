@@ -39,11 +39,11 @@ pipeline {
                     }
                     steps {
                         sh('''
-                            wget https://github.com/llvm/llvm-project/releases/download/llvmorg-14.0.0/clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz -P tar
-                            tar -xf tar/clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz -C tar/
-                            rm tar/clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+                            wget https://github.com/llvm/llvm-project/releases/download/llvmorg-14.0.0/clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+                            tar -xf clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+                            rm clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
 
-                            find tar/clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04/bin/* \
+                            find clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04/bin/* \
                                 ! -name 'clang' ! -name 'clang++' ! -name 'clang-14' ! -name 'clang-cl' ! -name 'clang-cpp' \
                                 ! -name 'ld64.lld' ! -name 'ld.lld' ! -name 'lld' ! -name 'lld-link' \
                                 ! -name 'llvm-ar' ! -name 'llvm-as' ! -name 'llvm-nm' ! -name 'llvm-objdump' ! -name 'llvm-objcopy' \
@@ -52,7 +52,7 @@ pipeline {
                                 ! -name 'clang-tidy' ! -name 'clang-format' \
                             -exec rm {} +
 
-                            find tar/clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04/lib/ -maxdepth 1 -type f,l -exec rm {} +
+                            find clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04/lib/ -maxdepth 1 -type f,l -exec rm {} +
                         ''')
                         uploadDistribution("clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04", context)
                     }
@@ -110,7 +110,7 @@ pipeline {
 }
 
 def uploadDistribution(name, context) {
-    sh("tar -czf clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.gz tar/clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04/")
+    sh("tar -czf clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.gz clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04/")
     sh("sha256sum '${name}.tar.gz' > ${name}.tar.gz.sha256")
     archiveArtifacts artifacts: '*.tar.gz*'
 
