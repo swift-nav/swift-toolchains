@@ -116,8 +116,13 @@ def uploadDistribution(name, context) {
 
     script{
         context.archivePatterns(
-            patterns: ["${name}.tar.gz*"],
+            patterns: ["${name}.tar.gz"],
             path: "swift-toolchains/${context.gitDescribe()}/${name}.tar.gz",
+            jenkins: false
+        )
+        context.archivePatterns(
+            patterns: ["${name}.tar.gz.sha256"],
+            path: "swift-toolchains/${context.gitDescribe()}/${name}.tar.gz.sha256",
             jenkins: false
         )
     }
