@@ -52,7 +52,7 @@ pipeline {
                                 ! -name 'clang-tidy' ! -name 'clang-format' \
                             -exec rm {} +
 
-                            rm tar/clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04/lib/*
+                            find tar/clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04/lib/ -maxdepth 1 -type f -exec rm {} +
                         ''')
                         uploadDistribution("clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04", context)
                     }
