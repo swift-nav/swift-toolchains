@@ -34,7 +34,8 @@ pipeline {
                 stage('llvm x86_64 linux') {
                     agent {
                         docker{
-                            image 'docker.io/library/ubuntu:18.04'
+                            image 'ubuntu:18.04'
+                            registryUrl 'docker.io/library/'
                         }
                     }
                     steps {
