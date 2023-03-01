@@ -34,7 +34,7 @@ pipeline {
                 stage('llvm x86_64 linux') {
                     agent {
                         docker{
-                            image 'ubuntu:18.04'
+                            image 'docker.io/library/ubuntu:18.04'
                         }
                     }
                     steps {
