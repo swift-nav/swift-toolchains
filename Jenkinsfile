@@ -33,9 +33,8 @@ pipeline {
             parallel {
                 stage('llvm x86_64 linux') {
                     agent {
-                        docker{
-                            image 'ubuntu:18.04'
-                            registryUrl 'docker.io/library/'
+                        dockerfile {
+                            filename "Dockerfile.llvm"
                         }
                     }
                     steps {
