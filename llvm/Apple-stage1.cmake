@@ -52,7 +52,7 @@ set(CLANG_BOOTSTRAP_TARGETS
   clang-test-depends
   distribution
   install-distribution
-  install-xcode-toolchain
+  # install-xcode-toolchain
   install-distribution-toolchain
   clang CACHE STRING "")
 
