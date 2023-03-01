@@ -110,13 +110,13 @@ pipeline {
 }
 
 def uploadDistribution(name, context) {
-    tar(file: "${name}.tar.gz", dir: 'tar', compress: true, archive: false)
+    sh("tar -czf clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.gz tar/clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04/")
     sh("sha256sum '${name}.tar.gz' > ${name}.tar.gz.sha256")
     archiveArtifacts artifacts: '*.tar.gz*'
 
     script{
         context.archivePatterns(
-            patterns: ["${name}.tar.gz"],
+            patterns: ["${name}.tar.gz*"],
             path: "swift-toolchains/${context.gitDescribe()}/${name}.tar.gz",
             jenkins: false
         )
