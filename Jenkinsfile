@@ -39,20 +39,22 @@ pipeline {
                     }
                     steps {
                         sh('''
-                            git clone https://github.com/llvm/llvm-project --branch=llvmorg-14.0.6 --single-branch
-                            cd llvm-project
+                            wget https://github.com/llvm/llvm-project/releases/download/llvmorg-14.0.0/clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz -P tar
+                            tar -xf tar/clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+                            rm tar/clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
 
-                            mkdir build
-                            cd build
+                            find tar/clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04/bin/* \
+                                ! -name 'clang' ! -name 'clang++' ! -name 'clang-14' ! -name 'clang-cl' ! -name 'clang-cpp' \
+                                ! -name 'ld64.lld' ! -name 'ld.lld' ! -name 'lld' ! -name 'lld-link' \
+                                ! -name 'llvm-ar' ! -name 'llvm-as' ! -name 'llvm-nm' ! -name 'llvm-objdump' ! -name 'llvm-objcopy' \
+                                ! -name 'llvm-profdata' ! -name 'llvm-dwp' ! -name 'llvm-ranlib' ! -name 'llvm-readelf' ! -name 'llvm-readobj' \
+                                ! -name 'llvm-strip' ! -name 'llvm-symbolizer' ! -name 'llvm-cov'  \
+                                ! -name 'clang-tidy' ! -name 'clang-format' \
+                            -exec rm {} +
 
-                            cmake -GNinja ../llvm \
-                                -DCMAKE_INSTALL_PREFIX=../out/ \
-                                -C ../../llvm/Distribution.cmake
-                            ninja install-distribution
-
-                            find ../out/
+                            rm tar/clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04/lib/*
                         ''')
-                        uploadDistribution("clang+llvm-14.0.6-x86_64-linux", context)
+                        uploadDistribution("clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04", context)
                     }
                 }
                 // stage('llvm aarch64 darwin') {
@@ -108,11 +110,10 @@ pipeline {
 }
 
 def uploadDistribution(name, context) {
-    sh("""
-        mkdir -p tar/${name}/
-        cp -rH llvm-project/out/* tar/${name}/
-    """)
-    tar(file: "${name}.tar.gz", dir: 'tar', archive: true)
+    tar(file: "${name}.tar.gz", dir: 'tar', archive: false)
+    sh("sha256sum '${name}.tar.gz' > ${name}.tar.gz.sha256")
+    archiveArtifacts artifacts: '*.tar.gz*'
+
     script{
         context.archivePatterns(
             patterns: ["${name}.tar.gz"],
