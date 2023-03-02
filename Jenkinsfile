@@ -39,7 +39,7 @@ pipeline {
                         sh('''
                             export ARCHFLAGS="-arch arm64"
 
-                            git clone https://github.com/llvm/llvm-project --branch=llvmorg-15.0.0-rc1 --single-branch
+                            git clone https://github.com/llvm/llvm-project --branch=llvmorg-14.0.0 --single-branch
                             cd llvm-project
 
                             mkdir build
@@ -58,7 +58,7 @@ pipeline {
                             ninja help
                             ninja stage2-install-distribution
                         ''')
-                        uploadDistribution("clang+llvm-14.0.6-arm64-apple-darwin", context)
+                        uploadDistribution("clang+llvm-14.0.0-arm64-apple-darwin", context)
                     }
                 }
             }
