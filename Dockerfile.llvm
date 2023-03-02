@@ -1,12 +1,7 @@
 FROM ubuntu:18.04
 
 RUN apt-get update
-RUN apt-get install -y \
-    build-essential \
-    clang-8 \
-    clang++-8 \
-    wget \
-    git
+RUN apt-get install -y wget git
 
 RUN \
   mkdir /opt/cmake && \
