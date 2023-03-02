@@ -72,11 +72,11 @@ def uploadDistribution(name, context) {
         cp -rH llvm-project/out/* tar/${name}/
     """)
     tar(file: "${name}.tar.gz", dir: 'tar', archive: true)
-    script{
-        context.archivePatterns(
-            patterns: ["${name}.tar.gz"],
-            path: "swift-toolchains/${context.gitDescribe()}/${name}.tar.gz",
-            jenkins: false
-        )
-    }
+    // script{
+    //     context.archivePatterns(
+    //         patterns: ["${name}.tar.gz"],
+    //         path: "swift-toolchains/${context.gitDescribe()}/${name}.tar.gz",
+    //         jenkins: false
+    //     )
+    // }
 }
