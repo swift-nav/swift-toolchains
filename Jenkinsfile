@@ -33,35 +33,48 @@ pipeline {
             parallel {
                 stage('llvm x86_64 darwin') {
                     agent {
-                        node('macos')
+                        dockerfile {
+                            filename "Dockerfile.llvm"
+                        }
                     }
                     steps {
                         sh('''
-                            git clone https://github.com/llvm/llvm-project --branch=llvmorg-14.0.6 --single-branch
-                            cd llvm-project
+                            wget -qO- https://github.com/llvm/llvm-project/releases/download/llvmorg-14.0.0/clang+llvm-14.0.0-x86_64-apple-darwin.tar.xz | tar xfJ -
 
-                            mkdir build
-                            cd build
+                            find clang+llvm-14.0.0-x86_64-apple-darwin/bin/* \
+                                ! -name 'clang' ! -name 'clang++' ! -name 'clang-14' ! -name 'clang-cl' ! -name 'clang-cpp' \
+                                ! -name 'ld64.lld' ! -name 'ld.lld' ! -name 'lld' ! -name 'lld-link' \
+                                ! -name 'llvm-ar' ! -name 'llvm-as' ! -name 'llvm-nm' ! -name 'llvm-objdump' ! -name 'llvm-objcopy' \
+                                ! -name 'llvm-profdata' ! -name 'llvm-dwp' ! -name 'llvm-ranlib' ! -name 'llvm-readelf' ! -name 'llvm-readobj' \
+                                ! -name 'llvm-strip' ! -name 'llvm-symbolizer' ! -name 'llvm-cov'  \
+                                ! -name 'clang-tidy' ! -name 'clang-format' \
+                            -exec rm {} +
 
-                            cmake -GNinja ../llvm \
-                                -DCMAKE_INSTALL_PREFIX=../out/ \
-                                -DCMAKE_OSX_ARCHITECTURES='x86_64' \
-                                -DCMAKE_C_COMPILER=`which clang` \
-                                -DCMAKE_CXX_COMPILER=`which clang++` \
-                                -DCMAKE_BUILD_TYPE=Release \
-                                -C ../../llvm/Apple-stage1.cmake
-
-                            ninja help
-                            ninja stage2-install-distribution
+                            find clang+llvm-14.0.0-x86_64-apple-darwin/lib/ -maxdepth 1 -type f,l -exec rm {} +
                         ''')
-                        sh("""
-                            mkdir -p tar/clang+llvm-14.0.6-x86_64-apple/
-                            cp -rH llvm-project/out/* tar/clang+llvm-14.0.6-x86_64-apple/
-                        """)
-                        tar(file: "clang+llvm-14.0.6-x86_64-apple.tar.gz", dir: 'tar', archive: true)
+                        uploadDistribution("clang+llvm-14.0.0-x86_64-apple-darwin", context)
                     }
                 }
             }
         }
+    }
+}
+
+def uploadDistribution(name, context) {
+    sh("tar -czf ${name}.tar.gz ${name}/")
+    sh("sha256sum '${name}.tar.gz' > ${name}.tar.gz.sha256")
+    archiveArtifacts artifacts: '*.tar.gz*'
+
+    script{
+        context.archivePatterns(
+            patterns: ["${name}.tar.gz"],
+            path: "swift-toolchains/${context.gitDescribe()}/${name}.tar.gz",
+            jenkins: false
+        )
+        context.archivePatterns(
+            patterns: ["${name}.tar.gz.sha256"],
+            path: "swift-toolchains/${context.gitDescribe()}/${name}.tar.gz.sha256",
+            jenkins: false
+        )
     }
 }
