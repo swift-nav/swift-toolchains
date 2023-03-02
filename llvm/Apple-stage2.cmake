@@ -2,6 +2,7 @@
 # specified by the stage1 build.
 
 set(LLVM_ENABLE_PROJECTS "clang;clang-tools-extra" CACHE STRING "")
+set(LLVM_ENABLE_RUNTIMES "compiler-rt;libcxx;libcxxabi;libunwind" CACHE STRING "")
 
 set(LLVM_TARGETS_TO_BUILD AArch64 CACHE STRING "") 
 set(PACKAGE_VENDOR Apple CACHE STRING "")
