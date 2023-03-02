@@ -36,7 +36,7 @@ set(LLVM_TOOLCHAIN_TOOLS
     builtins
     runtimes
     clang-resource-headers
-    clang-tidy
+    # clang-tidy
     ${LLVM_TOOLCHAIN_TOOLS}
     CACHE STRING "")
 
