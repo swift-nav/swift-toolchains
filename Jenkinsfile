@@ -67,6 +67,11 @@ pipeline {
             }
         }
     }
+    post {
+        always {
+            cleanWs()
+        }
+    }
 }
 
 def uploadDistribution(name, context) {
