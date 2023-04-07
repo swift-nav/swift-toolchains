@@ -59,6 +59,11 @@ pipeline {
                         uploadDistribution("clang+llvm-14.0.0-arm64-apple-darwin", context)
                     }
                 }
+                post {
+                    always {
+                        cleanWs
+                    }
+                }
             }
         }
     }
@@ -69,12 +74,12 @@ def uploadDistribution(name, context) {
         mkdir -p tar/${name}/
         cp -rH llvm-project/out/* tar/${name}/
     """)
-    tar(file: "${name}.tar.gz", dir: 'tar', archive: true)
-    // script{
-    //     context.archivePatterns(
-    //         patterns: ["${name}.tar.gz"],
-    //         path: "swift-toolchains/${context.gitDescribe()}/${name}.tar.gz",
-    //         jenkins: false
-    //     )
-    // }
+    tar(file: "${name}.tar.gz", dir: 'tar')
+    script{
+         context.archivePatterns(
+             patterns: ["${name}.tar.gz"],
+             path: "swift-toolchains/${context.gitDescribe()}/${name}.tar.gz",
+             jenkins: false
+         )
+    }
 }
