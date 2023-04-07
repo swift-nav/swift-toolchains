@@ -59,7 +59,7 @@ pipeline {
                         uploadDistribution("clang+llvm-14.0.0-arm64-apple-darwin", context)
                     }
                     post {
-                        always {
+                        cleanup {
                             cleanWs
                         }
                     }
