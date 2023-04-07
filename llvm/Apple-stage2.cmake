@@ -33,6 +33,8 @@ set(LLVM_TOOLCHAIN_TOOLS
 
   set(LLVM_DISTRIBUTION_COMPONENTS
     clang
+    clang-format
+    clang-tidy
     builtins
     runtimes
     clang-resource-headers

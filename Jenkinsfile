@@ -45,6 +45,8 @@ pipeline {
 
                             cmake -GNinja ../llvm \
                                 -DCMAKE_INSTALL_PREFIX=../out/ \
+                                -DCMAKE_C_COMPILER_LAUNCHER=sccache \
+                                -DCMAKE_CXX_COMPILER_LAUNCHER=sccache \
                                 -DCMAKE_OSX_ARCHITECTURES='arm64' \
                                 -DCMAKE_C_COMPILER=`which clang` \
                                 -DCMAKE_CXX_COMPILER=`which clang++` \
@@ -79,12 +81,5 @@ def uploadDistribution(name, context) {
         mkdir -p tar/${name}/
         cp -rH llvm-project/out/* tar/${name}/
     """)
-    tar(file: "${name}.tar.gz", dir: 'tar')
-    script{
-         context.archivePatterns(
-             patterns: ["${name}.tar.gz"],
-             path: "swift-toolchains/${context.gitDescribe()}/${name}.tar.gz",
-             jenkins: false
-         )
-    }
+    tar(file: "${name}.tar.gz", dir: 'tar', archive: true)
 }
