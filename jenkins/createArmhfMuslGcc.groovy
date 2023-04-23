@@ -11,3 +11,5 @@ def call(jenkins) {
 
     return createStage(name, options, action)
 }
+
+return this
