@@ -2,6 +2,11 @@ def call(jenkins) {
     String name = 'armhf-musl-gcc'
     Map options = [
         dockerFile: 'docker/Dockerfile',
+        node: 'docker.fast',
+        env: [
+            CC: 'sccache gcc',
+            CXX: 'sccache g++'
+        ]
     ]
     Closure action = {
         sh """/bin/bash -ex
@@ -13,7 +18,8 @@ def call(jenkins) {
         make install
         """
 
-        tar(file: 'arm-linux-musleabifh-cross.tar.gz', compress: true, dir: 'output', archive: true)
+        sh 'echo $(pwd)'
+        tar(file: 'arm-linux-musleabifh-cross.tar.gz', compress: true, dir: 'build/output', archive: true)
     }
 
     return createStage(name, options, action)
