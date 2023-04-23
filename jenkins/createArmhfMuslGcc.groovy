@@ -13,7 +13,7 @@ def call(jenkins) {
         make install
         """
 
-        tar(file = "arm-linux-musleabifh-cross.tar.gz", compress = true, dir: 'output', archive = true)
+        tar(file = "arm-linux-musleabifh-cross.tar.gz", compress = true, dir = 'output', archive = true)
     }
 
     return createStage(name, options, action)
