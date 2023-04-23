@@ -16,10 +16,10 @@ def call(jenkins) {
         export TARGET=arm-linux-musleabihf
         make -j4
         make install
+        tar -czf arm-linux-musleabihf-cross.tar.gz output/
         """
 
-        sh 'echo $(pwd)'
-        tar(file: 'arm-linux-musleabifh-cross.tar.gz', compress: true, dir: '/tmp/musl', archive: true)
+        archiveArtifacts artifacts: 'musl-cross-make/arm-linux-musleabihf-cross.tar.gz'
     }
 
     return createStage(name, options, action)

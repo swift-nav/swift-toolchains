@@ -3,7 +3,7 @@
 # To install directly to a specific location, set it here. Multiple targets
 # can safely be installed in the same location. Some examples:
 
-OUTPUT = /tmp/musl
+#OUTPUT = /tmp/musl
 
 # By default, latest supported release versions of musl and the toolchain
 # components are used. You can override those here, but the version selected
