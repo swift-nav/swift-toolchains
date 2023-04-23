@@ -15,7 +15,7 @@ RUN apt-get update && \
     sudo \
     unzip \
     python3-pip && \
-    pip3 install awscli upgrade \
+    pip3 install awscli --upgrade \
     && curl -sSL -o /tmp/sccache.tgz "${SCCACHE_URL}" \
     && mkdir /tmp/sccache \
     && tar --strip-components=1 -C /tmp/sccache -xzf /tmp/sccache.tgz \
