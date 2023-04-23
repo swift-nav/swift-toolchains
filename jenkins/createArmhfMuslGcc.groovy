@@ -11,7 +11,7 @@ def call(jenkins) {
     Closure action = {
         sh """/bin/bash -ex
         git clone --depth 1 https://github.com/richfelker/musl-cross-make.git
-        cd musl-cross-make && cp config.mak musl-cross-make/config.mak
+        cp config.mak musl-cross-make/config.mak && cd musl-cross-make
         export CFLAGS="-fPIC -g1 \$CFLAGS"
         export TARGET=arm-linux-musleabihf
         make -j4
