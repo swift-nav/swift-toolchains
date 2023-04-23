@@ -5,7 +5,12 @@ def call(jenkins) {
     ]
     Closure action = {
         sh """/bin/bash -ex
-        echo "hello world!"
+        git clone --depth 1 https://github.com/richfelker/musl-cross-make.git build/
+        cp config.mak build/config.mak && cd build/
+        export CFLAGS="-fPIC -g1 \$CFLAGS"
+        export TARGET=arm-linux-musleabihf
+        make -j4
+        make install
         """
     }
 
