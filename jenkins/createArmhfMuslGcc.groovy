@@ -16,11 +16,16 @@ def call(jenkins) {
         export TARGET=arm-linux-musleabihf
         make -j4
         make install
-        tar -czf arm-linux-musleabihf-cross.tar.gz -C output/
+        tar -czf arm-linux-musleabihf-cross.tar.gz arm-linux-musleabihf/
         """
 
         archiveArtifacts artifacts: 'musl-cross-make/arm-linux-musleabihf-cross.tar.gz'
+
+        jenkins.context.archivePatters
+            patterns: ['musl-cross-make/arm-linux-musleabihf-cross.tar.gz'],
+            path: 'swift-toolchains/' + jenkins.context.gitDescribe() + '/arm-linux-musleabihf-cross.tar.gz'
     }
+
 
     return createStage(name, options, action)
 }
