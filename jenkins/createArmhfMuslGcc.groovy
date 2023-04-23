@@ -16,7 +16,7 @@ def call(jenkins) {
         export TARGET=arm-linux-musleabihf
         make -j4
         make install
-        tar -czf arm-linux-musleabihf-cross.tar.gz output/
+        tar -czf arm-linux-musleabihf-cross.tar.gz --strip-components=1 output/
         """
 
         archiveArtifacts artifacts: 'musl-cross-make/arm-linux-musleabihf-cross.tar.gz'
