@@ -10,8 +10,8 @@ def call(jenkins) {
     ]
     Closure action = {
         sh """/bin/bash -ex
-        git clone --depth 1 https://github.com/richfelker/musl-cross-make.git build/
-        cp config.mak build/config.mak && cd build/
+        git clone --depth 1 https://github.com/richfelker/musl-cross-make.git
+        cd musl-cross-make && cp config.mak musl-cross-make/config.mak
         export CFLAGS="-fPIC -g1 \$CFLAGS"
         export TARGET=arm-linux-musleabihf
         make -j4
@@ -19,7 +19,7 @@ def call(jenkins) {
         """
 
         sh 'echo $(pwd)'
-        tar(file: 'arm-linux-musleabifh-cross.tar.gz', compress: true, dir: 'build/output', archive: true)
+        tar(file: 'arm-linux-musleabifh-cross.tar.gz', compress: true, dir: 'musl-cross-make/output', archive: true)
     }
 
     return createStage(name, options, action)
