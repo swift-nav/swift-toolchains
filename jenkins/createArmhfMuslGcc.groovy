@@ -21,11 +21,11 @@ def call(jenkins) {
 
         archiveArtifacts artifacts: 'musl-cross-make/arm-linux-musleabihf-cross.tar.gz'
 
-        jenkins.context.archivePatters
+        jenkins.context.archivePatters(
             patterns: ['musl-cross-make/arm-linux-musleabihf-cross.tar.gz'],
             path: 'swift-toolchains/' + jenkins.context.gitDescribe() + '/arm-linux-musleabihf-cross.tar.gz'
+        )
     }
-
 
     return createStage(name, options, action)
 }
