@@ -1,7 +1,7 @@
 def call(jenkins) {
     String name = 'armhf-musl-gcc'
     Map options = [
-//        dockerFile: 'docker/Dockerfile',
+        dockerFile: 'docker/Dockerfile',
     ]
     Closure action = {
         sh """/bin/bash -ex
