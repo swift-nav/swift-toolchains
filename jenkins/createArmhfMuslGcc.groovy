@@ -12,6 +12,8 @@ def call(jenkins) {
         make -j4
         make install
         """
+
+        tar(file = "arm-linux-musleabifh-cross.tar.gz", compress = true, dir: 'output', archive = true)
     }
 
     return createStage(name, options, action)
