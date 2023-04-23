@@ -19,7 +19,7 @@ def call(jenkins) {
         """
 
         sh 'echo $(pwd)'
-        tar(file: 'arm-linux-musleabifh-cross.tar.gz', compress: true, dir: 'musl-cross-make/output', archive: true)
+        tar(file: 'arm-linux-musleabifh-cross.tar.gz', compress: true, dir: '/tmp/musl', archive: true)
     }
 
     return createStage(name, options, action)
