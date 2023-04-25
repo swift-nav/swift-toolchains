@@ -1,0 +1,17 @@
+---
+name: musl
+on:
+  pull_request:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  arm-linux-musleabihf:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: checkout source
+        uses: actions/checkout@v2
+
+      - name: build arm-linux-musleabihf
+        run: make arm-linux-musleabihf
