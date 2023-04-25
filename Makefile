@@ -1,3 +1,5 @@
+.PHONY: arm-linux-musleabihf
+
 SCRIPTS := .travis.sh \
 					 base.bash \
 					 build.bash \
@@ -26,6 +28,10 @@ NO_TTY_ARG := --no-tty
 else
 NO_TTY_ARG :=
 endif
+
+arm-linux-musleabihf:
+	docker build --tag 'rust-musl-cross' musl
+	docker run --rm -it -v $(CURDIR):/mnt/workspace -w /mnt/workspace rust-musl-cross musl/build.sh
 
 base: check-base
 	$(CURDIR)/base.bash $(NO_TTY_ARG)
