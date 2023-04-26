@@ -6,8 +6,6 @@ on:
       - "musl/**"
       - .github/workflows/musl.yaml
   push:
-    branches:
-      - "master"
     tags:
       - "*"
 

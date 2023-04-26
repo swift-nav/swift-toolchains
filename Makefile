@@ -1,5 +1,3 @@
-.PHONY: arm-linux-musleabihf
-
 SCRIPTS := .travis.sh \
 					 base.bash \
 					 build.bash \
