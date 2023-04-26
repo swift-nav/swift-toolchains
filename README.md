@@ -1,7 +1,5 @@
 # Overview of Swift Toolchains
 
-[![Build Status](https://travis-ci.org/swift-nav/llvm-obfuscator-arm.svg?branch=master)](https://travis-ci.org/swift-nav/llvm-obfuscator-arm)
-
 This collection of toolchains includes several things:
 
 - A build of LLVM 6 for ARM and x64 for use within Buildroot to run clang-tidy (and friends)
