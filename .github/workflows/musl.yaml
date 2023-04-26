@@ -2,16 +2,32 @@
 name: musl
 on:
   pull_request:
+    paths:
+      - "musl/**"
+      - .github/workflows/musl.yaml
   push:
     branches:
       - "master"
+    tags:
+      - "*"
 
 jobs:
   arm-linux-musleabihf:
     runs-on: ubuntu-22.04
     steps:
-      - name: checkout source
+      - name: Checkout source
         uses: actions/checkout@v2
 
-      - name: build arm-linux-musleabihf
+      - name: Build arm-linux-musleabihf
         run: make arm-linux-musleabihf
+
+      - name: Upload release
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+        uses: svenstaro/upload-release-action@v1-release
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: "arm-linux-musleabihf.tar.gz"
+          tag: ${{ github.ref }}
+          overwrite: true
+          file_glob: true
+
