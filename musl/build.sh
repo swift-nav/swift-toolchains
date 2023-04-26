@@ -15,5 +15,5 @@ export CFLAGS="-fPIC -g1 $CFLAGS"
 export TARGET=$target
 make -C /tmp/musl -j4
 make -C /tmp/musl install
-tar -C /tmp/musl -czf ${target}.tar.gz output/
-sha256sum ${target}.tar.gz > ${target}.tar.gz.sha256
+tar -C /tmp/musl -czf ${target}-cross.tar.gz output/
+sha256sum ${target}-cross.tar.gz > ${target}-cross.tar.gz.sha256

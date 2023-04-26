@@ -7,7 +7,7 @@ on:
       - .github/workflows/musl.yaml
   push:
     tags:
-      - "*"
+      - "musl-cross-*"
 
 jobs:
   toolchains:
@@ -28,7 +28,7 @@ jobs:
         uses: svenstaro/upload-release-action@v1-release
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: "${{ matrix.target }}.tar.gz*"
+          file: "${{ matrix.target }}-cross.tar.gz*"
           tag: ${{ github.ref }}
           overwrite: true
           file_glob: true
