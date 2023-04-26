@@ -31,7 +31,7 @@ endif
 
 arm-linux-musleabihf:
 	docker build --tag 'rust-musl-cross' musl
-	docker run --rm -v $(CURDIR):/mnt/workspace -w /mnt/workspace rust-musl-cross musl/build.sh
+	docker run --rm -v $(CURDIR):/mnt/workspace -w /mnt/workspace rust-musl-cross musl/build.sh arm-linux-musleabihf
 
 base: check-base
 	$(CURDIR)/base.bash $(NO_TTY_ARG)
