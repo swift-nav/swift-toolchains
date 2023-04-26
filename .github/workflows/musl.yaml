@@ -1,0 +1,35 @@
+---
+name: musl
+on:
+  pull_request:
+    paths:
+      - "musl/**"
+      - .github/workflows/musl.yaml
+  push:
+    tags:
+      - "musl-cross-*"
+
+jobs:
+  toolchains:
+    strategy:
+      matrix:
+        target: [aarch64-linux-musl, arm-linux-musleabihf, x86_64-linux-musl]
+    runs-on: ubuntu-22.04
+    name: ${{ matrix.target }}
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v2
+
+      - name: Build ${{ matrix.target }}
+        run: make ${{ matrix.target }}
+
+      - name: Upload release
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+        uses: svenstaro/upload-release-action@v1-release
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: "${{ matrix.target }}-cross.tar.gz*"
+          tag: ${{ github.ref }}
+          overwrite: true
+          file_glob: true
+

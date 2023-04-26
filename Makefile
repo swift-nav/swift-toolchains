@@ -27,6 +27,18 @@ else
 NO_TTY_ARG :=
 endif
 
+arm-linux-musleabihf:
+	docker build --tag 'rust-musl-cross' musl
+	docker run --rm -v $(CURDIR):/mnt/workspace -w /mnt/workspace rust-musl-cross musl/build.sh arm-linux-musleabihf
+
+aarch64-linux-musl:
+	docker build --tag 'rust-musl-cross' musl
+	docker run --rm -v $(CURDIR):/mnt/workspace -w /mnt/workspace rust-musl-cross musl/build.sh aarch64-linux-musl
+
+x86_64-linux-musl:
+	docker build --tag 'rust-musl-cross' musl
+	docker run --rm -v $(CURDIR):/mnt/workspace -w /mnt/workspace rust-musl-cross musl/build.sh x86_64-linux-musl
+
 base: check-base
 	$(CURDIR)/base.bash $(NO_TTY_ARG)
 
