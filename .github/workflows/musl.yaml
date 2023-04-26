@@ -15,7 +15,7 @@ jobs:
   toolchains:
     strategy:
       matrix:
-        target: [aarch64-linux-musl, arm-linux-muleabifh, x86_64-linux-musl]
+        target: [aarch64-linux-musl, arm-linux-musleabihf, x86_64-linux-musl]
     runs-on: ubuntu-22.04
     name: ${{ matrix.target }}
     steps:
@@ -30,7 +30,7 @@ jobs:
         uses: svenstaro/upload-release-action@v1-release
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: "${{ matrix.target }}.tar.gz"
+          file: "${{ matrix.target }}.tar.gz*"
           tag: ${{ github.ref }}
           overwrite: true
           file_glob: true
