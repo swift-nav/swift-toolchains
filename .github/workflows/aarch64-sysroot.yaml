@@ -19,7 +19,7 @@ jobs:
           sed -s -i 's|local chrome_dir=$(cd "${SCRIPT_DIR}/../../.." && pwd)|local chrome_dir=.|' sysroot-creator.sh
 
       - name: Create sysroot
-        run: ./sysroot-creator.sh arm64
+        run: ./sysroot-creator.sh build arm64
 
       - name: Upload sysroot
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
