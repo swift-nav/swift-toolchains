@@ -1,9 +1,9 @@
 ---
-name: aarch64 sysroot
+name: bullseye-aarch64 sysroot
 on:
   pull_request:
     paths:
-      - "aarch64-sysroot/**"
+      - "sysroot/**"
       - .github/workflows/aarch64-sysroot.yaml
   push:
     tags:
@@ -12,20 +12,20 @@ on:
 jobs:
   toolchains:
     runs-on: ubuntu-22.04
-    name: aarch64 sysroot
+    name: bullseye-aarch64 sysroot
     steps:
       - name: Checkout source
         uses: actions/checkout@v2
 
       - name: Create sysroot
-        run: ./aarch64-sysroot/sysroot-creator.sh build arm64
+        run: ./sysroot/sysroot-creator.sh build arm64
 
       - name: Upload sysroot
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
         uses: svenstaro/upload-release-action@v1-release
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: "aarch64-sysroot/out/sysroot-build/bullseye/debian_bullseye_arm64_sysroot.tar.xz"
+          file: "sysroot/out/sysroot-build/bullseye/debian_bullseye_arm64_sysroot.tar.xz"
           tag: ${{ github.ref }}
-          asset_name: debian_bullseye_arm64_sysroot.tar.xz
+          asset_name: debian_bullseye_aarch64_sysroot.tar.xz
           overwrite: true
