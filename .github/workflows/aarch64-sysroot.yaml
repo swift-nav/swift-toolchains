@@ -20,11 +20,6 @@ jobs:
       - name: Create sysroot
         run: ./aarch64-sysroot/sysroot-creator.sh build arm64
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          path: aarch64-sysroot/out/sysroot-build/bullseye/debian_bullseye_arm64_sysroot.tar.xz
-
       - name: Upload sysroot
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
         uses: svenstaro/upload-release-action@v1-release
@@ -32,4 +27,5 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: "aarch64-sysroot/out/sysroot-build/bullseye/debian_bullseye_arm64_sysroot.tar.xz"
           tag: ${{ github.ref }}
+          asset_name: debian_bullseye_arm64_sysroot.tar.xz
           overwrite: true
