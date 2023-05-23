@@ -7,7 +7,7 @@ on:
       - .github/workflows/aarch64-sysroot.yaml
   push:
     tags:
-      - "aarch64-sysroot-*"
+      - "bullseye-aarch64-sysroot-*"
 
 jobs:
   toolchains:
