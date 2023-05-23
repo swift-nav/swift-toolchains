@@ -3,29 +3,33 @@ name: aarch64 sysroot
 on:
   pull_request:
     paths:
+      - "aarch64-sysroot/**"
       - .github/workflows/aarch64-sysroot.yaml
   push:
     tags:
-      - "aarch-sysroot-*"
+      - "aarch64-sysroot-*"
 
 jobs:
   toolchains:
     runs-on: ubuntu-22.04
     name: aarch64 sysroot
     steps:
-      - name: Download & adjust script
-        run: |
-          wget -c https://chromium.googlesource.com/chromium/src/+archive/main/build/linux/sysroot_scripts.tar.gz -O - | tar -xz
-          sed -s -i 's|local chrome_dir=$(cd "${SCRIPT_DIR}/../../.." && pwd)|local chrome_dir=.|' sysroot-creator.sh
+      - name: Checkout source
+        uses: actions/checkout@v2
 
       - name: Create sysroot
-        run: ./sysroot-creator.sh build arm64
+        run: ./aarch64-sysroot/sysroot-creator.sh build arm64
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          path: aarch64-sysroot/out/sysroot-build/bullseye/debian_bullseye_arm64_sysroot.tar.xz
 
       - name: Upload sysroot
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
         uses: svenstaro/upload-release-action@v1-release
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: "out/sysroot-build/bullseye/debian_bullseye_arm64_sysroot.tar.xz"
+          file: "aarch64-sysroot/out/sysroot-build/bullseye/debian_bullseye_arm64_sysroot.tar.xz"
           tag: ${{ github.ref }}
           overwrite: true
