@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - "sysroot/**"
-      - .github/workflows/aarch64-sysroot.yaml
+      - .github/workflows/bullseye-aarch64-sysroot.yaml
   push:
     tags:
       - "bullseye-aarch64-sysroot-*"
