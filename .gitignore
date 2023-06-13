@@ -3,3 +3,4 @@ build/
 build-x86/
 output/
 llvm-obfuscator-*.txz
+sysroot/out

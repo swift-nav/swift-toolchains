@@ -64,14 +64,6 @@ DEBIAN_PACKAGES="\
 "
 
 DEBIAN_PACKAGES_AMD64="
-  libasan6
-  libdrm-intel1
-  libitm1
-  liblsan0
-  libquadmath0
-  libtsan0
-  libubsan1
-  valgrind
 "
 
 DEBIAN_PACKAGES_I386="
