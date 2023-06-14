@@ -1,0 +1,31 @@
+---
+name: bullseye-x86_64 sysroot
+on:
+  pull_request:
+    paths:
+      - "sysroot/**"
+      - .github/workflows/bullseye-x86_64-sysroot.yaml
+  push:
+    tags:
+      - "bullseye-x86_64-sysroot-*"
+
+jobs:
+  toolchains:
+    runs-on: ubuntu-22.04
+    name: bullseye-x86_64 sysroot
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v2
+
+      - name: Create sysroot
+        run: ./sysroot/sysroot-creator.sh build amd64
+
+      - name: Upload sysroot
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+        uses: svenstaro/upload-release-action@v1-release
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: "sysroot/out/sysroot-build/bullseye/debian_bullseye_amd64_sysroot.tar.xz"
+          tag: ${{ github.ref }}
+          asset_name: debian_bullseye_x86_64_sysroot.tar.xz
+          overwrite: true
