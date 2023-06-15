@@ -396,14 +396,29 @@ InstallIntoSysroot() {
       exit 1
     fi
 
-    Banner "Installing $(basename ${file})"
-    DownloadOrCopy ${file} ${package}
-    if [ ! -s "${package}" ] ; then
-      echo
-      echo "ERROR: bad package ${package}"
-      exit 1
-    fi
-    echo "${sha256sum}  ${package}" | sha256sum --quiet -c
+    for i in {1..5}; do
+      Banner "Installing $(basename ${file})"
+      DownloadOrCopy ${file} ${package}
+      if [ ! -s "${package}" ] ; then
+        echo
+        echo "ERROR: bad package ${package}"
+        exit 1
+      fi
+
+      sha256sum_comp=($(sha256sum ${package}))
+
+      if [ "$sha256sum_comp" = "$sha256sum" ]; then
+        break
+      fi
+
+      if [ $i -eq 5 ]; then
+        echo "sha256sum: ERROR: computed checksum did NOT match, exceeded max number of attempts"
+        exit 1
+      fi
+
+      echo "sha256sum: WARNING: computed checksum did NOT match, retrying..."
+      rm ${package}
+    done
 
     SubBanner "Extracting to ${INSTALL_ROOT}"
     dpkg-deb -x ${package} ${INSTALL_ROOT}
