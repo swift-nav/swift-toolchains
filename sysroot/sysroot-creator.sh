@@ -151,7 +151,9 @@ DownloadOrCopyNonUniqueFilename() {
 }
 
 DownloadOrCopy() {
-  if [ $3 -eq 0 ] && [ -f "$2" ] ; then
+  local force="${3:-0}"
+
+  if [ $force -eq 0 ] && [ -f "$2" ] ; then
     echo "$2 already in place"
     return
   fi
@@ -413,7 +415,7 @@ InstallIntoSysroot() {
 
     for i in {1..5}; do
       Banner "Installing $(basename ${file})"
-      DownloadOrCopy ${file} ${package} 0
+      DownloadOrCopy ${file} ${package}
       if [ ! -s "${package}" ] ; then
         echo
         echo "ERROR: bad package ${package}"
