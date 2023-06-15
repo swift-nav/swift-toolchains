@@ -139,10 +139,11 @@ DownloadOrCopyNonUniqueFilename() {
   # does not.
   local url="$1"
   local dest="$2"
+  local force="${3:-0}"
 
   local hash="$(echo "$url" | sha256sum | cut -d' ' -f1)"
 
-  DownloadOrCopy "${url}" "${dest}.${hash}"
+  DownloadOrCopy "${url}" "${dest}.${hash}" "${force}"
   # cp the file to prevent having to redownload it, but mv it to the
   # final location so that it's atomic.
   cp "${dest}.${hash}" "${dest}.$$"
@@ -150,7 +151,7 @@ DownloadOrCopyNonUniqueFilename() {
 }
 
 DownloadOrCopy() {
-  if [ -f "$2" ] ; then
+  if [ $3 -eq 0 ] && [ -f "$2" ] ; then
     echo "$2 already in place"
     return
   fi
@@ -291,7 +292,21 @@ GeneratePackageListDistRepo() {
   local package_list_arch="${repo_basedir}/${package_file_arch}"
 
   DownloadOrCopyNonUniqueFilename "${package_list_arch}" "${package_list}"
-  VerifyPackageListing "${package_file_arch}" "${package_list}" ${repo} ${dist}
+
+  for i in {1..5}; do
+    if VerifyPackageListing "${package_file_arch}" "${package_list}" ${repo} ${dist}; then
+      break
+    fi
+
+    if [ $i -eq 5 ]; then
+      echo "sha256sum: ERROR: computed checksum did NOT match, exceeded max number of attempts"
+      exit 1
+    fi
+
+    echo "sha256sum: WARNING: computed checksum did NOT match, retrying..."
+    DownloadOrCopyNonUniqueFilename "${package_list_arch}" "${package_list}" 1
+  done
+
   ExtractPackageXz "${package_list}" "${tmp_package_list}" ${repo}
   cat "${tmp_package_list}" | ./merge-package-lists.py "${list_base}"
 }
@@ -410,6 +425,10 @@ InstallIntoSysroot() {
       if [ "$sha256sum_comp" = "$sha256sum" ]; then
         break
       fi
+
+      echo ${output_file}
+      echo expected: ${sha256sum}
+      echo computed: ${sha256sum_comp}
 
       if [ $i -eq 5 ]; then
         echo "sha256sum: ERROR: computed checksum did NOT match, exceeded max number of attempts"
@@ -561,7 +580,17 @@ VerifyPackageListing() {
     exit 1
   fi
 
-  echo "${sha256sum}  ${output_file}" | sha256sum --quiet -c
+  sha256sum_comp=($(sha256sum ${output_file}))
+
+  if [ "$sha256sum_comp" = "$sha256sum" ]; then
+    return 0
+  fi
+
+  echo ${output_file}
+  echo expected: ${sha256sum}
+  echo computed: ${sha256sum_comp}
+
+  return 1
 }
 
 #
