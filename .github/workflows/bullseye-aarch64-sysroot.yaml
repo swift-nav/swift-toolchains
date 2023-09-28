@@ -21,6 +21,12 @@ jobs:
         run: ./sysroot/sysroot-creator.sh build arm64
 
       - name: Upload sysroot
+        uses: actions/upload-artifacts@v3
+        with:
+          name: debian_bullseye_aarch64_sysroot.tar.xz
+          path: sysroot/out/sysroot-build/bullseye/debian_bullseye_arm64_sysroot.tar.xz
+
+      - name: Release sysroot
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
         uses: svenstaro/upload-release-action@v1-release
         with:
