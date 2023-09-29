@@ -2,6 +2,9 @@ cc_binary(
     name = "uuid",
     srcs = ["test/uuid.cc"],
     tags = ["manual"],
+    linkopts = [
+        "-luuid",
+    ],
 )
 
 cc_binary(
