@@ -1,0 +1,4 @@
+build:aarch64_sysroot --incompatible_enable_cc_toolchain_resolution
+build:aarch64_sysroot --platforms=@rules_swiftnav//platforms:aarch64_bullseye_graviton2
+
+try-import %workspace%/.bazelrc.user

@@ -1,0 +1,5 @@
+cc_binary(
+    name = "uuid",
+    srcs = ["test/uuid.cc"],
+    tags = ["manual"],
+)
