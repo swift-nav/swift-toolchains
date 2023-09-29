@@ -7,7 +7,7 @@ on:
       - .github/workflows/bullseye-x86_64-sysroot.yaml
   push:
     tags:
-      - "bullseye-x86_64-sysroot-*"
+      - "bullseye-sysroot-*"
 
 jobs:
   toolchains:
@@ -21,6 +21,26 @@ jobs:
         run: ./sysroot/sysroot-creator.sh build amd64
 
       - name: Upload sysroot
+        uses: actions/upload-artifact@v3
+        with:
+          name: debian_bullseye_x86_64_sysroot.tar.xz
+          path: sysroot/out/sysroot-build/bullseye/debian_bullseye_amd64_sysroot.tar.xz
+
+      - uses: bazelbuild/setup-bazelisk@v2
+
+      - name: Mount bazel cache
+        uses: actions/cache@v1
+        with:
+          path: "~/.cache/bazel"
+          key: bazel
+
+      - name: Copy sysroot
+        run: cp sysroot/out/sysroot-build/bullseye/debian_bullseye_amd64_sysroot.tar.xz debian_bullseye_x86_64_sysroot.tar.xz
+
+      - name: Test sysroot
+        run: bazel build --config=x86_64_sysroot //sysroot/...
+
+      - name: Release sysroot
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
         uses: svenstaro/upload-release-action@v1-release
         with:

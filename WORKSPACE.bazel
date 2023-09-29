@@ -1,0 +1,55 @@
+workspace(name = "swift-toolchains")
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "bazel_skylib",
+    sha256 = "74d544d96f4a5bb630d465ca8bbcfe231e3594e5aae57e1edbf17a6eb3ca2506",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/1.3.0/bazel-skylib-1.3.0.tar.gz",
+        "https://github.com/bazelbuild/bazel-skylib/releases/download/1.3.0/bazel-skylib-1.3.0.tar.gz",
+    ],
+)
+
+load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
+
+bazel_skylib_workspace()
+
+http_archive(
+    name = "rules_swiftnav",
+    sha256 = "91a230cf400921189f1654ebe7ca10305e89f3d8cccc0c7486e6fc8886ac0d1b",
+    strip_prefix = "rules_swiftnav-3262a9ccd01951aa45576be3db102f03b84047eb",
+    url = "https://github.com/swift-nav/rules_swiftnav/archive/3262a9ccd01951aa45576be3db102f03b84047eb.tar.gz",
+)
+
+load("@rules_swiftnav//cc:repositories.bzl", "register_swift_cc_toolchains", "swift_cc_toolchain")
+
+swift_cc_toolchain()
+
+register_swift_cc_toolchains()
+
+load("@rules_swiftnav//tools:local_archive.bzl", "local_archive")
+
+local_archive(
+    name = "aarch64-sysroot",
+    build_file_content = """
+filegroup(
+    name = "aarch64-sysroot",
+    srcs = glob(["*/**"]),
+    visibility = ["//visibility:public"],
+)
+    """,
+    src = "//:debian_bullseye_aarch64_sysroot.tar.xz",
+)
+
+local_archive(
+    name = "x86_64-sysroot",
+    build_file_content = """
+filegroup(
+    name = "x86_64-sysroot",
+    srcs = glob(["*/**"]),
+    visibility = ["//visibility:public"],
+)
+    """,
+    src = "//:debian_bullseye_x86_64_sysroot.tar.xz",
+)
