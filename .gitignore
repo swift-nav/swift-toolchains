@@ -4,3 +4,5 @@ build-x86/
 output/
 llvm-obfuscator-*.txz
 sysroot/out
+/bazel-*
+.bazelrc.user

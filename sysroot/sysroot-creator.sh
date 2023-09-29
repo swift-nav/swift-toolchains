@@ -61,10 +61,10 @@ DEBIAN_PACKAGES="\
   uuid-dev
   libgcc-10-dev
   libgcc-s1
-  libblas3
   libblas-dev
-  liblapack3
+  libblas3
   liblapack-dev
+  liblapack3
 "
 
 DEBIAN_PACKAGES_AMD64="
