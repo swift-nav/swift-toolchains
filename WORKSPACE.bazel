@@ -17,8 +17,8 @@ bazel_skylib_workspace()
 
 http_archive(
     name = "rules_swiftnav",
-    strip_prefix = "rules_swiftnav-643e16de3cecb491955472d6b19b3672a0aaac9e",
-    url = "https://github.com/swift-nav/rules_swiftnav/archive/643e16de3cecb491955472d6b19b3672a0aaac9e.tar.gz",
+    strip_prefix = "rules_swiftnav-a3e5c82504c07b8de9a2c8c455a99ebc864d5859",
+    url = "https://github.com/swift-nav/rules_swiftnav/archive/a3e5c82504c07b8de9a2c8c455a99ebc864d5859.tar.gz",
 )
 
 load("@rules_swiftnav//cc:repositories.bzl", "register_swift_cc_toolchains", "swift_cc_toolchain")
