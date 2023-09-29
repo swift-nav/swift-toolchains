@@ -7,9 +7,13 @@ cc_binary(
 )
 
 cc_binary(
-    name = "lapack",
+    name = "foo",
     srcs = ["test/lapack.cc"],
     linkopts = [
+        "-Lexternal/aarch64-sysroot/usr/lib/aarch64-linux-gnu/blas",
+        "-Lexternal/aarch64-sysroot/usr/lib/aarch64-linux-gnu/lapack",
+        "-Lexternal/x86_64-sysroot/usr/lib/x86_64-linux-gnu/blas",
+        "-Lexternal/x86_64-sysroot/usr/lib/x86_64-linux-gnu/lapack",
         "-lm",
         "-lpthread",
         "-lblas",

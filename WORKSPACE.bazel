@@ -40,3 +40,15 @@ filegroup(
     """,
     src = "//:debian_bullseye_aarch64_sysroot.tar.xz",
 )
+
+local_archive(
+    name = "x86_64-sysroot",
+    build_file_content = """
+filegroup(
+    name = "x86_64-sysroot",
+    srcs = glob(["*/**"]),
+    visibility = ["//visibility:public"],
+)
+    """,
+    src = "//:debian_bullseye_x86_64_sysroot.tar.xz",
+)
