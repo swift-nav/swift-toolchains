@@ -3,3 +3,15 @@ cc_binary(
     srcs = ["test/uuid.cc"],
     tags = ["manual"],
 )
+
+cc_binary(
+    name = "lapack",
+    srcs = ["test/lapack.cc"],
+    tags = ["manual"],
+    linkopts = [
+        "-lm",
+        "-lpthread",
+        "-lblas",
+        "-llapack",
+    ],
+)
