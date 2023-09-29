@@ -7,7 +7,7 @@ on:
       - .github/workflows/bullseye-x86_64-sysroot.yaml
   push:
     tags:
-      - "bullseye-x86_64-sysroot-*"
+      - "bullseye-sysroot-*"
 
 jobs:
   toolchains:
