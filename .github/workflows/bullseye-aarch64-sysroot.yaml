@@ -32,7 +32,7 @@ jobs:
         run: cp sysroot/out/sysroot-build/bullseye/debian_bullseye_arm64_sysroot.tar.xz debian_bullseye_aarch64_sysroot.tar.xz
 
       - name: Test sysroot
-        run: bazel build --config=aarch64_sysroot //sysroot:uuid
+        run: bazel build --config=aarch64_sysroot //sysroot/...
 
       - name: Upload sysroot
         uses: actions/upload-artifact@v3
