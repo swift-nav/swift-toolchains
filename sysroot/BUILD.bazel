@@ -1,7 +1,6 @@
 cc_binary(
     name = "uuid",
     srcs = ["test/uuid.cc"],
-    tags = ["manual"],
     linkopts = [
         "-luuid",
     ],
@@ -10,7 +9,6 @@ cc_binary(
 cc_binary(
     name = "lapack",
     srcs = ["test/lapack.cc"],
-    tags = ["manual"],
     linkopts = [
         "-lm",
         "-lpthread",
