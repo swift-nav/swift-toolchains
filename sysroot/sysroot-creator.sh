@@ -361,45 +361,12 @@ StripChecksumsFromPackageList() {
 HacksAndPatches() {
   Banner "Misc Hacks & Patches"
 
-  # Remove an unnecessary dependency on qtchooser.
-  # rm "${INSTALL_ROOT}/usr/lib/${TRIPLE}/qt-default/qtchooser/default.conf"
-
-  # libxcomposite1 is missing a symbols file.
-  # cp "${SCRIPT_DIR}/libxcomposite1-symbols" \
-  #   "${INSTALL_ROOT}/debian/libxcomposite1/DEBIAN/symbols"
-
-  # __GLIBC_MINOR__ is used as a feature test macro.  Replace it with the
-  # earliest supported version of glibc (2.26, obtained from the oldest glibc
-  # version in //chrome/installer/linux/debian/dist_packag_versions.json and
-  # //chrome/installer/linux/rpm/dist_package_provides.json).
-  local usr_include="${INSTALL_ROOT}/usr/include"
-  # local features_h="${usr_include}/features.h"
-  # sed -i 's|\(#define\s\+__GLIBC_MINOR__\)|\1 26 //|' "${features_h}"
-
-  # fcntl64() was introduced in glibc 2.28.  Make sure to use fcntl() instead.
-  # local fcntl_h="${INSTALL_ROOT}/usr/include/fcntl.h"
-  # sed -i '{N; s/#ifndef __USE_FILE_OFFSET64\(\nextern int fcntl\)/#if 1\1/}' \
-  #     "${fcntl_h}"
-
-  # Do not use pthread_cond_clockwait as it was introduced in glibc 2.30.
-  local cppconfig_h="${usr_include}/${TRIPLE}/c++/10/bits/c++config.h"
-  sed -i 's|\(#define\s\+_GLIBCXX_USE_PTHREAD_COND_CLOCKWAIT\)|// \1|' \
-    "${cppconfig_h}"
-
-  # This is for chrome's ./build/linux/pkg-config-wrapper
-  # which overwrites PKG_CONFIG_LIBDIR internally
-  SubBanner "Move pkgconfig scripts"
-  mkdir -p ${INSTALL_ROOT}/usr/lib/pkgconfig
-  mv ${INSTALL_ROOT}/usr/lib/${TRIPLE}/pkgconfig/* \
-      ${INSTALL_ROOT}/usr/lib/pkgconfig
-
-  # Avoid requiring unsupported glibc versions.
-  "${SCRIPT_DIR}/reversion_glibc.py" \
-    "${INSTALL_ROOT}/lib/${TRIPLE}/libc.so.6"
-  "${SCRIPT_DIR}/reversion_glibc.py" \
-    "${INSTALL_ROOT}/lib/${TRIPLE}/libm.so.6"
-  # "${SCRIPT_DIR}/reversion_glibc.py" \
-  #   "${INSTALL_ROOT}/lib/${TRIPLE}/libcrypt.so.1"
+  cd ${INSTALL_ROOT}/usr/lib/${TRIPLE}
+  ln -s ./blas/libblas.so libblas.so
+  ln -s ./blas/libblas.a libblas.a
+  ln -s ./lapack/liblapack.so liblapack.so
+  ln -s ./lapack/liblapack.a liblapack.a
+  cd -
 }
 
 InstallIntoSysroot() {
@@ -528,7 +495,7 @@ BuildSysroot() {
   local files_and_sha256sums="$(cat ${package_file})"
   StripChecksumsFromPackageList "$package_file"
   InstallIntoSysroot ${files_and_sha256sums}
-  # HacksAndPatches
+  HacksAndPatches
   # CleanupJailSymlinks
   # VerifyLibraryDeps
   CreateTarBall
