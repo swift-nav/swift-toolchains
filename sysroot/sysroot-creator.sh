@@ -355,12 +355,30 @@ StripChecksumsFromPackageList() {
 }
 
 ######################################################################
-#
+# This is the part of the script that brings shame upon your clan.
 ######################################################################
 
 HacksAndPatches() {
   Banner "Misc Hacks & Patches"
 
+  # In debian blas and lapack are virtual packages.
+  #
+  # As such - the alternatives system is responsible for ensuring that a
+  # libblas.so and liblapack.so are available in /usr/lib/${TRIPLE} -
+  # i.e. - they are in the linkers default search path.
+  #
+  # The implementation we're using here - libblas-dev, and liblapack-dev
+  # only install the libraries to /usr/lib/${TRIPLE}/blas and /usr/lib/${TRIPLE}/lapack
+  # which are not on the linkers default search paths.
+  #
+  # Typically the symlink creation is handled by their respective post install
+  # scripts - but since we're using dpkg-deb directly - we need to do it ourselves.
+  #
+  # Otherwise we have to hardcode the install locations in the build system.
+  # Dealing with the possible combinations of arch, os, whether we're building
+  # with a sysroot or not is a nightmare.
+  #
+  # This is a hack - but it's the least bad option.
   cd ${INSTALL_ROOT}/usr/lib/${TRIPLE}
   ln -s ./blas/libblas.so libblas.so
   ln -s ./blas/libblas.a libblas.a
