@@ -355,7 +355,7 @@ StripChecksumsFromPackageList() {
 }
 
 ######################################################################
-# This is the part of the script that brings shame upon your clan.
+#
 ######################################################################
 
 HacksAndPatches() {
@@ -376,9 +376,8 @@ HacksAndPatches() {
   #
   # Otherwise we have to hardcode the install locations in the build system.
   # Dealing with the possible combinations of arch, os, whether we're building
-  # with a sysroot or not is a nightmare.
-  #
-  # This is a hack - but it's the least bad option.
+  # with a sysroot or not, etc... is too much to keep straight. So we'll deal
+  # with it here.
   cd ${INSTALL_ROOT}/usr/lib/${TRIPLE}
   ln -s ./blas/libblas.so libblas.so
   ln -s ./blas/libblas.a libblas.a
