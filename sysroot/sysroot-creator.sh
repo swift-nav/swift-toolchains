@@ -21,7 +21,7 @@ set -o errexit
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 DISTRO=debian
-RELEASE=bullseye
+RELEASE=stretch
 
 # This number is appended to the sysroot key to cause full rebuilds.  It
 # should be incremented when removing packages or patching existing packages.
@@ -32,20 +32,20 @@ ARCHIVE_TIMESTAMP=20230329T085712Z
 
 ARCHIVE_URL="https://snapshot.debian.org/archive/debian/$ARCHIVE_TIMESTAMP/"
 APT_SOURCES_LIST=(
-  # Debian 12 (Bookworm) is needed for GTK4.  It should be kept before bullseye
-  # so that bullseye takes precedence.
-  "${ARCHIVE_URL} bookworm main"
-  "${ARCHIVE_URL} bookworm-updates main"
+#  # Debian 12 (Bookworm) is needed for GTK4.  It should be kept before bullseye
+#  # so that bullseye takes precedence.
+#  "${ARCHIVE_URL} bookworm main"
+#  "${ARCHIVE_URL} bookworm-updates main"
 
   # Debian 9 (Stretch) is needed for gnome-keyring.  It should be kept before
   # bullseye so that bullseye takes precedence.
   "${ARCHIVE_URL} stretch main"
   "${ARCHIVE_URL} stretch-updates main"
 
-  # This mimics a sources.list from bullseye.
-  "${ARCHIVE_URL} bullseye main contrib non-free"
-  "${ARCHIVE_URL} bullseye-updates main contrib non-free"
-  "${ARCHIVE_URL} bullseye-backports main contrib non-free"
+#  # This mimics a sources.list from bullseye.
+#  "${ARCHIVE_URL} bullseye main contrib non-free"
+#  "${ARCHIVE_URL} bullseye-updates main contrib non-free"
+#  "${ARCHIVE_URL} bullseye-backports main contrib non-free"
 )
 
 # gpg keyring file generated using generate_keyring.sh
@@ -55,16 +55,11 @@ KEYRING_FILE="${SCRIPT_DIR}/keyring.gpg"
 DEBIAN_PACKAGES="\
   libc6
   libc6-dev
-  libstdc++-10-dev
+  libstdc++-6-dev
   libstdc++6
   linux-libc-dev
-  uuid-dev
-  libgcc-10-dev
-  libgcc-s1
-  libblas-dev
-  libblas3
-  liblapack-dev
-  liblapack3
+  libgcc-6-dev
+  libgcc1
 "
 
 DEBIAN_PACKAGES_AMD64="
