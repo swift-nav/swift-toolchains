@@ -21,31 +21,26 @@ set -o errexit
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 DISTRO=debian
-RELEASE=bullseye
+RELEASE=bookworm
 
 # This number is appended to the sysroot key to cause full rebuilds.  It
 # should be incremented when removing packages or patching existing packages.
 # It should not be incremented when adding packages.
 SYSROOT_RELEASE=1
 
-ARCHIVE_TIMESTAMP=20230329T085712Z
+ARCHIVE_TIMESTAMP=20240829T000000Z
 
 ARCHIVE_URL="https://snapshot.debian.org/archive/debian/$ARCHIVE_TIMESTAMP/"
 APT_SOURCES_LIST=(
-  # Debian 12 (Bookworm) is needed for GTK4.  It should be kept before bullseye
-  # so that bullseye takes precedence.
-  "${ARCHIVE_URL} bookworm main"
-  "${ARCHIVE_URL} bookworm-updates main"
+  # This mimics a sources.list from bookworm.
+  "${ARCHIVE_URL} bookworm main contrib non-free non-free-firmware"
+  "${ARCHIVE_URL} bookworm-updates main contrib non-free non-free-firmware"
+  "${ARCHIVE_URL} bookworm-backports main contrib non-free non-free-firmware"
 
-  # Debian 9 (Stretch) is needed for gnome-keyring.  It should be kept before
-  # bullseye so that bullseye takes precedence.
-  "${ARCHIVE_URL} stretch main"
-  "${ARCHIVE_URL} stretch-updates main"
-
-  # This mimics a sources.list from bullseye.
+  # Debian 11 (Bullseye) is kept for compatibility with older packages if needed.
+  # It should be kept after bookworm so that bookworm takes precedence.
   "${ARCHIVE_URL} bullseye main contrib non-free"
   "${ARCHIVE_URL} bullseye-updates main contrib non-free"
-  "${ARCHIVE_URL} bullseye-backports main contrib non-free"
 )
 
 # gpg keyring file generated using generate_keyring.sh

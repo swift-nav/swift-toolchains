@@ -1,18 +1,18 @@
 ---
-name: bullseye-aarch64 sysroot
+name: bookworm-aarch64 sysroot
 on:
   pull_request:
     paths:
       - "sysroot/**"
-      - .github/workflows/bullseye-aarch64-sysroot.yaml
+      - .github/workflows/bookworm-aarch64-sysroot.yaml
   push:
     tags:
-      - "bullseye-sysroot-*"
+      - "bookworm-sysroot-*"
 
 jobs:
   toolchains:
     runs-on: ubuntu-22.04
-    name: bullseye-aarch64 sysroot
+    name: bookworm-aarch64 sysroot
     steps:
       - name: Checkout source
         uses: actions/checkout@v2
@@ -23,8 +23,8 @@ jobs:
       - name: Upload sysroot
         uses: actions/upload-artifact@v3
         with:
-          name: debian_bullseye_aarch64_sysroot.tar.xz
-          path: sysroot/out/sysroot-build/bullseye/debian_bullseye_arm64_sysroot.tar.xz
+          name: debian_bookworm_aarch64_sysroot.tar.xz
+          path: sysroot/out/sysroot-build/bookworm/debian_bookworm_arm64_sysroot.tar.xz
 
       - uses: bazelbuild/setup-bazelisk@v2
 
@@ -35,7 +35,7 @@ jobs:
           key: bazel
 
       - name: Copy sysroot
-        run: cp sysroot/out/sysroot-build/bullseye/debian_bullseye_arm64_sysroot.tar.xz debian_bullseye_aarch64_sysroot.tar.xz
+        run: cp sysroot/out/sysroot-build/bookworm/debian_bookworm_arm64_sysroot.tar.xz debian_bookworm_aarch64_sysroot.tar.xz
 
       - name: Test sysroot
         run: bazel build --config=aarch64_sysroot //sysroot/...
@@ -45,7 +45,7 @@ jobs:
         uses: svenstaro/upload-release-action@v1-release
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: "sysroot/out/sysroot-build/bullseye/debian_bullseye_arm64_sysroot.tar.xz"
+          file: "sysroot/out/sysroot-build/bookworm/debian_bookworm_arm64_sysroot.tar.xz"
           tag: ${{ github.ref }}
-          asset_name: debian_bullseye_aarch64_sysroot.tar.xz
+          asset_name: debian_bookworm_aarch64_sysroot.tar.xz
           overwrite: true
