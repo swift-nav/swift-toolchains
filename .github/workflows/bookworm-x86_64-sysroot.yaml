@@ -15,21 +15,21 @@ jobs:
     name: bookworm-x86_64 sysroot
     steps:
       - name: Checkout source
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Create sysroot
         run: ./sysroot/sysroot-creator.sh build amd64
 
       - name: Upload sysroot
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: debian_bookworm_x86_64_sysroot.tar.xz
           path: sysroot/out/sysroot-build/bookworm/debian_bookworm_amd64_sysroot.tar.xz
 
-      - uses: bazelbuild/setup-bazelisk@v2
+      - uses: bazel-contrib/setup-bazel@0.15.0
 
       - name: Mount bazel cache
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         with:
           path: "~/.cache/bazel"
           key: bazel
@@ -42,7 +42,7 @@ jobs:
 
       - name: Release sysroot
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
-        uses: svenstaro/upload-release-action@v1-release
+        uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: "sysroot/out/sysroot-build/bookworm/debian_bookworm_amd64_sysroot.tar.xz"
