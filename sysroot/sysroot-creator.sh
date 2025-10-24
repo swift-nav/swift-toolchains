@@ -20,7 +20,6 @@
 
 set -o nounset
 set -o errexit
-set -x
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -461,7 +460,6 @@ CleanupJailSymlinks() {
     libdirs="${libdirs} lib64"
   fi
   find $libdirs -type l -printf '%p %l\n' | while read link target; do
-    echo "Processing link ${link} -> ${target}"
     # skip links with non-absolute paths
     echo "${target}" | grep -qs ^/ || continue
     echo "${link}: ${target}"
