@@ -456,7 +456,7 @@ CleanupJailSymlinks() {
   SAVEDPWD=$(pwd)
   cd ${INSTALL_ROOT}
   local libdirs="lib usr/lib"
-  if [ "${ARCH}" != "MIPS" ]; then
+  if [ -d lib64 ]; then
     libdirs="${libdirs} lib64"
   fi
   find $libdirs -type l -printf '%p %l\n' | while read link target; do
@@ -483,14 +483,14 @@ CleanupJailSymlinks() {
         ;;
     esac
   done
-  # find $libdirs -type l -printf '%p %l\n' | while read link target; do
-  #   # Make sure we catch new bad links.
-  #   if [ ! -r "${link}" ]; then
-  #     echo "ERROR: FOUND BAD LINK ${link}"
-  #     ls -l ${link}
-  #     exit 1
-  #   fi
-  # done
+  find $libdirs -type l -printf '%p %l\n' | while read link target; do
+    # Make sure we catch new bad links.
+    if [ ! -r "${link}" ]; then
+      echo "ERROR: FOUND BAD LINK ${link}"
+      ls -l ${link}
+      #exit 1
+    fi
+  done
   cd "$SAVEDPWD"
 }
 
