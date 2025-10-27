@@ -11,6 +11,9 @@
 #@    {amd64,i386,armhf,arm64,armel,mipsel,mips64el}
 #@
 
+# partially synced with https://chromium.googlesource.com/chromium/src/+/e8df45bfd5386216b9b6ff178b26461902c7ae3a/build/linux/sysroot_scripts/sysroot-creator.sh
+
+
 ######################################################################
 # Config
 ######################################################################
@@ -450,35 +453,44 @@ InstallIntoSysroot() {
 
 CleanupJailSymlinks() {
   Banner "Jail symlink cleanup"
-
   SAVEDPWD=$(pwd)
   cd ${INSTALL_ROOT}
   local libdirs="lib usr/lib"
   if [ -d lib64 ]; then
     libdirs="${libdirs} lib64"
   fi
-
   find $libdirs -type l -printf '%p %l\n' | while read link target; do
     # skip links with non-absolute paths
     echo "${target}" | grep -qs ^/ || continue
     echo "${link}: ${target}"
-    # Relativize the symlink.
-    prefix=$(echo "${link}" | sed -e 's/[^/]//g' | sed -e 's|/|../|g')
-    ln -snfv "${prefix}${target}" "${link}"
+    case "${link}" in
+      usr/lib/gcc/*-linux-gnu/4.*/* | usr/lib/gcc/arm-linux-gnueabihf/4.*/* | \
+      usr/lib/gcc/aarch64-linux-gnu/4.*/*)
+        # Relativize the symlink.
+        ln -snfv "../../../../..${target}" "${link}"
+        ;;
+      usr/lib/*-linux-gnu/* | usr/lib/arm-linux-gnueabihf/*)
+        # Relativize the symlink.
+        ln -snfv "../../..${target}" "${link}"
+        ;;
+      usr/lib/*)
+        # Relativize the symlink.
+        ln -snfv "../..${target}" "${link}"
+        ;;
+      lib64/* | lib/*)
+        # Relativize the symlink."
+        ln -snfv "..${target}" "${link}"
+        ;;
+    esac
   done
-
-  failed=0
-  while read link target; do
+  find $libdirs -type l -printf '%p %l\n' | while read link target; do
     # Make sure we catch new bad links.
     if [ ! -r "${link}" ]; then
       echo "ERROR: FOUND BAD LINK ${link}"
       ls -l ${link}
-      failed=1
+      #exit 1
     fi
-  done < <(find $libdirs -type l -printf '%p %l\n')
-  if [ $failed -eq 1 ]; then
-      exit 1
-  fi
+  done
   cd "$SAVEDPWD"
 }
 
@@ -513,7 +525,7 @@ BuildSysroot() {
   StripChecksumsFromPackageList "$package_file"
   InstallIntoSysroot ${files_and_sha256sums}
   HacksAndPatches
-  # CleanupJailSymlinks
+  CleanupJailSymlinks
   # VerifyLibraryDeps
   CreateTarBall
 }
