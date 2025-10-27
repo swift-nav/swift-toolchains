@@ -5,6 +5,9 @@ on:
     paths:
       - "sysroot/**"
       - .github/workflows/bullseye-x86_64-sysroot.yaml
+      - "MODULE.bazel"
+      - ".bazeliskrc"
+      - ".bazelrc"
   push:
     tags:
       - "bullseye-sysroot-*"
