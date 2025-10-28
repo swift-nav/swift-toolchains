@@ -6,3 +6,6 @@ llvm-obfuscator-*.txz
 sysroot/out
 /bazel-*
 .bazelrc.user
+
+debian_bullseye_x86_64_sysroot.tar.xz
+debian_bullseye_aarch64_sysroot.tar.xz
