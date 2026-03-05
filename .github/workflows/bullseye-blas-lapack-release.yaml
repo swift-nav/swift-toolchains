@@ -35,27 +35,24 @@ jobs:
           name: ${{ matrix.asset_name }}
           path: sysroot/out/sysroot-build/bullseye/debian_bullseye_${{ matrix.arch }}_blas_lapack.tar.xz
 
-      - name: Upload to draft release
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh release create "${{ github.ref_name }}" --draft --title "${{ github.ref_name }}" \
-            --repo "${{ github.repository }}" 2>/dev/null || true
-          gh release upload "${{ github.ref_name }}" \
-            "sysroot/out/sysroot-build/bullseye/debian_bullseye_${{ matrix.arch }}_blas_lapack.tar.xz#${{ matrix.asset_name }}" \
-            --clobber --repo "${{ github.repository }}"
-
-  publish-release:
+  release:
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
     needs: blas-lapack
     runs-on: ubuntu-22.04
     permissions:
       contents: write
     steps:
-      - name: Publish release
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Create release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release edit "${{ github.ref_name }}" --draft=false \
-            --repo "${{ github.repository }}"
+          gh release create "${{ github.ref_name }}" artifacts/*.tar.xz \
+            --title "${{ github.ref_name }}" \
+            --repo "${{ github.repository }}" \
+            --generate-notes
