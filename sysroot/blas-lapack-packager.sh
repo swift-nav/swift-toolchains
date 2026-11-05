@@ -12,6 +12,7 @@ set -o errexit
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 DISTRO=debian
+DISTRO_VERSION=11
 RELEASE=bullseye
 
 SetEnvironmentVariables() {
@@ -51,6 +52,12 @@ PackageBlasLapack() {
   # Static libs (from blas/ and lapack/ subdirs placed there by the deb)
   cp "${lib_src}/blas/libblas.a"     "${stage}/lib/"
   cp "${lib_src}/lapack/liblapack.a" "${stage}/lib/"
+
+  # Consumers read the version here, so SBOMs cannot drift from the libraries.
+  local version
+  version="$(grep -om1 'liblapack-dev_[^_]*' "${SCRIPT_DIR}/generated_package_lists/${RELEASE}.${ARCH}")"
+  version="${version#liblapack-dev_}"
+  echo "LAPACK_PURL = \"pkg:deb/${DISTRO}/liblapack-dev@${version//+/%2B}?arch=${ARCH}&distro=${DISTRO}-${DISTRO_VERSION}&upstream=lapack\"" > "${stage}/version.bzl"
 
   echo "Creating ${TARBALL}"
   tar -I "xz -9 -T0" -cf "${TARBALL}" -C "${stage}" .
