@@ -12,6 +12,7 @@ set -o errexit
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 DISTRO=debian
+DISTRO_VERSION=11
 RELEASE=bullseye
 
 SetEnvironmentVariables() {
@@ -34,6 +35,13 @@ SetEnvironmentVariables() {
   TARBALL="${BUILD_DIR}/${DISTRO}_${RELEASE}_${ARCH}_blas_lapack.tar.xz"
 }
 
+WritePurl() {
+  local name="$1" package="$2" output="$3" version
+  version="$(grep -om1 "${package}_[^_]*" "${SCRIPT_DIR}/generated_package_lists/${RELEASE}.${ARCH}")"
+  version="${version#"${package}"_}"
+  echo "${name}_PURL = \"pkg:deb/${DISTRO}/${package}@${version//+/%2B}?arch=${ARCH}&distro=${DISTRO}-${DISTRO_VERSION}&upstream=lapack\"" >> "${output}"
+}
+
 PackageBlasLapack() {
   if [ ! -d "${INSTALL_ROOT}" ]; then
     echo "ERROR: staging dir not found: ${INSTALL_ROOT}"
@@ -51,6 +59,10 @@ PackageBlasLapack() {
   # Static libs (from blas/ and lapack/ subdirs placed there by the deb)
   cp "${lib_src}/blas/libblas.a"     "${stage}/lib/"
   cp "${lib_src}/lapack/liblapack.a" "${stage}/lib/"
+
+  # Consumers read the purls here, so SBOMs cannot drift from the libraries.
+  WritePurl BLAS libblas-dev "${stage}/purl.bzl"
+  WritePurl LAPACK liblapack-dev "${stage}/purl.bzl"
 
   echo "Creating ${TARBALL}"
   tar -I "xz -9 -T0" -cf "${TARBALL}" -C "${stage}" .
