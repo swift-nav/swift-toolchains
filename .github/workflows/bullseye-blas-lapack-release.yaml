@@ -17,11 +17,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        include:
-          - arch: amd64
-            asset_name: debian_bullseye_x86_64_blas_lapack.tar.xz
-          - arch: arm64
-            asset_name: debian_bullseye_aarch64_blas_lapack.tar.xz
+        arch: [amd64, arm64]
     name: bullseye blas/lapack ${{ matrix.arch }}
     steps:
       - name: Checkout source
@@ -35,7 +31,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: ${{ matrix.asset_name }}
+          name: ${{ matrix.arch }}
           path: sysroot/out/sysroot-build/bullseye/debian_bullseye_${{ matrix.arch }}_blas_lapack.tar.xz
 
   release:
