@@ -9,7 +9,9 @@ fi
 
 target=$1
 
-git clone --depth 1 https://github.com/richfelker/musl-cross-make.git /tmp/musl
+git clone https://github.com/richfelker/musl-cross-make.git /tmp/musl
+# Later commits add a musl 1.1.24 patch with a stray conflict marker (upstream issue #232).
+git -C /tmp/musl checkout e5147dde912478dd32ad42a25003e82d4f5733aa
 cp musl/config.mak /tmp/musl
 export CFLAGS="-fPIC -g1 $CFLAGS"
 export TARGET=$target

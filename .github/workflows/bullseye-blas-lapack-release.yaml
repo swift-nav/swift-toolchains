@@ -9,9 +9,14 @@ on:
     tags:
       - "bullseye-blas-lapack-*"
 
+permissions:
+  contents: read
+
 jobs:
   blas-lapack:
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
     strategy:
       matrix:
         include:
@@ -22,20 +27,22 @@ jobs:
     name: bullseye blas/lapack ${{ matrix.arch }}
     steps:
       - name: Checkout source
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Package blas/lapack
         run: ./sysroot/blas-lapack-packager.sh ${{ matrix.arch }}
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: ${{ matrix.asset_name }}
           path: sysroot/out/sysroot-build/bullseye/debian_bullseye_${{ matrix.arch }}_blas_lapack.tar.xz
 
       - name: Release blas/lapack
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
-        uses: svenstaro/upload-release-action@v2
+        uses: svenstaro/upload-release-action@29e53e917877a24fad85510ded594ab3c9ca12de # 2.11.5
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: "sysroot/out/sysroot-build/bullseye/debian_bullseye_${{ matrix.arch }}_blas_lapack.tar.xz"

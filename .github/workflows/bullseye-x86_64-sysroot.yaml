@@ -12,27 +12,36 @@ on:
     tags:
       - "bullseye-sysroot-*"
 
+permissions:
+  contents: read
+
 jobs:
   toolchains:
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
     name: bullseye-x86_64 sysroot
     steps:
       - name: Checkout source
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Create sysroot
         run: ./sysroot/sysroot-creator.sh build amd64
 
       - name: Upload sysroot
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: debian_bullseye_x86_64_sysroot.tar.xz
           path: sysroot/out/sysroot-build/bullseye/debian_bullseye_amd64_sysroot.tar.xz
 
-      - uses: bazel-contrib/setup-bazel@0.15.0
+      - uses: bazel-contrib/setup-bazel@104e3eea9447cdaa4b00d0fb46191a3985d26ab3 # 0.19.1
 
       - name: Mount bazel cache
-        uses: actions/cache@v4
+        # Release builds must not restore a cache that PR runs can write.
+        if: github.event_name != 'push'
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0 # zizmor: ignore[cache-poisoning] -- skipped on tag builds
         with:
           path: "~/.cache/bazel"
           key: bazel
@@ -45,7 +54,7 @@ jobs:
 
       - name: Release sysroot
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
-        uses: svenstaro/upload-release-action@v2
+        uses: svenstaro/upload-release-action@29e53e917877a24fad85510ded594ab3c9ca12de # 2.11.5
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: "sysroot/out/sysroot-build/bullseye/debian_bullseye_amd64_sysroot.tar.xz"
